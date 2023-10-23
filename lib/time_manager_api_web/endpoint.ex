@@ -7,7 +7,7 @@ defmodule TimeManagerApiWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_time_manager_api_key",
-    signing_salt: "L09Ycqka",
+    signing_salt: "7pWP1E48",
     same_site: "Lax"
   ]
 
@@ -26,8 +26,6 @@ defmodule TimeManagerApiWeb.Endpoint do
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
-    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
-    plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :time_manager_api
   end

@@ -16,11 +16,11 @@ config :time_manager_api, TimeManagerApiWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Phoenix.Endpoint.Cowboy2Adapter,
   render_errors: [
-    formats: [html: TimeManagerApiWeb.ErrorHTML, json: TimeManagerApiWeb.ErrorJSON],
+    formats: [json: TimeManagerApiWeb.ErrorJSON],
     layout: false
   ],
   pubsub_server: TimeManagerApi.PubSub,
-  live_view: [signing_salt: "iciBDBRz"]
+  live_view: [signing_salt: "5Ni6Gttf"]
 
 # Configures the mailer
 #
