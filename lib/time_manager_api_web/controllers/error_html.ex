@@ -1,12 +1,12 @@
-defmodule TestWeb.ErrorHTML do
-  use TestWeb, :html
+defmodule TimeManagerApiWeb.ErrorHTML do
+  use TimeManagerApiWeb, :html
 
   # If you want to customize your error pages,
   # uncomment the embed_templates/1 call below
   # and add pages to the error directory:
   #
-  #   * lib/test_web/controllers/error_html/404.html.heex
-  #   * lib/test_web/controllers/error_html/500.html.heex
+  #   * lib/time_manager_api_web/controllers/error_html/404.html.heex
+  #   * lib/time_manager_api_web/controllers/error_html/500.html.heex
   #
   # embed_templates "error_html/*"
 

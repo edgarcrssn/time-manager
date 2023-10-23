@@ -1,13 +1,13 @@
-defmodule TestWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :test
+defmodule TimeManagerApiWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :time_manager_api
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_test_key",
-    signing_salt: "NShAOsyd",
+    key: "_time_manager_api_key",
+    signing_salt: "L09Ycqka",
     same_site: "Lax"
   ]
 
@@ -19,9 +19,9 @@ defmodule TestWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :test,
+    from: :time_manager_api,
     gzip: false,
-    only: TestWeb.static_paths()
+    only: TimeManagerApiWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -29,7 +29,7 @@ defmodule TestWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :test
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :time_manager_api
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
@@ -47,5 +47,5 @@ defmodule TestWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug TestWeb.Router
+  plug TimeManagerApiWeb.Router
 end

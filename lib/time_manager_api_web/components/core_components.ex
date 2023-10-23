@@ -1,4 +1,4 @@
-defmodule TestWeb.CoreComponents do
+defmodule TimeManagerApiWeb.CoreComponents do
   @moduledoc """
   Provides core UI components.
 
@@ -17,7 +17,7 @@ defmodule TestWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import TestWeb.Gettext
+  import TimeManagerApiWeb.Gettext
 
   @doc """
   Renders a modal.
@@ -659,9 +659,9 @@ defmodule TestWeb.CoreComponents do
     # with our gettext backend as first argument. Translations are
     # available in the errors.po file (as we use the "errors" domain).
     if count = opts[:count] do
-      Gettext.dngettext(TestWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(TimeManagerApiWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(TestWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(TimeManagerApiWeb.Gettext, "errors", msg, opts)
     end
   end
 

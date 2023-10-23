@@ -1,12 +1,12 @@
-defmodule TestWeb do
+defmodule TimeManagerApiWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, components, channels, and so on.
 
   This can be used in your application as:
 
-      use TestWeb, :controller
-      use TestWeb, :html
+      use TimeManagerApiWeb, :controller
+      use TimeManagerApiWeb, :html
 
   The definitions below will be executed for every controller,
   component, etc, so keep them short and clean, focused
@@ -40,10 +40,10 @@ defmodule TestWeb do
     quote do
       use Phoenix.Controller,
         formats: [:html, :json],
-        layouts: [html: TestWeb.Layouts]
+        layouts: [html: TimeManagerApiWeb.Layouts]
 
       import Plug.Conn
-      import TestWeb.Gettext
+      import TimeManagerApiWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -52,7 +52,7 @@ defmodule TestWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {TestWeb.Layouts, :app}
+        layout: {TimeManagerApiWeb.Layouts, :app}
 
       unquote(html_helpers())
     end
@@ -84,8 +84,8 @@ defmodule TestWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import TestWeb.CoreComponents
-      import TestWeb.Gettext
+      import TimeManagerApiWeb.CoreComponents
+      import TimeManagerApiWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
@@ -98,9 +98,9 @@ defmodule TestWeb do
   def verified_routes do
     quote do
       use Phoenix.VerifiedRoutes,
-        endpoint: TestWeb.Endpoint,
-        router: TestWeb.Router,
-        statics: TestWeb.static_paths()
+        endpoint: TimeManagerApiWeb.Endpoint,
+        router: TimeManagerApiWeb.Router,
+        statics: TimeManagerApiWeb.static_paths()
     end
   end
 

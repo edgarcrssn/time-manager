@@ -1,5 +1,5 @@
-defmodule TestWeb.PageControllerTest do
-  use TestWeb.ConnCase
+defmodule TimeManagerApiWeb.PageControllerTest do
+  use TimeManagerApiWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")

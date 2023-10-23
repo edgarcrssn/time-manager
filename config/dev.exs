@@ -1,11 +1,11 @@
 import Config
 
 # Configure your database
-config :test, Test.Repo,
+config :time_manager_api, TimeManagerApi.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "test_dev",
+  database: "time_manager_api_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -16,14 +16,14 @@ config :test, Test.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
-config :test, TestWeb.Endpoint,
+config :time_manager_api, TimeManagerApiWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "6z254XVan0CaEZ6w/SYY6c219ae7WTDYCfjGg8Z8d+AcrK9Nb6YOJoiHndxQI0ki",
+  secret_key_base: "P89pAw+fHiXjNQopEyHblYcfBFa++6Sj4UdT6RAj5JWzQg1We+4LyVwtyVw8IFp8",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
@@ -53,17 +53,17 @@ config :test, TestWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :test, TestWeb.Endpoint,
+config :time_manager_api, TimeManagerApiWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/test_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"lib/time_manager_api_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :test, dev_routes: true
+config :time_manager_api, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
