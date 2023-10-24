@@ -8,7 +8,7 @@ It also uses `PostgreSQL`. See the official [PostgreSQL installation guide](http
 
 You can have a `PostgreSQL` database running very quickly with a one-line command using `Docker`:
 ```bash
-docker run --name postgres-container -e POSTGRES_USER=your_postgres_user -e POSTGRES_PASSWORD=your_postgres_user_password -p 5432:5432 -d your_database_name
+docker run --name postgres-container -e POSTGRES_USER=your_postgres_user -e POSTGRES_PASSWORD=your_postgres_user_password -p 5432:5432 -d postgres
 ```
 
 ## Installation
