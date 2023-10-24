@@ -8,7 +8,7 @@ defmodule TimeManagerApiWeb.Router do
   scope "/api", TimeManagerApiWeb do
     pipe_through :api
 
-    scopre "/workingtimes" do
+    scope "/workingtimes" do
       get "/workingtimes/:userID", WorkingtimesController, :getall
       get "/workingtimes/:userID/:id", WorkingtimesController, :getone
       post "/workingtimes/:userID", WorkingtimesController, :create
