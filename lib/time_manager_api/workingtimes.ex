@@ -5,6 +5,7 @@ defmodule TimeManagerApi.Workingtimes do
   schema "workingtimes" do
     field :start, :utc_datetime
     field :end, :utc_datetime
+    field :user_id, :id
   end
 
   @doc false
