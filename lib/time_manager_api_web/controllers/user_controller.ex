@@ -79,8 +79,6 @@ defmodule TimeManagerApiWeb.UserController do
         |> json(%{user: user})
 
       {:error, changeset} ->
-        IO.inspect(changeset)
-
         if Enum.any?(changeset.errors, fn {field, error} ->
              field == :email and
                error ==
