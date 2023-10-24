@@ -25,6 +25,10 @@ cd T-POO-700-LIL_3
 touch .env
 ```
 Setup your .env file. See [.env.example](.env.example).
+Once it's done, run:
+```bash
+source .env
+```
 
 Install and setup dependencies:
 ```bash
