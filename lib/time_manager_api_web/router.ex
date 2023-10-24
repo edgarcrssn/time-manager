@@ -8,12 +8,20 @@ defmodule TimeManagerApiWeb.Router do
   scope "/api", TimeManagerApiWeb do
     pipe_through :api
 
-    get "/users", UserController, :index
-    get "/users/:userID", UserController, :show
-    post "/users", UserController, :create
-    put "/users/:userID", UserController, :update
-    delete "/users/:userID", UserController, :delete
+    scope "/clocks" do
+      get "/:userID", ClockController, :show
+      post "/:userID", ClockController, :create
+    end
+
+    scope "/users" do
+      get "", UserController, :index
+      get "/:userID", UserController, :show
+      post "", UserController, :create
+      put "/:userID", UserController, :update
+      delete "/:userID", UserController, :delete
+    end
   end
+
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:time_manager_api, :dev_routes) do
