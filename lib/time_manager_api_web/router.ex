@@ -8,6 +8,16 @@ defmodule TimeManagerApiWeb.Router do
   scope "/api", TimeManagerApiWeb do
     pipe_through :api
 
+    get "/workingtimes/:userID", WorkingtimesController, :getall
+
+    get "/workingtimes/:userID/:id", WorkingtimesController, :getone
+
+    post "/workingtimes/:userID", WorkingtimesController, :create
+
+    put "/workingtimes/:id", WorkingtimesController, :update
+
+    delete "/workingtimes/:id", WorkingtimesController, :delete
+
     scope "/clocks" do
       get "/:userID", ClockController, :show
       post "/:userID", ClockController, :create
@@ -32,11 +42,10 @@ defmodule TimeManagerApiWeb.Router do
     # as long as you are also using SSL (which you should anyway).
     import Phoenix.LiveDashboard.Router
 
-    scope "/dev" do
+    scope "/api" do
       pipe_through [:fetch_session, :protect_from_forgery]
 
-      live_dashboard "/dashboard", metrics: TimeManagerApiWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+
     end
   end
 end
