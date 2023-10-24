@@ -6,7 +6,7 @@ This api is built with the `Phoenix` framework, written in `Elixir`. You'll need
 
 It also uses `PostgreSQL`. See the official [PostgreSQL installation guide](https://wiki.postgresql.org/wiki/Detailed_installation_guides).
 
-You can have a `PostgreSQL` database running very quickly with a one-line command using `Docker`:
+You can have a `PostgreSQL` instance running very quickly with a one-line command using `Docker`:
 ```bash
 docker run --name postgres-container -e POSTGRES_USER=your_postgres_user -e POSTGRES_PASSWORD=your_postgres_user_password -p 5432:5432 -d postgres
 ```
