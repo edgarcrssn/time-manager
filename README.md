@@ -21,6 +21,8 @@ git clone git@github.com:EpitechMscProPromo2025/T-POO-700-LIL_3.git
 cd T-POO-700-LIL_3
 ```
 
+Make sure an instance of `PostgreSQL` is running and it has a `postgres` user with a `postgres` password.
+
 Install and setup dependencies:
 ```bash
 mix setup
@@ -30,7 +32,6 @@ Create the database:
 ```bash
 mix ecto.create
 ```
-Make sure an instance of `PostgreSQL` is running and it has a `postgres` user with a `postgres` password.
 
 Apply the migrations:
 ```bash
