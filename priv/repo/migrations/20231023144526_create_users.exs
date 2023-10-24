@@ -7,6 +7,7 @@ defmodule TimeManagerApi.Repo.Migrations.CreateUsers do
       add :email, :string, null: false
     end
 
+    create unique_index(:users, [:email])
     execute("ALTER TABLE users ADD CONSTRAINT email_format_check CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$')")
   end
 end
