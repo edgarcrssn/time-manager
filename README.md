@@ -35,27 +35,29 @@ Install and setup dependencies:
 mix setup
 ```
 
-Create the database:
-```bash
-mix ecto.create
-```
-
-Apply the migrations:
-```bash
-mix ecto.migrate
-```
-
-Run the seed to hydrate your database with some data:
-```bash
-mix run priv/repo/seeds.exs
-```
-
 You can now start the server, by running:
 ```bash
 mix phx.server
 ```
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser or by using Postman.
+
+## Usefull commands
+
+Create the database (executed by mix setup):
+```bash
+mix ecto.create
+```
+
+Apply the migrations (executed by mix setup):
+```bash
+mix ecto.migrate
+```
+
+Run the seed to hydrate your database with some data (executed by mix setup):
+```bash
+mix run priv/repo/seeds.exs
+```
 
 ## Learn more about Phoenix
 
