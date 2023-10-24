@@ -2,7 +2,11 @@ defmodule TimeManagerApiWeb.Router do
   use TimeManagerApiWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["json", "html"]
+  end
+
+  scope "/", TimeManagerApiWeb, as: :browser do
+    get "/", HomeController, :index
   end
 
   scope "/api", TimeManagerApiWeb do
