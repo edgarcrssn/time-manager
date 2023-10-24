@@ -4,15 +4,15 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
 
   def getall(conn, %{"userID" => userId}) do
     date_start = conn.query_params["start"]
-    date_end = conn.quert_params["end"]
+    date_end = conn.query_params["end"]
     json(conn,"Id de l'utilisateur #{userId}, date de début : #{date_start}, date de fin : #{date_end}")
   end
 
-  def getone(conn, %{"userId" => userId}, %{"id" => id}) do
-    json(conn,"Id de l'utilisateur : #{userId}, id du workingtimes #{id}")
+  def getone(conn, %{"userID" => userId, "id" => id}) do
+    json(conn,"Id de l'utiyisateur : #{userId}, id du workingtimes #{id}")
   end
 
-  def create(conn, %{"userId" => userId}) do
+  def create(conn, %{"userID" => userId}) do
     json(conn,"Création du workingtimes, id de l'utilisateur : #{userId}")
   end
 

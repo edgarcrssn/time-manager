@@ -9,11 +9,11 @@ defmodule TimeManagerApiWeb.Router do
     pipe_through :api
 
     scope "/workingtimes" do
-      get "/workingtimes/:userID", WorkingtimesController, :getall
-      get "/workingtimes/:userID/:id", WorkingtimesController, :getone
-      post "/workingtimes/:userID", WorkingtimesController, :create
-      put "/workingtimes/:id", WorkingtimesController, :update
-      delete "/workingtimes/:id", WorkingtimesController, :delete
+      get "/:userID", WorkingtimesController, :getall
+      get "/:userID/:id", WorkingtimesController, :getone
+      post "/:userID", WorkingtimesController, :create
+      put "/:id", WorkingtimesController, :update
+      delete "/:id", WorkingtimesController, :delete
     end
 
     scope "/clocks" do
