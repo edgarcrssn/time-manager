@@ -7,6 +7,8 @@ defmodule TimeManagerApiWeb.Router do
 
   scope "/api", TimeManagerApiWeb do
     pipe_through :api
+
+    get "/users", UserController, :index
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
