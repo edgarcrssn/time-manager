@@ -25,10 +25,19 @@ defmodule TimeManagerApiWeb.ClockController do
     end
   end
 
-
   def create(conn, %{"userID" => user_id, "clock" => clock_params}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
-    changeset = TimeManagerApi.Clock.changeset(%TimeManagerApi.Clock{}, Map.merge(clock_params, %{"user_id" => user_id}))
+
+    last_clock = TimeManagerApi.Repo.one(from c in TimeManagerApi.Clock, where: c.user_id == ^user_id, order_by: [desc: c.time], limit: 1)
+
+    new_status = case last_clock do
+      nil -> true
+      %TimeManagerApi.Clock{status: last_status} -> not last_status
+    end
+
+    merged_params = Map.merge(clock_params, %{"user_id" => user_id, "status" => new_status})
+
+    changeset = TimeManagerApi.Clock.changeset(%TimeManagerApi.Clock{}, merged_params)
 
     try do
       case TimeManagerApi.Repo.insert(changeset) do
