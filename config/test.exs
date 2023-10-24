@@ -7,11 +7,9 @@ import Config
 # Run `mix help test` for more information.
 config :time_manager_api, TimeManagerApi.Repo,
   username: "postgres",
-  password: "ugo",
+  password: "postgres",
   hostname: "localhost",
-  database: "time_manager",
-  port: "5432",
-  show_sensitive_data_on_connection_error: true,
+  database: "time_manager_api_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
