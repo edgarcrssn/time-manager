@@ -20,7 +20,7 @@ export default {
     setup(props) {
         const startDateTime = ref(null);
         const clockIn = ref(false);
-        const API_URL = `http://localhost:4000/api/clocks/${props.userId}`;
+        const API_URL = `${import.meta.env.VITE_API_URL}/api/clocks/${props.userId}`;
 
         const refresh = async () => {
             try {
