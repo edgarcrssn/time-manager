@@ -11,6 +11,9 @@ config :time_manager_api,
   ecto_repos: [TimeManagerApi.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+# Add the configuration for your front-end URL
+config :time_manager_api, :front_url, System.get_env("VITE_FRONT_URL")
+
 # Configures the endpoint
 config :time_manager_api, TimeManagerApiWeb.Endpoint,
   url: [host: "localhost"],
