@@ -45,5 +45,7 @@ defmodule TimeManagerApiWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+  front_url = Application.get_env(:time_manager_api, :front_url)
+  plug CORSPlug, origin: front_url
   plug TimeManagerApiWeb.Router
 end

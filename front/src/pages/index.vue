@@ -1,17 +1,29 @@
 <template>
     <div>
-        <h1 className="text-3xl font-bold underline">
-            Time Manager
-        </h1>
+        <h1 class="text-3xl font-bold underline">Time Manager</h1>
         <BarChart />
+
+        <ClockManager :userId="userId" />
     </div>
 </template>
 
 <script lang="ts">
-import BarChart from '../components/charts/BarChart.vue'
+import { ref } from 'vue';
+import BarChart from '../components/charts/BarChart.vue';
+import ClockManager from '../components/ClockManager.vue';
 
 export default {
-  name: 'App',
-  components: { BarChart }
+    name: 'Dashboard',
+    components: {
+        BarChart,
+        ClockManager,
+    },
+    setup() {
+        const userId = ref('3');
+
+        return {
+            userId
+        };
+    }
 }
 </script>
