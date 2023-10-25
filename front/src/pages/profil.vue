@@ -41,11 +41,31 @@ export default {
 
         const deleteAccount = async () => {
             if (storedUserRole === 'general_manager' || storedUserID === user.value.id) {
-                // Implement deletion logic here
-                // Redirect to homepage or login after deletion
-                router.push('/');
+                const API_URL = `${import.meta.env.VITE_API_URL}/api/users/${user.value.id}`;
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to delete the profile');
+                    }
+                    if(storedUserID === user.value.id){
+                        localStorage.removeItem('userID');
+                        localStorage.removeItem('userRole');
+                        router.push('/');
+                    } else {
+                        router.push(`/dashboard/${storedUserID}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting profile:', error);
+                }
             }
         };
+
 
         const canDelete = computed(() => {
             return storedUserRole === 'general_manager' || storedUserID === user.value.id;
