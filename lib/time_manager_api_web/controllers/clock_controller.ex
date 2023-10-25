@@ -44,7 +44,7 @@ defmodule TimeManagerApiWeb.ClockController do
         {:ok, clock} ->
           conn
           |> put_status(:created)
-          |> json(clock)  # Return the newly created clock's status to frontend
+          |> json(clock)
 
         {:error, changeset} ->
           conn
