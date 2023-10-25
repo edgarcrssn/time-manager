@@ -10,7 +10,7 @@ defmodule TimeManagerApiWeb.UserController do
       from(
         u in TimeManagerApi.User,
         where: u.email == ^email and u.username == ^username,
-        select: %{id: u.id, email: u.email, username: u.username}
+        select: %{id: u.id, email: u.email, username: u.username, role: u.role}
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -22,7 +22,7 @@ defmodule TimeManagerApiWeb.UserController do
       from(
         u in TimeManagerApi.User,
         where: u.email == ^email,
-        select: %{id: u.id, email: u.email, username: u.username}
+        select: %{id: u.id, email: u.email, username: u.username, role: u.role}
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -34,7 +34,7 @@ defmodule TimeManagerApiWeb.UserController do
       from(
         u in TimeManagerApi.User,
         where: u.username == ^username,
-        select: %{id: u.id, email: u.email, username: u.username}
+        select: %{id: u.id, email: u.email, username: u.username, role: u.role}
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -45,7 +45,7 @@ defmodule TimeManagerApiWeb.UserController do
     query =
       from(
         u in TimeManagerApi.User,
-        select: %{id: u.id, email: u.email, username: u.username}
+        select: %{id: u.id, email: u.email, username: u.username, role: u.role}
       )
 
     users = TimeManagerApi.Repo.all(query)

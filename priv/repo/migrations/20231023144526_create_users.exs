@@ -5,6 +5,7 @@ defmodule TimeManagerApi.Repo.Migrations.CreateUsers do
     create table(:users) do
       add :username, :string, null: false
       add :email, :string, null: false
+      add :role, :string
     end
 
     create unique_index(:users, [:email])
