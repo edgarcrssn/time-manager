@@ -2,22 +2,45 @@
   "name": "front",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pretty-quick": "pretty-quick --staged"
   },
   "dependencies": {
     "chart.js": "^4.4.0",
+    "eslint-plugin-vue": "^9.18.0",
     "vue": "^3.3.4",
     "vue-chartjs": "^5.2.0",
     "vue-router": "^4.0.13"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts,vue}": [
+      "pretty-quick --staged",
+      "eslint --fix"
+    ]
+  },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "autoprefixer": "^10.4.16",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-standard": "^4.1.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.2",
     "postcss": "^8.4.31",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
     "tailwindcss": "^3.3.4",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
