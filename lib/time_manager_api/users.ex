@@ -2,11 +2,12 @@ defmodule TimeManagerApi.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:id, :username, :email, :role]}
+  @derive {Jason.Encoder, only: [:id, :username, :email, :role, :team]}
   schema "users" do
     field :username, :string
     field :email, :string
-    field :role, Ecto.Enum, values: [:employee, :manager, :general_manager]
+    field :role, Ecto.Enum, values: [:employee, :manager, :general_manager], default: :employee
+    belongs_to :team, TimeManagerApi.Team
   end
 
   def changeset(user, params \\ %{}) do
