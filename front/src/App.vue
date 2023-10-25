@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view></router-view>
+    <router-view />
   </div>
 </template>
 
@@ -10,7 +10,7 @@ import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'App',
-  setup() {
+  setup () {
     const router = useRouter()
     return { router }
   }
