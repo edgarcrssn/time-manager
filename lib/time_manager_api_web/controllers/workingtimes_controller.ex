@@ -18,9 +18,13 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
         |> put_status(:bad_request)
         |> json(%{error: "Bad request occured"})
       {_,_} ->
+        date_start = String.to_integer(date_start)
+        date_end = String.to_integer(date_end)
+        convert_date_start = DateTime.from_unix!(date_start, :second)
+        convert_date_end = DateTime.from_unix!(date_end, :second)
         query = from(
           w in TimeManagerApi.Workingtimes,
-          where: w.start >= ^"2024-10-25 08:45:51" and w.end <= ^"2025-10-25 08:45:51",
+          where: w.start >= ^convert_date_start and w.end <= ^convert_date_end,
           select: w
         )
         workingtime_result = TimeManagerApi.Repo.all(query)
@@ -139,24 +143,5 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
             |> json(%{message: "Failed to delete workingtime"})
         end
     end
-  end
-
-  def convert_to_naive_datetime(date_string) do
-    reformatted_date_string = reformat_date(date_string)
-
-    case NaiveDateTime.from_iso8601(reformatted_date_string) do
-      {:ok, naive_datetime} ->
-        {:ok, naive_datetime}
-      {:error, reason} ->
-        {:error, reason}
-    end
-  end
-
-  defp reformat_date(date_string) do
-    [date_part, time_part] = String.split(date_string,"T")
-    [year, month, day] = String.split(date_part, "-")
-    [hour, minute, second] = String.split(Enum.at(String.split(time_part, " "), 0), ":")
-    reformatted_date = "#{year}-#{month}-#{day}T#{hour}:#{minute}:#{second}"
-    reformatted_date
   end
 end
