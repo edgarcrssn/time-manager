@@ -82,11 +82,9 @@ defmodule TimeManagerApiWeb.UserController do
 
       {:error, changeset} ->
         if Enum.any?(changeset.errors, fn {field, error} ->
-             field == :email and
-               error ==
-                 {"has already been taken",
-                  [constraint: :unique, constraint_name: "users_email_index"]}
-           end) do
+          field == :email and
+          error == {"has already been taken", [constraint: :unique, constraint_name: "users_email_index"]}
+        end) do
           conn
           |> put_status(:conflict)
           |> json(%{message: "Email is already taken"})
