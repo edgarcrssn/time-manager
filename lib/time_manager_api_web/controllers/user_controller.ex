@@ -10,7 +10,7 @@ defmodule TimeManagerApiWeb.UserController do
       from(
         u in TimeManagerApi.User,
         where: u.email == ^email and u.username == ^username,
-        select: [u.id, u.email, u.username]
+        select: %{id: u.id, email: u.email, username: u.username}
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -22,7 +22,7 @@ defmodule TimeManagerApiWeb.UserController do
       from(
         u in TimeManagerApi.User,
         where: u.email == ^email,
-        select: [u.id, u.email, u.username]
+        select: %{id: u.id, email: u.email, username: u.username}
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -34,7 +34,7 @@ defmodule TimeManagerApiWeb.UserController do
       from(
         u in TimeManagerApi.User,
         where: u.username == ^username,
-        select: [u.id, u.email, u.username]
+        select: %{id: u.id, email: u.email, username: u.username}
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -45,12 +45,13 @@ defmodule TimeManagerApiWeb.UserController do
     query =
       from(
         u in TimeManagerApi.User,
-        select: [u.id, u.email, u.username]
+        select: %{id: u.id, email: u.email, username: u.username}
       )
 
     users = TimeManagerApi.Repo.all(query)
     json(conn, users)
   end
+
 
   @doc """
   Retrieve a user by id.
