@@ -35,8 +35,19 @@ export default {
         const fetchProfile = async () => {
             const userId = route.params.userId;
             const API_URL = `${import.meta.env.VITE_API_URL}/api/users/${userId}`;
-            const response = await fetch(API_URL);
-            user.value = await response.json();
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        router.push(`/profil/${storedUserID}`);
+                        return;
+                    }
+                    throw new Error('Failed to fetch profile');
+                }
+                user.value = await response.json();
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+            }
         };
 
         const deleteAccount = async () => {
@@ -53,7 +64,8 @@ export default {
                     if (!response.ok) {
                         throw new Error('Failed to delete the profile');
                     }
-                    if(storedUserID === user.value.id){
+
+                    if (storedUserID === user.value.id) {
                         localStorage.removeItem('userID');
                         localStorage.removeItem('userRole');
                         router.push('/');
@@ -65,7 +77,6 @@ export default {
                 }
             }
         };
-
 
         const canDelete = computed(() => {
             return storedUserRole === 'general_manager' || storedUserID === user.value.id;
