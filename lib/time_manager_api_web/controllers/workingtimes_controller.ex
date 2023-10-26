@@ -33,6 +33,7 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
     end
   end
 
+  # TODO create: must be "general_manager" or "manager" of the user or user himself
   def show(conn, %{"userID" => userId, "id" => id} = params) when is_map(params) do
     _query =
       from(

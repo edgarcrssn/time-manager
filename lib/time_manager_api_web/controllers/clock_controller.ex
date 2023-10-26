@@ -2,7 +2,7 @@ defmodule TimeManagerApiWeb.ClockController do
   use TimeManagerApiWeb, :controller
   import Ecto.Query
 
-  # TODO show: must be "general_manager" or user himself
+  # TODO show: must be "general_manager" or "manager" of the user or user himself
   def show(conn, %{"userID" => user_id}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
 
