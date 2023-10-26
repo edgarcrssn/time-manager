@@ -7,6 +7,7 @@ import Dashboard from './pages/dashboard.vue'
 import Profile from './pages/profile.vue'
 import WorkingTimes from './pages/working-times.vue'
 import DashboardLayout from './layouts/DashboardLayout.vue'
+import UserComponentVue from './components/UserComponent.vue';
 
 const routes = [
   { path: '/', component: Index },
@@ -58,6 +59,11 @@ const routes = [
         name: 'DeleteWorkingTime',
         component: WorkingTime,
         props: true
+      }
+      {
+        path: '/view-users',
+        name: 'View-users',
+        component: UserComponentVue
       }
     ]
   }
