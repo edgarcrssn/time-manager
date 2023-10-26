@@ -30,7 +30,7 @@ export default {
         router.push('/')
       }
       if (+routeParamUserId !== storedUserID && storedUserRole !== 'general_manager') {
-        router.push('/dashboard')
+        router.push(`/dashboard/${storedUserID}`)
       }
     })
 
@@ -40,16 +40,15 @@ export default {
         const response = await fetch(API_URL)
         if (!response.ok) {
           if (response.status === 404) {
-            router.push('/dashboard')
+            router.push(`/dashboard/${storedUserID}`)
             return
           }
-          throw new Error('Failed to fetch profile')
+          throw new Error('Failed to fetch working times')
         }
         const data = await response.json()
-        console.log(data)
         workingTimes.value = data
       } catch (error) {
-        console.error('Error fetching profile:', error)
+        console.error('Error fetching working times:', error)
       }
     }
 
@@ -66,7 +65,7 @@ export default {
 
 <template>
   <section class="p-2 flex flex-col items-center">
-    <h1 class="text-3xl font-bold underline">Working time</h1>
+    <h1 class="text-3xl font-bold underline">Working times</h1>
     <article class="w-full max-w-md">
       {{ workingTimes }}
     </article>
