@@ -4,7 +4,7 @@ import ChartManager from './components/ChartManager.vue'
 import ClockManager from './components/ClockManager.vue'
 import Dashboard from './pages/dashboard.vue'
 import Profile from './pages/profile.vue'
-import WorkingTime from './pages/working-time.vue'
+import WorkingTimes from './pages/working-times.vue'
 import DashboardLayout from './layouts/DashboardLayout.vue'
 
 const routes = [
@@ -38,7 +38,7 @@ const routes = [
       {
         path: 'working-times/:userId',
         name: 'WorkingTimes',
-        component: WorkingTime
+        component: WorkingTimes
       }
     ]
   }
