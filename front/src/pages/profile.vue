@@ -1,6 +1,6 @@
 <template>
     <div class="p-2 flex flex-col items-center">
-        <h1 class="text-3xl font-bold underline">Profil</h1>
+        <h1 class="text-3xl font-bold underline">Profile</h1>
         <div class="w-full max-w-md">
             <div><strong>Username:</strong> {{ user.username }}</div>
             <div><strong>Email:</strong> {{ user.email }}</div>
@@ -17,7 +17,7 @@ import { ref, onMounted, computed, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 export default {
-    name: 'Profil',
+    name: 'Profile',
     setup() {
         const route = useRoute();
         const router = useRouter();
@@ -39,7 +39,7 @@ export default {
                 const response = await fetch(API_URL);
                 if (!response.ok) {
                     if (response.status === 404) {
-                        router.push(`/profil/${storedUserID}`);
+                        router.push(`/profile/${storedUserID}`);
                         return;
                     }
                     throw new Error('Failed to fetch profile');

@@ -3,7 +3,7 @@ import Index from './pages/index.vue'
 import ChartManager from './components/ChartManager.vue';
 import ClockManager from './components/ClockManager.vue';
 import Dashboard from './pages/dashboard.vue';
-import Profil from './pages/profil.vue';
+import Profile from './pages/profile.vue';
 
 const routes = [
   { path: '/', component: Index },
@@ -25,9 +25,9 @@ const routes = [
     component: Dashboard
   },
   {
-    path: '/profil/:userId',
-    name: 'Profil',
-    component: Profil,
+    path: '/profile/:userId',
+    name: 'Profile',
+    component: Profile,
   },
 ]
 

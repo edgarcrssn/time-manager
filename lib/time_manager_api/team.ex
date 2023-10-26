@@ -6,8 +6,6 @@ defmodule TimeManagerApi.Team do
   schema "teams" do
     field :name, :string
     belongs_to :manager, TimeManagerApi.User
-
-    timestamps()
   end
 
   def changeset(team, params \\ %{}) do
