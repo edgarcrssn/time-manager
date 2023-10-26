@@ -1,10 +1,10 @@
 <template>
-    <div class="text-center">
+    <section class="text-center">
         <h2 class="text-3xl mt-4 mb-4">Work Tracking</h2>
         <p>{{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}</p>
         <button class="text-white bg-slate-300 rounded-xl p-2 mt-4" @click="clock">{{ clockIn ? 'Clock Out' : 'Clock In'
         }}</button>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">
