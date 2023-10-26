@@ -11,7 +11,7 @@ defmodule TimeManagerApiWeb.UserController do
       from(
         u in TimeManagerApi.User,
         where: u.email == ^email and u.username == ^username,
-        select: %{id: u.id, email: u.email, username: u.username}
+        preload: [:team]
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -23,7 +23,7 @@ defmodule TimeManagerApiWeb.UserController do
       from(
         u in TimeManagerApi.User,
         where: u.email == ^email,
-        select: %{id: u.id, email: u.email, username: u.username}
+        preload: [:team]
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -35,7 +35,7 @@ defmodule TimeManagerApiWeb.UserController do
       from(
         u in TimeManagerApi.User,
         where: u.username == ^username,
-        select: %{id: u.id, email: u.email, username: u.username}
+        preload: [:team]
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -46,7 +46,7 @@ defmodule TimeManagerApiWeb.UserController do
     query =
       from(
         u in TimeManagerApi.User,
-        select: %{id: u.id, email: u.email, username: u.username}
+        preload: [:team]
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -58,7 +58,10 @@ defmodule TimeManagerApiWeb.UserController do
   """
   # TODO show: must be authenticated
   def show(conn, %{"userID" => id}) do
-    case TimeManagerApi.Repo.get(TimeManagerApi.User, id) do
+    user = TimeManagerApi.Repo.get(TimeManagerApi.User, id)
+    user = TimeManagerApi.Repo.preload(user, :team)
+
+    case user do
       %TimeManagerApi.User{} = user ->
         json(conn, user)
 
@@ -110,7 +113,7 @@ defmodule TimeManagerApiWeb.UserController do
         |> put_status(:not_found)
         |> json(%{message: "User not found"})
 
-      _ ->
+      %TimeManagerApi.User{role: role} when role in ["manager", "general_manager"] ->
         changeset = TimeManagerApi.User.changeset(user, user_params)
 
         case TimeManagerApi.Repo.update(changeset) do
@@ -133,8 +136,12 @@ defmodule TimeManagerApiWeb.UserController do
               |> json(%{message: "Bad Request"})
             end
         end
+        _ ->
+          conn
+          |> put_status(:forbidden)
+          |> json(%{message: "Permission denied"})
+      end
     end
-  end
 
   @doc """
   Delete an existing user by id.
