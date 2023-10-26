@@ -2,10 +2,24 @@
     <section class="text-center">
         <h2 class="text-3xl mt-4 mb-4">Work Tracking</h2>
         <p>{{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}</p>
-        <button class="text-white bg-slate-300 rounded-xl p-2 mt-4" @click="clock">{{ clockIn ? 'Clock Out' : 'Clock In'
-        }}</button>
+        <button 
+          v-if="!loading && !processing" 
+          class="text-white bg-slate-300 rounded-xl p-2 mt-4" 
+          @click="clock"
+        >
+          {{ clockIn ? 'Clock Out' : 'Clock In' }}
+        </button>
+        <button 
+          v-else 
+          disabled 
+          class="text-white bg-slate-300 rounded-xl p-2 mt-4"
+        >
+          Processing...
+        </button>
     </section>
 </template>
+
+
 
 <script lang="ts">
 import { ref, onMounted } from 'vue';
@@ -22,6 +36,9 @@ export default {
         const clockIn = ref(false);
         const API_URL = `${import.meta.env.VITE_API_URL}/api/clocks/${props.userId}`;
 
+        const loading = ref(true);
+        const processing = ref(false);
+
         const refresh = async () => {
             try {
                 const response = await fetch(API_URL);
@@ -31,12 +48,17 @@ export default {
                     clockIn.value = lastClock.status;
                     startDateTime.value = lastClock.status ? new Date().toLocaleString() : null;
                 }
+                loading.value = false;
             } catch (error) {
                 console.error('Error fetching clock status:', error);
+                loading.value = false;
             }
         };
 
+        refresh();
+
         const clock = async () => {
+            processing.value = true;
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -52,12 +74,36 @@ export default {
 
                 const data = await response.json();
                 clockIn.value = data.status;
-                startDateTime.value = data.status ? new Date().toLocaleString() : null;
+                const currentTime = new Date().toISOString();
+                if (!data.status && startDateTime.value) {
+                    await createWorkingTime(startDateTime.value, currentTime);
+                }
+                startDateTime.value = data.status ? currentTime : null;
             } catch (error) {
                 console.error('Error clocking in:', error);
+            } finally {
+                processing.value = false;
             }
         };
 
+        const createWorkingTime = async (startTime, endTime) => {
+            const workingTimesAPI = `${import.meta.env.VITE_API_URL}/api/workingtimes/${props.userId}`;
+
+            try {
+                await fetch(workingTimesAPI, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        workingtime: {
+                            start: startTime,
+                            end: endTime
+                        }
+                    })
+                });
+            } catch (error) {
+                console.error('Error creating working time:', error);
+            }
+        };
 
         onMounted(() => {
             refresh();
