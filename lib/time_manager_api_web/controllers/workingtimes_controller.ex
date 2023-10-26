@@ -3,22 +3,39 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
   import Plug.Conn
   import Ecto.Query
 
-  # TODO userId is unused ?
-  def index(conn, %{"userID" => _userId, "end" => date_end, "start" => date_start}) do
-    case {date_end,date_start} do
-      {nil,nil} ->
+  # TODO index: must be "general_manager" or "manager" of the user or user himself
+  def index(conn, %{"userID" => userId} = params) when is_map(params) do
+    case userId do
+      nil ->
         conn
         |> put_status(:bad_request)
-        |> json(%{error: "Bad request occurred"})
-      {nil,_} ->
+        |> json(%{error: "userId is required"})
+      _ ->
+        query = from(
+          w in TimeManagerApi.Workingtimes,
+          where: w.user_id == ^userId,
+          select: %{id: w.id, start: w.start, end: w.end, user_id: w.user_id}
+        )
+        workingtime_result = TimeManagerApi.Repo.all(query)
+        json(conn, workingtime_result)
+    end
+  end
+
+  def index(conn, %{"userID" => userId, "end" => date_end, "start" => date_start}) do
+    case {userId,date_end,date_start} do
+      {nil,_,_} ->
         conn
         |> put_status(:bad_request)
-        |> json(%{error: "Bad request occurred"})
-      {_,nil} ->
+        |> json(%{error: "userId must be specified"})
+      {_,nil,_} ->
         conn
         |> put_status(:bad_request)
-        |> json(%{error: "Bad request occurred"})
-      {_,_} ->
+        |> json(%{error: "End date must be specified"})
+      {_,_,nil} ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{error: "End date must be specified"})
+      {_,_,_} ->
         date_start = String.to_integer(date_start)
         date_end = String.to_integer(date_end)
         convert_date_start = DateTime.from_unix!(date_start, :second)
@@ -33,7 +50,7 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
     end
   end
 
-  # TODO create: must be "general_manager" or "manager" of the user or user himself
+  # TODO show: must be "general_manager" or "manager" of the user or user himself
   def show(conn, %{"userID" => userId, "id" => id} = params) when is_map(params) do
     _query =
       from(
