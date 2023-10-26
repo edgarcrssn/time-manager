@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <section>
         <h2 class="text-3xl mt-4 mb-4">User {{ userId }}'s Charts</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
@@ -13,7 +13,7 @@
                 <LineChart :data="lineChartData" :options="chartOptions" />
             </div>
         </div>
-    </div>
+    </section>
 </template>
   
 <script lang="ts">
