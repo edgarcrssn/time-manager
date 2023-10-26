@@ -5,6 +5,7 @@ import ClockManager from './components/ClockManager.vue';
 import Dashboard from './pages/dashboard.vue';
 import Profile from './pages/profile.vue';
 import DashboardLayout from './layouts/DashboardLayout.vue';
+import UserComponentVue from './components/UserComponent.vue';
 
 const routes = [
   { path: '/', component: Index },
@@ -34,6 +35,11 @@ const routes = [
         name: 'Profile',
         component: Profile,
       },
+      {
+        path: '/view-users',
+        name: 'View-users',
+        component: UserComponentVue
+      }
     ]
   },
 ]
