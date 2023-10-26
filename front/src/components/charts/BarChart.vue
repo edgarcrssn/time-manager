@@ -17,7 +17,7 @@ export default {
       required: true
     },
     chartOptions: {
-      type: Object,
+      type: Object
     }
   }
 }
