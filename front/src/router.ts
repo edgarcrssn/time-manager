@@ -4,30 +4,37 @@ import ChartManager from './components/ChartManager.vue';
 import ClockManager from './components/ClockManager.vue';
 import Dashboard from './pages/dashboard.vue';
 import Profile from './pages/profile.vue';
+import DashboardLayout from './layouts/DashboardLayout.vue';
 
 const routes = [
   { path: '/', component: Index },
   {
-    path: '/chartManager/:userId',
-    name: 'ChartManager',
-    component: ChartManager,
-    props: true
-  },
-  {
-    path: '/clock/:userId',
-    name: 'ClockManager',
-    component: ClockManager,
-    props: true
-  },
-  {
-    path: '/dashboard/:userId',
-    name: 'Dashboard',
-    component: Dashboard
-  },
-  {
-    path: '/profile/:userId',
-    name: 'Profile',
-    component: Profile,
+    path: '/dashboard',
+    component: DashboardLayout,
+    children: [
+      {
+        path: 'chartManager/:userId',
+        name: 'ChartManager',
+        component: ChartManager,
+        props: true
+      },
+      {
+        path: 'clock/:userId',
+        name: 'ClockManager',
+        component: ClockManager,
+        props: true
+      },
+      {
+        path: ':userId',
+        name: 'Dashboard',
+        component: Dashboard
+      },
+      {
+        path: 'profile/:userId',
+        name: 'Profile',
+        component: Profile,
+      },
+    ]
   },
 ]
 
