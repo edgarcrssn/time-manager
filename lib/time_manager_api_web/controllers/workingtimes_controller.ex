@@ -3,20 +3,21 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
   import Plug.Conn
   import Ecto.Query
 
-  def getall(conn, %{"userID" => userId, "end" => date_end, "start" => date_start}) do
+  # TODO userId is unused ?
+  def index(conn, %{"userID" => _userId, "end" => date_end, "start" => date_start}) do
     case {date_end,date_start} do
       {nil,nil} ->
         conn
         |> put_status(:bad_request)
-        |> json(%{error: "Bad request occured"})
+        |> json(%{error: "Bad request occurred"})
       {nil,_} ->
         conn
         |> put_status(:bad_request)
-        |> json(%{error: "Bad request occured"})
+        |> json(%{error: "Bad request occurred"})
       {_,nil} ->
         conn
         |> put_status(:bad_request)
-        |> json(%{error: "Bad request occured"})
+        |> json(%{error: "Bad request occurred"})
       {_,_} ->
         date_start = String.to_integer(date_start)
         date_end = String.to_integer(date_end)
@@ -32,8 +33,8 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
     end
   end
 
-  def getone(conn, %{"userID" => userId, "id" => id} = params) when is_map(params) do
-    query =
+  def show(conn, %{"userID" => userId, "id" => id} = params) when is_map(params) do
+    _query =
       from(
         w in TimeManagerApi.Workingtimes,
         where: w.id == ^id and w.user_id == ^userId,
@@ -41,16 +42,17 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
       )
       workingtime = TimeManagerApi.Repo.get(TimeManagerApi.Workingtimes,id)
       case workingtime do
-        workingtime ->
-          json(conn,workingtime)
         nil ->
           conn
           |> put_status(:not_found)
           |> json(%{error: "Workingtime with the id #{id} and the userId #{userId} doesn't exist"})
+        workingtime ->
+          json(conn,workingtime)
       end
     json(conn,workingtime)
   end
 
+  # TODO create: must be "general_manager" or user himself
   def create(conn, %{"userID" => userId, "workingtime" => workingtime_param}) when is_binary(userId) do
     user_id = String.to_integer(userId)
     user = TimeManagerApi.Repo.get(TimeManagerApi.User,userId)
@@ -67,8 +69,8 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
             {:ok, workingtime} ->
               conn
               |> put_status(:created)
-              |> json(%{message: "Workingtime correctly created"})
-            {:error, changeset} ->
+              |> json(%{workingtime: workingtime})
+            {:error, _changeset} ->
               conn
               |> put_status(:bad_request)
               |> json(%{error: "Bad request occured"})
@@ -82,6 +84,7 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
     end
   end
 
+  # TODO update: must be "general_manager" or workingtime owner himself
   def update(conn, %{"id" => id, "workingtime" => workingtime_param}) do
     workingtime = TimeManagerApi.Repo.get(TimeManagerApi.Workingtimes,id)
     case workingtime do
@@ -110,18 +113,19 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
                   {:ok, updated_workingtime} ->
                     conn
                     |> put_status(:ok)
-                    |> json(%{user: updated_workingtime})
+                    |> json(%{workingtime: updated_workingtime})
 
-                  {:error, changeset} ->
+                  {:error, _changeset} ->
                     conn
                     |> put_status(:bad_request)
-                    |> json(%{message: "Bad request occured"})
+                    |> json(%{message: "Bad request occurred"})
                 end
             end
         end
     end
   end
 
+  # TODO delete: must be "general_manager" or workingtime owner himself
   def delete(conn, %{"id" => id}) do
     workingtime = TimeManagerApi.Repo.get(TimeManagerApi.Workingtimes, id)
 

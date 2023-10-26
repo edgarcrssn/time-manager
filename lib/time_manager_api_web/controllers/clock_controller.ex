@@ -2,6 +2,7 @@ defmodule TimeManagerApiWeb.ClockController do
   use TimeManagerApiWeb, :controller
   import Ecto.Query
 
+  # TODO show: must be "general_manager" or user himself
   def show(conn, %{"userID" => user_id}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
 
@@ -25,6 +26,7 @@ defmodule TimeManagerApiWeb.ClockController do
     end
   end
 
+  # TODO create: must be user himself
   def create(conn, %{"userID" => user_id, "clock" => clock_params}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
 
@@ -49,7 +51,7 @@ defmodule TimeManagerApiWeb.ClockController do
         {:error, changeset} ->
           conn
           |> put_status(:bad_request)
-          |> json(%{errors: Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} -> msg end)})
+          |> json(%{errors: Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)})
       end
     rescue
       _ ->

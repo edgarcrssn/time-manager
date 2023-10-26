@@ -13,8 +13,8 @@ defmodule TimeManagerApiWeb.Router do
     pipe_through :api
 
     scope "/workingtimes" do
-      get "/:userID", WorkingtimesController, :getall
-      get "/:userID/:id", WorkingtimesController, :getone
+      get "/:userID", WorkingtimesController, :index
+      get "/:userID/:id", WorkingtimesController, :show
       post "/:userID", WorkingtimesController, :create
       put "/:id", WorkingtimesController, :update
       delete "/:id", WorkingtimesController, :delete
@@ -42,7 +42,7 @@ defmodule TimeManagerApiWeb.Router do
     # If your application does not have an admins-only section yet,
     # you can use Plug.BasicAuth to set up some basic authentication
     # as long as you are also using SSL (which you should anyway).
-    import Phoenix.LiveDashboard.Router
+    # import Phoenix.LiveDashboard.Router
 
     scope "/api" do
       pipe_through [:fetch_session, :protect_from_forgery]
