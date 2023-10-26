@@ -40,7 +40,7 @@ const routes = [
         path: 'working-times/:userId',
         name: 'WorkingTimes',
         component: WorkingTimes
-      }
+      },
       {
         path: '/view-users',
         name: 'View-users',
