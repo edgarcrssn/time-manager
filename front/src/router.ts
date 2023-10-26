@@ -59,7 +59,7 @@ const routes = [
         name: 'DeleteWorkingTime',
         component: WorkingTime,
         props: true
-      }
+      },
       {
         path: '/view-users',
         name: 'View-users',
