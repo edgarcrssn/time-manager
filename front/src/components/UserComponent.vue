@@ -71,6 +71,19 @@ export default {
         const handleItemDeleted = (itemId: number) => {
             usersData.value = usersData.value.filter(user => user.id !== itemId);
         };
+        const handleItemAdded = async () => {
+            try{
+                const getAllUsersUrl = `${import.meta.env.VITE_API_URL}/api/users`
+                const responseAllUsers = await fetch(getAllUsersUrl)
+                const dataUsers = await responseAllUsers.json();
+                if(dataUsers){
+                    usersData.value = dataUsers
+                }
+            }
+            catch(error){
+                console.error("Error while fetching all the users data")
+            }
+        };
         return {
             userUsername,
             userEmail,
@@ -78,6 +91,7 @@ export default {
             usersData,
             createUser,
             handleItemDeleted,
+            handleItemAdded,
             isOpenModal,
             openModal,
             closeModal
@@ -99,7 +113,7 @@ export default {
 
   <h2 class="text-center" v-if="isManager && usersData.length > 0">Table of the users</h2>
   <TableComponent :titleProperty="['Username','Email', 'Actions']"
-  :data="usersData" :tableName="'Table of Users'" :typeTable="'user'" v-if="isManager" :key="refreshKey" @itemDeleted="handleItemDeleted" ></TableComponent>
+  :data="usersData" :tableName="'Table of Users'" :typeTable="'user'" v-if="isManager" :key="refreshKey" @itemDeleted="handleItemDeleted" @addItem="handleItemAdded" ></TableComponent>
 </template>
 
 <style scoped>

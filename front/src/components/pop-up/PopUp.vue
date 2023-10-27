@@ -39,7 +39,9 @@ export default {
     }
 
     const createUser = () => {
-      if(props.isOpen){ 
+      if(props.isOpen){
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type","application/json")
         var raw = JSON.stringify({
           "user":{
             "username": `${userInput.value.username}`,
@@ -49,16 +51,18 @@ export default {
         const requestOptions: RequestInit = {
           method: 'POST',
           body: raw,
+          headers: myHeaders,
           redirect: 'follow'
         }
         fetch(`${import.meta.env.VITE_API_URL}/api/users`, requestOptions)
         .then((response: Response) => {
           if(response.ok){
-            console.log("Creation of the user is a success")
+            emit('addItem')
+            closeModal()
           }
         })
         .catch((error: Error) => console.error(error))
-        closeModal()
+        
       }
     }
 
