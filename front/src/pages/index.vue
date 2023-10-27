@@ -8,50 +8,41 @@
     </div>
 </template>
   
-<script lang="ts">
+<script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-export default {
-  setup() {
-    const email = ref('');
-    const router = useRouter();
+const email = ref('');
+const router = useRouter();
 
-    const checkStoredUserID = () => {
-      const storedUserID = localStorage.getItem('userID');
-      if (storedUserID) {
+const checkStoredUserID = () => {
+    const storedUserID = localStorage.getItem('userID');
+    if (storedUserID) {
         router.push(`/dashboard/${storedUserID}`);
-      }
-    };
+    }
+};
 
-    const login = async () => {
-      try {
+const login = async () => {
+    try {
         const API_URL = `${import.meta.env.VITE_API_URL}/api/users`;
         const response = await fetch(API_URL + "?email=" + email.value);
         const users = await response.json();
 
         if (users && users.length > 0) {
-          const userID = users[0].id;
-          const userRole = users[0].role;
-          localStorage.setItem('userID', userID.toString());
-          localStorage.setItem('userRole', userRole.toString());
-          router.push(`/dashboard/${userID}`);
+            const userID = users[0].id;
+            const userRole = users[0].role;
+            localStorage.setItem('userID', userID.toString());
+            localStorage.setItem('userRole', userRole.toString());
+            router.push(`/dashboard/${userID}`);
         } else {
-          console.error('No user found for this email');
+            console.error('No user found for this email');
         }
-      } catch (error) {
+    } catch (error) {
         console.error('Error fetching user by email:', error);
-      }
-    };
-
-    onMounted(() => {
-      checkStoredUserID();
-    });
-
-    return {
-      email,
-      login
-    };
-  }
+    }
 };
+
+onMounted(() => {
+    checkStoredUserID();
+});
 </script>

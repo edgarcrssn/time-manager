@@ -2,24 +2,14 @@
     <Pie :data="chartData" :options="chartOptions" />
 </template>
   
-<script lang="ts">
+<script lang="ts" setup>
 import { Pie } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js'
+import { defineProps } from 'vue';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement)
 
-export default {
-    name: 'PieChart',
-    components: { Pie },
-    props: {
-        chartData: {
-            type: Object,
-            required: true
-        },
-        chartOptions: {
-            type: Object,
-        }
-    }
-}
+const { chartData, chartOptions } = defineProps(['chartData', 'chartOptions']);
 </script>
+
   

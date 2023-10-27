@@ -70,29 +70,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { useRouter } from 'vue-router'
+<script lang="ts" setup>
+import { useRouter } from 'vue-router';
+import { ref, computed } from 'vue';
 
-export default {
-  name: 'DashboardLayout',
-  setup () {
-    const router = useRouter()
+const router = useRouter();
 
-    const logout = () => {
-      localStorage.removeItem('userID')
-      localStorage.removeItem('userRole')
-      router.push('/')
-    }
-
-    return {
-      logout
-    }
-  },
-  computed: {
-    isManagerOrGeneralManager () {
-      const storedUserRole = localStorage.getItem('userRole')
-      return storedUserRole === 'manager' || storedUserRole === 'general_manager'
-    }
-  }
+const logout = () => {
+    localStorage.removeItem('userID');
+    localStorage.removeItem('userRole');
+    router.push('/');
 }
+
+const isManagerOrGeneralManager = computed(() => {
+    const storedUserRole = localStorage.getItem('userRole');
+    return storedUserRole === 'manager' || storedUserRole === 'general_manager';
+});
 </script>
