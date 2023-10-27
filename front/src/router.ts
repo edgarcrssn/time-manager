@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Index from './pages/index.vue'
 import ChartManager from './components/ChartManager.vue'
 import ClockManager from './components/ClockManager.vue'
+import WorkingTime from './components/WorkingTime.vue'
 import Dashboard from './pages/dashboard.vue'
 import Profile from './pages/profile.vue'
 import WorkingTimes from './pages/working-times.vue'
@@ -39,6 +40,24 @@ const routes = [
         path: 'working-times/:userId',
         name: 'WorkingTimes',
         component: WorkingTimes
+      },
+      {
+        path: '/workingTime/:userId',
+        name: 'CreateWorkingTime',
+        component: WorkingTime,
+        props: true
+      },
+      {
+        path: '/workingTime/:userId/:workingTimeId',
+        name: 'EditWorkingTime',
+        component: WorkingTime,
+        props: true
+      },
+      {
+        path: '/workingTime/:userId/:workingTimeId',
+        name: 'DeleteWorkingTime',
+        component: WorkingTime,
+        props: true
       }
     ]
   }
