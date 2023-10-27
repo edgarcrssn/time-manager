@@ -6,20 +6,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-if="typeTable == 'user'" v-for="(donnee, id) in data">
+      <tr v-if="typeTable == 'user'" v-for="donnee in data">
         <td class="border border-black">{{ donnee.username }}</td>
-        <td class="border border-black">test@gmail.com</td>
+        <td class="border border-black">{{ donnee.email }}</td>
         <td class="border border-black">
-          <button type="button" @click="deleteUser(id)" class="mr-3"><img alt="delete" src="../../icon/delete_icon.png" class="w-5 h-5 float-left"/></button>
-          <button type="button" @click="updateUser(id)" class="ml-3"><img alt="update" src="../../icon/update_icon.png" class="w-5 h-5 float-left"/></button>
+          <button type="button" @click="deleteUser(donnee.id)" class="mr-3"><img alt="delete" src="../../../icon/delete_icon.png" class="w-5 h-5 float-left"/></button>
         </td>
       </tr>
 
       <tr v-if="typeTable == 'team'" v-for="(donnee, id) in data">
         <td class="border border-black">{{ donnee.name }}</td>
         <td class="border border-black">
-          <button type="button" @click="deleteUser(id)" class="mr-3"><img alt="delete" src="../../icon/delete_icon.png" class="w-5 h-5 float-left"/></button>
-          <button type="button" @click="updateUser(id)" class="ml-3"><img alt="update" src="../../icon/update_icon.png" class="w-5 h-5 float-left"/></button>
+          <button type="button" @click="deleteUser(id)" class="mr-3"><img alt="delete" src="../../../icon/delete_icon.png" class="w-5 h-5 float-left"/></button>
         </td>
       </tr>
       
@@ -28,7 +26,6 @@
 </template>
 
 <script lang="ts">
-
 
 export default {
   props: {
@@ -49,20 +46,22 @@ export default {
       type: String
     }
   },
-  setup: function(){
-    const updateUser = (id: number) => {
-      //convert id to integer
-      console.log(`update user ${id}`)
-    }
-
-    const deleteUser = (id: number) => {
-      console.log(`id de l'utilisateur ${id}`);
-    };
-    return {
-      updateUser,
-      deleteUser
-    }
-  }
+  methods: {
+    deleteUser(id: number){
+      const requestOptions: RequestInit = {
+        method: 'DELETE',
+        redirect: 'follow'
+      };
+      fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, requestOptions)
+      .then((response: Response) => {
+        if(response.ok){
+          this.$emit('itemDeleted', id);
+        }
+      })
+      .catch((error: Error) => console.error('error', error))
+    },
+  },
+  
 }
 </script>
 
