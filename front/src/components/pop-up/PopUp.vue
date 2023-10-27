@@ -1,56 +1,76 @@
 <template>
-    <div>
-      <button @click="showModal = true">Afficher la pop-up</button>
-  
-      <div v-if="showModal" class="modal">
-        <div class="modal-content">
-          <span class="close" @click="showModal = false">&times;</span>
-          <p>Contenu de la pop-up ici</p>
+  <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center">
+    <div class="modal-bg absolute inset-0 bg-gray-500 opacity-75"></div>
+    <div class="modal-content bg-white p-8 rounded shadow-lg z-50">
+      <h2 class="text-2xl font-semibold mb-4">Créer un utilisateur</h2>
+      <form @submit.prevent="createUser">
+        <div class="mb-4">
+          <label for="username" class="block text-sm font-medium text-gray-600">Nom d'utilisateur</label>
+          <input type="text" id="username" v-model="userInput.username" class="mt-1 p-2 w-full border rounded">
         </div>
-      </div>
+        <div class="mb-4">
+          <label for="email" class="block text-sm font-medium text-gray-600">Adresse email</label>
+          <input type="email" id="email" v-model="userInput.email" class="mt-1 p-2 w-full border rounded">
+        </div>
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-700">Créer</button>
+      </form>
+      <button @click="closeModal" class="mt-4 text-gray-600">Fermer</button>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref } from "vue";
-  
-  const showModal = ref(false);
-  </script>
-  
-  <style>
-  /* Style pour la modal */
-  .modal {
-    display: block;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
+  </div>
+</template>
+
+<script lang="ts">
+import { ref } from 'vue'
+
+export default {
+  props: {
+    isOpen: Boolean
+  },
+  setup(props, { emit }) {
+
+    //to get the data in the form
+    const userInput = ref({
+      username: '',
+      email: ''
+    })
+
+    const closeModal = () => {
+      emit('close')
+    }
+
+    const createUser = () => {
+      if(props.isOpen){ 
+        var raw = JSON.stringify({
+          "user":{
+            "username": `${userInput.value.username}`,
+            "email": `${userInput.value.email}`
+          }
+        })
+        const requestOptions: RequestInit = {
+          method: 'POST',
+          body: raw,
+          redirect: 'follow'
+        }
+        fetch(`${import.meta.env.VITE_API_URL}/api/users`, requestOptions)
+        .then((response: Response) => {
+          if(response.ok){
+            console.log("Creation of the user is a success")
+          }
+        })
+        .catch((error: Error) => console.error(error))
+        closeModal()
+      }
+    }
+
+    return {
+      userInput,
+      closeModal,
+      createUser
+    }
   }
-  
-  .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-  }
-  
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  </style>
-  
+}
+</script>
+
+<style scoped>
+
+</style>

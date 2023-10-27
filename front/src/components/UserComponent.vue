@@ -1,28 +1,59 @@
 <script lang="ts">
 import {onMounted, ref} from "vue";
 import TableComponent from "./table/TableComponent.vue";
+import UserModal from "./pop-up/PopUp.vue";
 export default {
-    props: {},
+    props: {
+
+    },
+    data() {
+        return {
+            refreshKey: 0
+        }
+    },
+    methods: {
+        reloadComponent(){
+            this.refreshKey += 1
+        }
+    },
     setup: function () {
         const userId = localStorage.getItem('userID');
         const getUserUrl = `${import.meta.env.VITE_API_URL}/api/users/${userId}`;
-        //const getTeams = `${import.meta.env.VITE_API_URL}/api/teams`;
         const userUsername = ref("");
         const userEmail = ref("");
+        const usersData = ref([] as any[]);
         const isManager = ref(false);
-        //const teams = ref([])
+
+        const isOpenModal = ref(false);
+
+        const openModal = () => {
+            isOpenModal.value = true;
+        };
+
+        const closeModal = () => {
+            isOpenModal.value = false;
+        };
+
+
         const getUser = async () => {
             try {
                 const response = await fetch(getUserUrl);
                 const data = await response.json();
                 if (data) {
-                    userUsername.value = data.username;
-                    userEmail.value = data.email;
-                    console.log(data);
                     if (data.role === "manager" || data.role === "general_manager") {
                         isManager.value = true;
-                        // get the data from the api of the users in the same team of the manager
-                        //todo create component for the table 
+                        // get all the users of the database
+                        try{
+                            const getAllUsersUrl = `${import.meta.env.VITE_API_URL}/api/users`
+                            const responseAllUsers = await fetch(getAllUsersUrl)
+                            const dataUsers = await responseAllUsers.json();
+                            if(dataUsers){
+                                usersData.value = dataUsers
+                            }
+                        }
+                        catch(error){
+                            console.error("Error while fetching all the users data")
+                        }
                     }
                 }
             }
@@ -36,35 +67,39 @@ export default {
         const createUser = () => {
             console.log("create user");
         };
+
+        const handleItemDeleted = (itemId: number) => {
+            usersData.value = usersData.value.filter(user => user.id !== itemId);
+        };
         return {
             userUsername,
             userEmail,
             isManager,
-            createUser
+            usersData,
+            createUser,
+            handleItemDeleted,
+            isOpenModal,
+            openModal,
+            closeModal
         };
     },
-    components: { TableComponent }
+    components: { TableComponent, UserModal }
 };
 </script>
 
 <template>
   <meta charset="UTF-8">
   <h1 class="text-center text-4xl">Manage user</h1>
-  <h2>My informations</h2>
-  <p>My username : {{userUsername}}</p>
-  <p>My Email : {{userEmail}}</p>
-  <button type="button" @click="createUser()">Add User</button>
-  <h2 class="text-center" v-if="isManager">Table of the users</h2>
-  <TableComponent :titleProperty="['Username','Email']"
-  :data="[]" :tableName="'Table of Users'" :typeTable="'user'" v-if="isManager">
+  <button @click="openModal" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-700">
+    Add User
+  </button>
 
-  </TableComponent>
+  <user-modal :is-open="isOpenModal" @close="closeModal"></user-modal>
 
-  <h2 class="text-center" v-if="isManager">Table of the team</h2>
-  <TableComponent :titleProperty="['Team Name']"
-  :data="[]" :tableName="'Table of Teams'" :typeTable="'team'" v-if="isManager">
 
-  </TableComponent>
+  <h2 class="text-center" v-if="isManager && usersData.length > 0">Table of the users</h2>
+  <TableComponent :titleProperty="['Username','Email', 'Actions']"
+  :data="usersData" :tableName="'Table of Users'" :typeTable="'user'" v-if="isManager" :key="refreshKey" @itemDeleted="handleItemDeleted" ></TableComponent>
 </template>
 
 <style scoped>
