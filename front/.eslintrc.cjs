@@ -8,8 +8,10 @@ module.exports = {
   },
   extends: ['eslint:recommended', 'standard', 'plugin:vue/recommended'],
   parserOptions: {
-    ecmaVersion: 2019,
+    ecmaVersion: 2020,
   },
   plugins: ['import', 'node', 'promise', 'standard', 'vue'],
-  rules: {},
+  rules: {
+    'vue/multi-word-component-names': 'off',
+  },
 }

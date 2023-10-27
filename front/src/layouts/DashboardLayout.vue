@@ -71,19 +71,19 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
-import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router'
+import { computed } from 'vue'
 
-const router = useRouter();
+const router = useRouter()
 
 const logout = () => {
-    localStorage.removeItem('userID');
-    localStorage.removeItem('userRole');
-    router.push('/');
+  localStorage.removeItem('userID')
+  localStorage.removeItem('userRole')
+  router.push('/')
 }
 
 const isManagerOrGeneralManager = computed(() => {
-    const storedUserRole = localStorage.getItem('userRole');
-    return storedUserRole === 'manager' || storedUserRole === 'general_manager';
-});
+  const storedUserRole = localStorage.getItem('userRole')
+  return storedUserRole === 'manager' || storedUserRole === 'general_manager'
+})
 </script>
