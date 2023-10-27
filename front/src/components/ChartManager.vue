@@ -16,43 +16,32 @@
     </section>
 </template>
   
-<script lang="ts">
+<script lang="ts" setup>
+import { ref } from 'vue';
 import BarChart from './charts/BarChart.vue';
 import PieChart from './charts/PieChart.vue';
 import LineChart from './charts/LineChart.vue';
+import { defineProps } from 'vue';
 
-export default {
-    name: 'ChartManager',
-    components: {
-        BarChart,
-        PieChart,
-        LineChart
-    },
-    props: {
-        userId: {
-            type: String,
-            required: true
-        }
-    },
-    data() {
-        return {
-            barChartData: {
-                labels: ['January', 'February', 'March'],
-                datasets: [{ data: [40, 20, 12] }]
-            },
-            pieChartData: {
-                labels: ['Red', 'Blue', 'Yellow'],
-                datasets: [{ data: [300, 50, 100] }]
-            },
-            lineChartData: {
-                labels: ['January', 'February', 'March'],
-                datasets: [{ data: [65, 59, 80] }]
-            },
-            chartOptions: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        }
-    }
-}
+const { userId } = defineProps(['userId']);
+
+const barChartData = ref({
+    labels: ['January', 'February', 'March'],
+    datasets: [{ data: [40, 20, 12] }]
+});
+
+const pieChartData = ref({
+    labels: ['Red', 'Blue', 'Yellow'],
+    datasets: [{ data: [300, 50, 100] }]
+});
+
+const lineChartData = ref({
+    labels: ['January', 'February', 'March'],
+    datasets: [{ data: [65, 59, 80] }]
+});
+
+const chartOptions = ref({
+    responsive: true,
+    maintainAspectRatio: false
+});
 </script>
