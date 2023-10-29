@@ -1,7 +1,19 @@
 <template>
   <div class="h-screen flex flex-col">
-    <header class="bg-gray-800 text-white p-4 text-center">
-      <h1>Dashboard</h1>
+    <header class="bg-gray-800 text-white p-4 flex items-center justify-between">
+      <h1 class="text-center flex-grow">
+        Dashboard
+      </h1>
+      <router-link
+        :to="`/dashboard/profile/${storedUserID}`"
+        class="ml-4"
+      >
+        <img
+          alt="profile"
+          src="../assets/user_icon.svg"
+          class="w-5 h-5"
+        >
+      </router-link>
     </header>
 
     <div class="flex flex-row h-full">
@@ -9,7 +21,7 @@
         <ul>
           <li class="mb-2">
             <router-link
-              to="/dashboard"
+              :to="`/dashboard/${storedUserID}`"
               class="text-gray-700"
             >
               My Dashboard
@@ -17,7 +29,7 @@
           </li>
           <li class="mb-2">
             <router-link
-              to="/working-times"
+              :to="`/dashboard/working-times/${storedUserID}`"
               class="text-gray-700"
             >
               Working Time
@@ -45,7 +57,10 @@
               Create My Team
             </router-link>
           </li>
-          <li class="mb-2">
+          <li
+            v-if="isManagerOrGeneralManager"
+            class="mb-2"
+          >
             <router-link
               to="/view-users"
               class="text-gray-700"
@@ -72,9 +87,10 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const router = useRouter()
+const storedUserID = ref('')
 
 const logout = () => {
   localStorage.removeItem('userID')
@@ -85,5 +101,13 @@ const logout = () => {
 const isManagerOrGeneralManager = computed(() => {
   const storedUserRole = localStorage.getItem('userRole')
   return storedUserRole === 'manager' || storedUserRole === 'general_manager'
+})
+
+const getUserInfo = () => {
+  storedUserID.value = localStorage.getItem('userID')
+}
+
+onMounted(() => {
+  getUserInfo()
 })
 </script>

@@ -1,8 +1,8 @@
 <template>
   <div class="p-2 flex flex-col items-center">
-    <h1 class="text-3xl font-bold underline">
+    <h2 class="text-3xl">
       Profile
-    </h1>
+    </h2>
     <div class="w-full max-w-md">
       <div><strong>Username:</strong> {{ user.username }}</div>
       <div><strong>Email:</strong> {{ user.email }}</div>

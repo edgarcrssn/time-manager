@@ -1,6 +1,8 @@
 <template>
   <section class="p-2 flex flex-col items-center">
-    <h1 class="text-3xl font-bold underline">Working times</h1>
+    <h2 class="text-3xl">
+      Working times
+    </h2>
     <article class="w-full max-w-md">
       {{ workingTimes }}
     </article>

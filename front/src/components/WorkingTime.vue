@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ pageTitle }}</h1>
+    <h2>{{ pageTitle }}</h2>
 
     <form @submit.prevent="handleSubmit">
       <input
