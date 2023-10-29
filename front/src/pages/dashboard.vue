@@ -1,12 +1,18 @@
 <template>
   <div class="p-2 flex flex-col items-center">
-    <ClockManager :user-id="userId" />
-    <ChartManager :user-id="userId" />
+    <ClockManager
+      :key="userId"
+      :user-id="userId"
+    />
+    <ChartManager
+      :key="userId"
+      :user-id="userId"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ClockManager from '../components/ClockManager.vue'
 import ChartManager from '../components/ChartManager.vue'
@@ -51,6 +57,14 @@ const getUserInfo = async () => {
     console.error('Error fetching user by ID:', error)
   }
 }
+
+watch(
+  () => route.params.userId,
+  (newUserId) => {
+    userId.value = newUserId
+    getUserInfo()
+  }
+)
 
 onMounted(() => {
   getUserInfo()
