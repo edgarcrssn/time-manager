@@ -26,7 +26,6 @@ const isManager = ref(false);
 const isOpenModal = ref(false);
   
 const openModal = () => {
-    console.log("open")
     isOpenModal.value = true;
 };
 

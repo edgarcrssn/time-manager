@@ -47,7 +47,7 @@ const createUser = () => {
         "username": `${userInput.value.username}`,
         "email": `${userInput.value.email}`
       }
-    })
+    });
     const requestOptions: RequestInit = {
       method: 'POST',
       body: raw,
