@@ -57,6 +57,12 @@
           :options="chartOptions"
         />
       </div>
+      <div v-if="viewMode === 'week'">
+        <PieChart
+          :data="pieChartData"
+          :options="pieChartOptions"
+        />
+      </div>
     </div>
   </section>
 </template>
@@ -65,6 +71,7 @@
 import { ref, onMounted, defineProps } from 'vue'
 import BarChart from './charts/BarChart.vue'
 import LineChart from './charts/LineChart.vue'
+import PieChart from './charts/PieChart.vue'
 
 const barChartData = ref({
   labels: [],
@@ -74,6 +81,11 @@ const barChartData = ref({
 const lineChartData = ref({
   labels: [],
   datasets: [{ data: [], label: 'Hours Worked', backgroundColor: 'blue' }]
+})
+
+const pieChartData = ref({
+  labels: [],
+  datasets: [{ data: [], backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'] }]
 })
 
 const chartOptions = ref({
@@ -194,6 +206,13 @@ const fetchWeekData = async (date) => {
   lineChartData.value = {
     labels: labels,
     datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: 'blue' }]
+  }
+
+  pieChartData.value = {
+    labels: labels,
+    datasets: [
+      { data: hoursWorked, backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'] }
+    ]
   }
 }
 
