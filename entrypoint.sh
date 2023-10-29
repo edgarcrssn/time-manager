@@ -1,9 +1,9 @@
 #!/bin/bash
 
 if [ ! -f .env ]; then
-  echo "The .env file is not found. Stopping the Phoenix container..."
-  docker-compose stop phoenix
-  echo "Phoenix container stopped."
+  echo "The .env file is not found. Stopping the api container..."
+  docker-compose stop api
+  echo "api container stopped."
 else
   source .env
 fi
