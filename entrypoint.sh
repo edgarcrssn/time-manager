@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ ! -f .env ]; then
+  echo "The .env file is not found. Stopping the Phoenix container..."
+  docker-compose stop phoenix
+  echo "Phoenix container stopped."
+else
+  source .env
+fi
+
+while ! pg_isready -q -h db -p "$PGPORT" -U postgres
+do
+  echo "$(date) - waiting for database to start"
+  sleep 1
+done
+
+mix setup
+exec mix phx.server

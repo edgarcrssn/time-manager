@@ -1,11 +1,12 @@
 import Config
+env = System.get_env("ENV")
 
 # Configure your database
 config :time_manager_api, TimeManagerApi.Repo,
-  username: System.get_env("DB_USER"),
-  password: System.get_env("DB_PASSWORD"),
-  database: System.get_env("DB_NAME"),
-  hostname: System.get_env("DB_HOST"),
+  username: System.get_env("PGUSER"),
+  password: System.get_env("PGPASSWORD"),
+  database: System.get_env("PGDATABASE"),
+  hostname: System.get_env("PGHOST"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -16,10 +17,17 @@ config :time_manager_api, TimeManagerApi.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
+ip =
+  case env do
+    "prod" ->
+      {0, 0, 0, 0}
+    _ ->
+      {127, 0, 0, 1}
+  end
 config :time_manager_api, TimeManagerApiWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: ip, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
