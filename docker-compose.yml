@@ -29,5 +29,14 @@ services:
     depends_on:
       - db
 
+  ui:
+    container_name: ui
+    build:
+      context: ./front
+    ports:
+      - '5173:5173'
+    depends_on:
+      - api
+
 volumes:
   dbdata:
