@@ -19,58 +19,49 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue'
+const props = defineProps({
+  isOpen:{
+    required: true,
+    type: Boolean
+  }
+})
+const emit = defineEmits(['close','addItem'])
+ //to get the data in the form
+const userInput = ref({
+  username: '',
+  email: ''
+})
 
-export default {
-  props: {
-    isOpen: Boolean
-  },
-  setup(props, { emit }) {
+const closeModal = () => {
+  emit('close')
+}
 
-    //to get the data in the form
-    const userInput = ref({
-      username: '',
-      email: ''
-    })
-
-    const closeModal = () => {
-      emit('close')
-    }
-
-    const createUser = () => {
-      if(props.isOpen){
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type","application/json")
-        var raw = JSON.stringify({
-          "user":{
-            "username": `${userInput.value.username}`,
-            "email": `${userInput.value.email}`
-          }
-        })
-        const requestOptions: RequestInit = {
-          method: 'POST',
-          body: raw,
-          headers: myHeaders,
-          redirect: 'follow'
-        }
-        fetch(`${import.meta.env.VITE_API_URL}/api/users`, requestOptions)
-        .then((response: Response) => {
-          if(response.ok){
-            emit('addItem')
-            closeModal()
-          }
-        })
-        .catch((error: Error) => console.error(error))
-        
+const createUser = () => {
+  if(props.isOpen){
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type","application/json")
+    var raw = JSON.stringify({
+      "user":{
+        "username": `${userInput.value.username}`,
+        "email": `${userInput.value.email}`
       }
+    })
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      body: raw,
+      headers: myHeaders,
+      redirect: 'follow'
     }
-
-    return {
-      userInput,
-      closeModal,
-      createUser
-    }
+    fetch(`${import.meta.env.VITE_API_URL}/api/users`, requestOptions)
+    .then((response: Response) => {
+      if(response.ok){
+        emit('addItem')
+          closeModal()
+        }
+      })
+    .catch((error: Error) => console.error(error))    
   }
 }
 </script>
