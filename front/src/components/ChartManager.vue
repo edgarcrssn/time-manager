@@ -51,6 +51,12 @@
           :options="chartOptions"
         />
       </div>
+      <div>
+        <LineChart
+          :data="lineChartData"
+          :options="chartOptions"
+        />
+      </div>
     </div>
   </section>
 </template>
@@ -58,8 +64,14 @@
 <script lang="ts" setup>
 import { ref, onMounted, defineProps } from 'vue'
 import BarChart from './charts/BarChart.vue'
+import LineChart from './charts/LineChart.vue'
 
 const barChartData = ref({
+  labels: [],
+  datasets: [{ data: [], label: 'Hours Worked', backgroundColor: 'blue' }]
+})
+
+const lineChartData = ref({
   labels: [],
   datasets: [{ data: [], label: 'Hours Worked', backgroundColor: 'blue' }]
 })
@@ -121,6 +133,17 @@ const fetchDayData = async (date) => {
       }
     ]
   }
+
+  lineChartData.value = {
+    labels: [date.toISOString().split('T')[0]],
+    datasets: [
+      {
+        data: [aggregatedHours[date.toISOString().split('T')[0]] || 0],
+        label: 'Hours Worked',
+        backgroundColor: 'blue'
+      }
+    ]
+  }
 }
 
 const fetchWeekData = async (date) => {
@@ -167,6 +190,11 @@ const fetchWeekData = async (date) => {
     labels: labels,
     datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: 'blue' }]
   }
+
+  lineChartData.value = {
+    labels: labels,
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: 'blue' }]
+  }
 }
 
 const fetchMonthData = async (date) => {
@@ -206,6 +234,11 @@ const fetchMonthData = async (date) => {
   const hoursWorked = labels.map((label) => aggregatedHours[label] || 0)
 
   barChartData.value = {
+    labels: labels,
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: 'blue' }]
+  }
+
+  lineChartData.value = {
     labels: labels,
     datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: 'blue' }]
   }
