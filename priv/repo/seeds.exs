@@ -37,17 +37,29 @@ user7 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user7", emai
 general_manager = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "general_manager", email: "gm@example.com", role: :general_manager})
 
 # working times
-start1 = DateTime.truncate(DateTime.utc_now(), :second)
-end1 = DateTime.truncate(DateTime.add(start1, 1, :second), :second)
-TimeManagerApi.Repo.insert!(%TimeManagerApi.Workingtimes{start: start1, end: end1, user_id: user1.id})
+current_date = Date.utc_today()
+days_until_monday = cond do
+  Date.day_of_week(current_date) == 1 -> 0
+  true -> 1 - Date.day_of_week(current_date) + 7
+end
+next_monday = Date.add(current_date, days_until_monday)
 
-start2 = DateTime.truncate(DateTime.utc_now(), :second)
-end2 = DateTime.truncate(DateTime.add(start2, 2, :second), :second)
-TimeManagerApi.Repo.insert!(%TimeManagerApi.Workingtimes{start: start2, end: end2, user_id: user2.id})
+for day <- 0..4 do
+  date = Date.add(next_monday, day)
 
-start3 = DateTime.truncate(DateTime.utc_now(), :second)
-end3 = DateTime.truncate(DateTime.add(start3, 3, :second), :second)
-TimeManagerApi.Repo.insert!(%TimeManagerApi.Workingtimes{start: start3, end: end3, user_id: user3.id})
+  {:ok, morning_time} = Time.new(9, 0, 0)
+  {:ok, evening_time} = Time.new(17, 0, 0)
+
+  start_time = DateTime.new!(date, morning_time, "Etc/UTC")
+  end_time = DateTime.new!(date, evening_time, "Etc/UTC")
+
+  TimeManagerApi.Repo.insert!(%TimeManagerApi.Workingtimes{
+    start: start_time,
+    end: end_time,
+    user_id: user5.id
+  })
+end
+
 
 # clocks
 TimeManagerApi.Repo.insert!(%TimeManagerApi.Clock{status: false, time: NaiveDateTime.truncate(DateTime.to_naive(DateTime.utc_now()), :second), user_id: user1.id})

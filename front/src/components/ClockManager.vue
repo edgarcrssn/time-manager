@@ -1,15 +1,14 @@
 <template>
-    <section class="text-center">
-        <h2 class="text-3xl mt-4 mb-4">Work Tracking</h2>
-        <p v-if="clockIn === null">Loading...</p>
-        <p v-else-if="!loading && !processing">{{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}</p>
-        <button v-if="!loading && !processing" class="text-white bg-slate-300 rounded-xl p-2 mt-4" @click="clock">
-            {{ clockIn ? 'Clock Out' : 'Clock In' }}
-        </button>
-        <button v-else disabled class="text-white bg-slate-300 rounded-xl p-2 mt-4">
-            Processing...
-        </button>
-    </section>
+  <section class="text-center">
+    <h2 class="text-3xl mt-4 mb-4">Work Tracking</h2>
+    <p v-if="!loading && !processing">{{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}</p>
+    <button v-if="!loading && !processing" class="text-white bg-slate-300 rounded-xl p-2 mt-4" @click="clock">
+      {{ clockIn ? 'Clock Out' : 'Clock In' }}
+    </button>
+    <button v-else disabled class="text-white bg-slate-300 rounded-xl p-2 mt-4">
+      Processing...
+    </button>
+  </section>
 </template>
 
 <script lang="ts" setup>
@@ -25,84 +24,84 @@ const loading = ref(true);
 const processing = ref(false);
 
 const refresh = async () => {
-    try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        if (data && data.length > 0) {
-            const lastClock = data[data.length - 1];
-            clockIn.value = lastClock.status;
-            startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null;
-        }
-        loading.value = false;
-    } catch (error) {
-        console.error('Error fetching clock status:', error);
-        loading.value = false;
+  try {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    if (data && data.length > 0) {
+      const lastClock = data[data.length - 1];
+      clockIn.value = lastClock.status;
+      startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null;
     }
+    loading.value = false;
+  } catch (error) {
+    console.error('Error fetching clock status:', error);
+    loading.value = false;
+  }
 };
 
 let intervalId: ReturnType<typeof setInterval>;
 
 onMounted(() => {
-    refresh();
-    intervalId = setInterval(refresh, 10000);
+  refresh();
+  intervalId = setInterval(refresh, 10000);
 });
 
 onUnmounted(() => {
-    clearInterval(intervalId);
+  clearInterval(intervalId);
 });
 
 const clock = async () => {
-    processing.value = true;
-    try {
-        const currentTime = new Date().toISOString();
-        await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                clock: {
-                    time: currentTime
-                }
-            })
-        });
-
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        const lastClock = data[data.length - 1];
-        clockIn.value = lastClock.status;
-
-        if (lastClock.status) {
-            startDateTime.value = new Date(lastClock.time).toLocaleString();
-        } else if (data.length > 1) {
-            const previousClock = data[data.length - 2];
-            await createWorkingTime(previousClock.time, lastClock.time);
-            startDateTime.value = null;
+  processing.value = true;
+  try {
+    const currentTime = new Date().toISOString();
+    await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        clock: {
+          time: currentTime
         }
-    } catch (error) {
-        console.error('Error clocking in/out:', error);
-    } finally {
-        setTimeout(() => {
-            processing.value = false;
-        }, 300);
+      })
+    });
+
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    const lastClock = data[data.length - 1];
+    clockIn.value = lastClock.status;
+
+    if (lastClock.status) {
+      startDateTime.value = new Date(lastClock.time).toLocaleString();
+    } else if (data.length > 1) {
+      const previousClock = data[data.length - 2];
+      await createWorkingTime(previousClock.time, lastClock.time);
+      startDateTime.value = null;
     }
+  } catch (error) {
+    console.error('Error clocking in/out:', error);
+  } finally {
+    setTimeout(() => {
+      processing.value = false;
+    }, 300);
+  }
 };
 
 const createWorkingTime = async (startTime: string, endTime: string) => {
-    const workingTimesAPI = `${import.meta.env.VITE_API_URL}/api/workingtimes/${userId}`;
-    try {
-        await fetch(workingTimesAPI, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                workingtime: {
-                    start: startTime,
-                    end: endTime
-                }
-            })
-        });
-    } catch (error) {
-        console.error('Error creating working time:', error);
-    }
+  const workingTimesAPI = `${import.meta.env.VITE_API_URL}/api/workingtimes/${userId}`;
+  try {
+    await fetch(workingTimesAPI, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        workingtime: {
+          start: startTime,
+          end: endTime
+        }
+      })
+    });
+  } catch (error) {
+    console.error('Error creating working time:', error);
+  }
 };
 </script>
