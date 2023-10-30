@@ -60,7 +60,7 @@
       <div v-if="viewMode === 'week'">
         <PieChart
           :data="pieChartData"
-          :options="pieChartOptions"
+          :options="chartOptions"
         />
       </div>
     </div>
@@ -72,23 +72,33 @@ import { ref, onMounted, defineProps } from 'vue'
 import BarChart from './charts/BarChart.vue'
 import LineChart from './charts/LineChart.vue'
 import PieChart from './charts/PieChart.vue'
+import { WorkingTime } from '../models/WorkingTimes'
 
-const barChartData = ref({
+type Data = {
+  labels: string[]
+  datasets: {
+    data: number[]
+    label?: string
+    backgroundColor: string | string[]
+  }[]
+}
+
+const barChartData = ref<Data>({
   labels: [],
   datasets: [{ data: [], label: 'Hours Worked', backgroundColor: 'blue' }]
 })
 
-const lineChartData = ref({
+const lineChartData = ref<Data>({
   labels: [],
   datasets: [{ data: [], label: 'Hours Worked', backgroundColor: 'blue' }]
 })
 
-const pieChartData = ref({
+const pieChartData = ref<Data>({
   labels: [],
   datasets: [{ data: [], backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'] }]
 })
 
-const chartOptions = ref({
+const chartOptions = ref<{ responsive: boolean; maintainAspectRatio: boolean }>({
   responsive: true,
   maintainAspectRatio: false
 })
@@ -113,20 +123,20 @@ const changeViewMode = () => {
 }
 
 // FETCH DATA
-const fetchDayData = async (date) => {
+const fetchDayData = async (date: Date) => {
   const response = await fetch(API_URL)
-  const data = await response.json()
+  const data: WorkingTime[] = await response.json()
 
   const dayData = data.filter((item) => {
     return new Date(item.start).toISOString().split('T')[0] === date.toISOString().split('T')[0]
   })
 
-  const aggregatedHours = {}
+  const aggregatedHours: { [date: string]: number } = {}
 
   dayData.forEach((item) => {
     const start = new Date(item.start)
     const end = new Date(item.end)
-    const hours = (end - start) / (1000 * 60 * 60)
+    const hours = (+end - +start) / (1000 * 60 * 60)
     const date = start.toISOString().split('T')[0]
 
     if (!aggregatedHours[date]) {
@@ -158,7 +168,7 @@ const fetchDayData = async (date) => {
   }
 }
 
-const fetchWeekData = async (date) => {
+const fetchWeekData = async (date: Date) => {
   const monday =
     date.getDay() === 0
       ? new Date(date.setDate(date.getDate() - 6))
@@ -169,19 +179,19 @@ const fetchWeekData = async (date) => {
   const end = sunday
 
   const response = await fetch(API_URL)
-  const data = await response.json()
+  const data: WorkingTime[] = await response.json()
 
   const weekData = data.filter((item) => {
     const startDate = new Date(item.start).toISOString().split('T')[0]
     return startDate >= start.toISOString().split('T')[0] && startDate <= end.toISOString().split('T')[0]
   })
 
-  const aggregatedHours = {}
+  const aggregatedHours: { [date: string]: number } = {}
 
   weekData.forEach((item) => {
     const start = new Date(item.start)
     const end = new Date(item.end)
-    const hours = (end - start) / (1000 * 60 * 60)
+    const hours = (+end - +start) / (1000 * 60 * 60)
     const date = start.toISOString().split('T')[0]
 
     if (!aggregatedHours[date]) {
@@ -216,24 +226,24 @@ const fetchWeekData = async (date) => {
   }
 }
 
-const fetchMonthData = async (date) => {
+const fetchMonthData = async (date: Date) => {
   const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)
   const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
   const response = await fetch(API_URL)
-  const data = await response.json()
+  const data: WorkingTime[] = await response.json()
 
   const monthData = data.filter((item) => {
     const startDate = new Date(item.start).toISOString().split('T')[0]
     return startDate >= startOfMonth.toISOString().split('T')[0] && startDate <= endOfMonth.toISOString().split('T')[0]
   })
 
-  const aggregatedHours = {}
+  const aggregatedHours: { [date: string]: number } = {}
 
   monthData.forEach((item) => {
     const start = new Date(item.start)
     const end = new Date(item.end)
-    const hours = (end - start) / (1000 * 60 * 60)
+    const hours = (+end - +start) / (1000 * 60 * 60)
     const date = start.toISOString().split('T')[0]
 
     if (!aggregatedHours[date]) {

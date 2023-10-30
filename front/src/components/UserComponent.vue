@@ -38,11 +38,12 @@
 import { onMounted, ref } from 'vue'
 import TableComponent from './table/TableComponent.vue'
 import UserModal from './PopUp.vue'
+import { User } from '../models/Users'
 
 const refreshKey = ref(0)
 const userId = localStorage.getItem('userID')
 const getUserUrl = `${import.meta.env.VITE_API_URL}/api/users/${userId}`
-const usersData = ref([])
+const usersData = ref<User[]>([])
 const isManager = ref(false)
 const isOpenModal = ref(false)
 
@@ -83,7 +84,7 @@ onMounted(async () => {
   getUser()
 })
 
-const handleItemDeleted = (itemId) => {
+const handleItemDeleted = (itemId: number) => {
   usersData.value = usersData.value.filter((user) => user.id !== itemId)
 }
 

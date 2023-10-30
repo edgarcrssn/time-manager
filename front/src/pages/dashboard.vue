@@ -12,14 +12,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ClockManager from '../components/ClockManager.vue'
 import ChartManager from '../components/ChartManager.vue'
 
 const route = useRoute()
 const router = useRouter()
-const userId = ref(route.params.userId)
+const userId = ref(route.params.userId) as Ref<string>
 const username = ref('')
 
 const getUserInfo = async () => {
@@ -61,7 +61,7 @@ const getUserInfo = async () => {
 watch(
   () => route.params.userId,
   (newUserId) => {
-    userId.value = newUserId
+    userId.value = newUserId as string
     getUserInfo()
   }
 )
