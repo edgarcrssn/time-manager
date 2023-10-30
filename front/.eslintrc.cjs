@@ -6,11 +6,13 @@ module.exports = {
     es2020: true,
     node: true,
   },
-  extends: ['eslint:recommended', 'standard', 'plugin:vue/recommended'],
+  parser: 'vue-eslint-parser',
   parserOptions: {
+    parser: '@typescript-eslint/parser',
     ecmaVersion: 2020,
   },
-  plugins: ['import', 'node', 'promise', 'standard', 'vue'],
+  extends: ['eslint:recommended', 'standard', 'plugin:@typescript-eslint/recommended', 'plugin:vue/recommended'],
+  plugins: ['import', 'node', 'promise', 'standard', '@typescript-eslint', 'vue'],
   rules: {
     'vue/multi-word-component-names': 'off',
   },

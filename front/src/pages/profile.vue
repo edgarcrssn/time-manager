@@ -1,9 +1,9 @@
 <template>
-  <div class="p-2 flex flex-col items-center">
+  <section class="p-2 flex flex-col items-center">
     <h2 class="text-3xl">
       Profile
     </h2>
-    <div class="w-full max-w-md">
+    <article class="w-full max-w-md">
       <div><strong>Username:</strong> {{ user.username }}</div>
       <div><strong>Email:</strong> {{ user.email }}</div>
       <div><strong>Role:</strong> {{ user.role }}</div>
@@ -17,17 +17,18 @@
       >
         Delete Account
       </button>
-    </div>
-  </div>
+    </article>
+  </section>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted, computed, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { User } from '../models/Users'
 
 const route = useRoute()
 const router = useRouter()
-const user = ref({})
+const user = ref<Partial<User>>({})
 
 const storedUserID = localStorage.getItem('userID') ? Number(localStorage.getItem('userID')) : null
 const storedUserRole = localStorage.getItem('userRole')

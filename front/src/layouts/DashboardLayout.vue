@@ -104,7 +104,9 @@ const isManagerOrGeneralManager = computed(() => {
 })
 
 const getUserInfo = () => {
-  storedUserID.value = localStorage.getItem('userID')
+  const userID = localStorage.getItem('userID')
+  if (!userID) return
+  storedUserID.value = userID
 }
 
 onMounted(() => {
