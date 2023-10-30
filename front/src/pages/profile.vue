@@ -1,6 +1,6 @@
 <template>
   <section class="p-2 flex flex-col items-center">
-    <h2 class="text-3xl">
+    <h2>
       Profile
     </h2>
     <article class="w-full max-w-md">
@@ -12,7 +12,7 @@
       </div>
       <button
         v-if="canDelete"
-        class="bg-red-600 text-white px-4 py-2 mt-4"
+        class="bg-error text-white px-4 py-2 mt-4"
         @click="deleteAccount"
       >
         Delete Account
@@ -25,6 +25,7 @@
 import { ref, onMounted, computed, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { User } from '../models/Users'
+import { apiUrl } from '../constants/urls'
 
 const route = useRoute()
 const router = useRouter()
@@ -41,7 +42,7 @@ onBeforeMount(() => {
 
 const fetchProfile = async () => {
   const userId = route.params.userId
-  const API_URL = `${import.meta.env.VITE_API_URL}/api/users/${userId}`
+  const API_URL = `${apiUrl}/api/users/${userId}`
   try {
     const response = await fetch(API_URL)
     if (!response.ok) {
@@ -59,7 +60,7 @@ const fetchProfile = async () => {
 
 const deleteAccount = async () => {
   if (storedUserRole === 'general_manager' || storedUserID === user.value.id) {
-    const API_URL = `${import.meta.env.VITE_API_URL}/api/users/${user.value.id}`
+    const API_URL = `${apiUrl}/api/users/${user.value.id}`
     try {
       const response = await fetch(API_URL, {
         method: 'DELETE',

@@ -40,7 +40,7 @@
         <div class="py-1">
           <svg
             class="fill-current h-6 w-6 text-teal-500 mr-4"
-            :class="{ 'text-red-500': isDeleted }"
+            :class="{ 'text-error': isDeleted }"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
@@ -65,6 +65,7 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { apiUrl } from '../constants/urls'
 
 const route = useRoute()
 
@@ -91,7 +92,7 @@ const alertClasses = computed(() => {
     'bg-red-100': isDeleted.value,
     'border-t-4': isCreated.value || isDeleted.value || isUpdated.value,
     'border-teal-500': isCreated.value || isUpdated.value,
-    'border-red-500': isDeleted.value,
+    'border-error': isDeleted.value,
     'rounded-b': isCreated.value || isDeleted.value || isUpdated.value,
     'rounded-b-lg': isDeleted.value,
     'rounded-b-sm': isCreated.value || isUpdated.value,
@@ -120,10 +121,10 @@ const getUserInfo = async () => {
     const storedUserID = localStorage.getItem('userID')
     const userId = route.params.userId.toString()
 
-    const currentUserResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${storedUserID}`)
+    const currentUserResponse = await fetch(`${apiUrl}/api/users/${storedUserID}`)
     const currentUser = await currentUserResponse.json()
 
-    const targetUserResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`)
+    const targetUserResponse = await fetch(`${apiUrl}/api/users/${userId}`)
     const targetUser = await targetUserResponse.json()
 
     return {
@@ -140,7 +141,7 @@ const loadWorkingTimeDetails = async () => {
     const userId = route.params.userId
     const workingTimeId = route.params.workingTimeId
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/workingtimes/${userId}/${workingTimeId}`)
+    const response = await fetch(`${apiUrl}/api/workingtimes/${userId}/${workingTimeId}`)
 
     if (!response.ok) {
       const errorData = await response.json()
@@ -194,7 +195,7 @@ const createWorkingTime = async () => {
       return
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/workingtimes/${targetUser.id}`, {
+    const response = await fetch(`${apiUrl}/api/workingtimes/${targetUser.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -248,7 +249,7 @@ const updateWorkingTime = async () => {
       return
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/workingtimes/${workingTimeId}`, {
+    const response = await fetch(`${apiUrl}/api/workingtimes/${workingTimeId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -289,7 +290,7 @@ const deleteWorkingTime = async () => {
       return
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/workingtimes/${workingTimeId}`, {
+    const response = await fetch(`${apiUrl}/api/workingtimes/${workingTimeId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'

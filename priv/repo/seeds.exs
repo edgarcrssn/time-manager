@@ -14,21 +14,25 @@
 user1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user1", email: "user1@example.com", role: :manager})
 user2 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user2", email: "user2@example.com", role: :employee})
 user3 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user3", email: "user3@example.com", role: :employee})
-team1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.Team{name: "Team1", manager_id: user1.id})
-user1 = Ecto.Changeset.change(user1, team_id: team1.id) |> TimeManagerApi.Repo.update!()
+
+team1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.Team{name: "Team1"})
+user_team1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.UserTeam{user: user1, team: team1, is_owner: true})
 
 # Additional team
 team2 = TimeManagerApi.Repo.insert!(%TimeManagerApi.Team{name: "Team2"})
 
 # New manager associated with team2
-user4 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user4", email: "user4@example.com", role: :manager, team_id: team2.id})
+user4 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user4", email: "user4@example.com", role: :manager})
 
 # Update team2 to associate it with user4 as its manager
-team2 = Ecto.Changeset.change(team2, manager_id: user4.id) |> TimeManagerApi.Repo.update!
+user_team2 = TimeManagerApi.Repo.insert!(%TimeManagerApi.UserTeam{user: user4, team: team2, is_owner: true})
+
 
 # Two employees associated with team2
-user5 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user5", email: "user5@example.com", role: :employee, team_id: team2.id})
-user6 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user6", email: "user6@example.com", role: :employee, team_id: team2.id})
+user5 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user5", email: "user5@example.com", role: :employee,})
+user6 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user6", email: "user6@example.com", role: :employee})
+user_team3 = TimeManagerApi.Repo.insert!(%TimeManagerApi.UserTeam{user: user5, team: team2, is_owner: false})
+user_team4 = TimeManagerApi.Repo.insert!(%TimeManagerApi.UserTeam{user: user6, team: team2, is_owner: false})
 
 # Employee without any team
 user7 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user7", email: "user7@example.com", role: :employee})

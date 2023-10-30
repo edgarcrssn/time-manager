@@ -1,24 +1,25 @@
 <template>
   <section class="text-center">
-    <h2 class="text-3xl mt-4 mb-4">Work Tracking</h2>
+    <h2>Work Tracking</h2>
     <p v-if="!loading && !processing">{{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}</p>
-    <button v-if="!loading && !processing" class="text-white bg-slate-300 rounded-xl p-2 mt-4" @click="clock">
+    <button v-if="!loading && !processing" class="main" @click="clock">
       {{ clockIn ? 'Clock Out' : 'Clock In' }}
     </button>
-    <button v-else disabled class="text-white bg-slate-300 rounded-xl p-2 mt-4">
+    <button v-else disabled class="main">
       Processing...
     </button>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, defineProps } from 'vue';
+import { ref, onMounted, onUnmounted, defineProps } from 'vue'
+import { apiUrl } from '../constants/urls'
 
 const { userId } = defineProps(['userId']);
 
 const startDateTime = ref<string | null>(null);
 const clockIn = ref<boolean | null>(null);
-const API_URL = `${import.meta.env.VITE_API_URL}/api/clocks/${userId}`;
+const API_URL = `${apiUrl}/api/clocks/${userId}`;
 
 const loading = ref(true);
 const processing = ref(false);
@@ -88,7 +89,7 @@ const clock = async () => {
 };
 
 const createWorkingTime = async (startTime: string, endTime: string) => {
-  const workingTimesAPI = `${import.meta.env.VITE_API_URL}/api/workingtimes/${userId}`;
+  const workingTimesAPI = `${apiUrl}/api/workingtimes/${userId}`;
   try {
     await fetch(workingTimesAPI, {
       method: 'POST',

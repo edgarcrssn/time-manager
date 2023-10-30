@@ -10,4 +10,7 @@ RUN mix local.hex --force
 RUN mix deps.get
 RUN mix deps.compile
 
+COPY ./entrypoint.sh /app/
+RUN chmod +x entrypoint.sh
+
 CMD ["./entrypoint.sh"]

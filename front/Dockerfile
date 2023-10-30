@@ -1,13 +1,9 @@
-FROM node:18.16.1
+FROM node:18-bullseye-slim
 
 WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm install
-
 COPY . .
 
+RUN npm ci
 RUN npm run build
 
 CMD [ "npm", "run", "preview", "--", "--host", "--port", "5173" ]

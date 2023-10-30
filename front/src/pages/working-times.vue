@@ -1,10 +1,14 @@
 <template>
   <section class="p-2 flex flex-col items-center">
-    <h2 class="text-3xl">
+    <h2>
       Working times
     </h2>
     <article class="w-full max-w-md">
-      {{ workingTimes }}
+      <TableComponent
+        :data="workingTimes" 
+        :titleProperty="['ID', 'Start Time', 'End Time', 'User ID']"
+        tableName="Working Times Table" 
+        typeTable="workingTimes" />
     </article>
   </section>
 </template>
@@ -12,6 +16,8 @@
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import TableComponent from '../components/table/TableComponent.vue'
+import { apiUrl } from '../constants/urls'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,14 +27,7 @@ const routeParamUserId = route.params.userId
 const storedUserID = localStorage.getItem('userID') ? Number(localStorage.getItem('userID')) : null
 const storedUserRole = localStorage.getItem('userRole')
 
-const workingTimes = ref([
-  {
-    id: 1,
-    start: '08:00 AM',
-    end: '04:00 PM',
-    userId: 123
-  }
-])
+const workingTimes = ref([])
 
 onBeforeMount(() => {
   if (!storedUserID) {
@@ -40,7 +39,7 @@ onBeforeMount(() => {
 })
 
 const getWorkingTimes = async () => {
-  const API_URL = `${import.meta.env.VITE_API_URL}/api/workingtimes/${routeParamUserId}`
+  const API_URL = `${apiUrl}/api/workingtimes/${routeParamUserId}`
   try {
     const response = await fetch(API_URL)
     if (!response.ok) {

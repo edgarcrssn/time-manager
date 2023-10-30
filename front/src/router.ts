@@ -7,10 +7,16 @@ import Dashboard from './pages/dashboard.vue'
 import Profile from './pages/profile.vue'
 import WorkingTimes from './pages/working-times.vue'
 import DashboardLayout from './layouts/DashboardLayout.vue'
-import UserComponentVue from './components/UserComponent.vue';
+import UserComponentVue from './components/UserComponent.vue'
+import FoireAuxQuestions from './components/FoireAuxQuestions.vue'
 
 const routes = [
   { path: '/', component: Index },
+  {
+    path: '/faq',
+    name: 'FoireAuxQuestions',
+    component: FoireAuxQuestions
+  },
   {
     path: '/dashboard',
     component: DashboardLayout,
