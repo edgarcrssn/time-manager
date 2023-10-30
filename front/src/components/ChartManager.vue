@@ -1,30 +1,30 @@
 <template>
   <section>
-    <h2 class="text-3xl mt-4 mb-4">
+    <h2>
       User {{ userId }}'s Charts
     </h2>
 
-    <div v-if="viewMode === 'week'">
-      <button @click="previousWeek">
+    <div v-if="viewMode === 'week'" class="mb-2">
+      <button class="main mr-2" @click="previousWeek">
         Previous Week
       </button>
-      <button @click="nextWeek">
+      <button class="main" @click="nextWeek">
         Next Week
       </button>
     </div>
-    <div v-if="viewMode === 'day'">
-      <button @click="previousDay">
+    <div v-if="viewMode === 'day'" class="mb-2">
+      <button class="main mr-2" @click="previousDay">
         Previous Day
       </button>
-      <button @click="nextDay">
+      <button class="main" @click="nextDay">
         Next Day
       </button>
     </div>
-    <div v-if="viewMode === 'month'">
-      <button @click="previousMonth">
+    <div v-if="viewMode === 'month'" class="mb-2">
+      <button class="main mr-2" @click="previousMonth">
         Previous Month
       </button>
-      <button @click="nextMonth">
+      <button class="main" @click="nextMonth">
         Next Month
       </button>
     </div>
@@ -85,17 +85,17 @@ type ChartData = {
 
 const barChartData = ref<ChartData>({
   labels: [],
-  datasets: [{ data: [], label: 'Hours Worked', backgroundColor: 'blue' }]
+  datasets: [{ data: [], label: 'Hours Worked'}]
 })
 
 const lineChartData = ref<ChartData>({
   labels: [],
-  datasets: [{ data: [], label: 'Hours Worked', backgroundColor: 'blue' }]
+  datasets: [{ data: [], label: 'Hours Worked'}]
 })
 
 const pieChartData = ref<ChartData>({
   labels: [],
-  datasets: [{ data: [], backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'] }]
+  datasets: [{ data: [] }]
 })
 
 const chartOptions = ref<{ responsive: boolean; maintainAspectRatio: boolean }>({
@@ -151,7 +151,7 @@ const fetchDayData = async (date: Date) => {
       {
         data: [aggregatedHours[date.toISOString().split('T')[0]] || 0],
         label: 'Hours Worked',
-        backgroundColor: 'blue'
+        backgroundColor: '#4A90E2'
       }
     ]
   }
@@ -162,7 +162,7 @@ const fetchDayData = async (date: Date) => {
       {
         data: [aggregatedHours[date.toISOString().split('T')[0]] || 0],
         label: 'Hours Worked',
-        backgroundColor: 'blue'
+        backgroundColor: '#4A90E2'
       }
     ]
   }
@@ -210,18 +210,18 @@ const fetchWeekData = async (date: Date) => {
 
   barChartData.value = {
     labels: labels,
-    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: 'blue' }]
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#4A90E2' }]
   }
 
   lineChartData.value = {
     labels: labels,
-    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: 'blue' }]
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#4A90E2' }]
   }
 
   pieChartData.value = {
     labels: labels,
     datasets: [
-      { data: hoursWorked, backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'] }
+      { data: hoursWorked, backgroundColor: ['#E94E77', '#F9A825', '#F6E05E', '#4CAF50', '#4A90E2', '#667EEA', '#9D48B9'] }
     ]
   }
 }
@@ -264,12 +264,12 @@ const fetchMonthData = async (date: Date) => {
 
   barChartData.value = {
     labels: labels,
-    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: 'blue' }]
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#4A90E2' }]
   }
 
   lineChartData.value = {
     labels: labels,
-    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: 'blue' }]
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#4A90E2' }]
   }
 }
 

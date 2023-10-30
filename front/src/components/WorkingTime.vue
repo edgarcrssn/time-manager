@@ -40,7 +40,7 @@
         <div class="py-1">
           <svg
             class="fill-current h-6 w-6 text-teal-500 mr-4"
-            :class="{ 'text-red-500': isDeleted }"
+            :class="{ 'text-error': isDeleted }"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
@@ -91,7 +91,7 @@ const alertClasses = computed(() => {
     'bg-red-100': isDeleted.value,
     'border-t-4': isCreated.value || isDeleted.value || isUpdated.value,
     'border-teal-500': isCreated.value || isUpdated.value,
-    'border-red-500': isDeleted.value,
+    'border-error': isDeleted.value,
     'rounded-b': isCreated.value || isDeleted.value || isUpdated.value,
     'rounded-b-lg': isDeleted.value,
     'rounded-b-sm': isCreated.value || isUpdated.value,
