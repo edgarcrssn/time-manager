@@ -74,7 +74,7 @@ import LineChart from './charts/LineChart.vue'
 import PieChart from './charts/PieChart.vue'
 import { WorkingTime } from '../models/WorkingTimes'
 
-type Data = {
+type ChartData = {
   labels: string[]
   datasets: {
     data: number[]
@@ -83,17 +83,17 @@ type Data = {
   }[]
 }
 
-const barChartData = ref<Data>({
+const barChartData = ref<ChartData>({
   labels: [],
   datasets: [{ data: [], label: 'Hours Worked', backgroundColor: 'blue' }]
 })
 
-const lineChartData = ref<Data>({
+const lineChartData = ref<ChartData>({
   labels: [],
   datasets: [{ data: [], label: 'Hours Worked', backgroundColor: 'blue' }]
 })
 
-const pieChartData = ref<Data>({
+const pieChartData = ref<ChartData>({
   labels: [],
   datasets: [{ data: [], backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'] }]
 })
