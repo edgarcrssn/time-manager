@@ -10,8 +10,7 @@ defmodule TimeManagerApiWeb.UserController do
     query =
       from(
         u in TimeManagerApi.User,
-        where: u.email == ^email and u.username == ^username,
-        preload: [:team]
+        where: u.email == ^email and u.username == ^username
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -22,8 +21,7 @@ defmodule TimeManagerApiWeb.UserController do
     query =
       from(
         u in TimeManagerApi.User,
-        where: u.email == ^email,
-        preload: [:team]
+        where: u.email == ^email
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -34,8 +32,7 @@ defmodule TimeManagerApiWeb.UserController do
     query =
       from(
         u in TimeManagerApi.User,
-        where: u.username == ^username,
-        preload: [:team]
+        where: u.username == ^username
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -45,8 +42,7 @@ defmodule TimeManagerApiWeb.UserController do
   def index(conn, _params) do
     query =
       from(
-        u in TimeManagerApi.User,
-        preload: [:team]
+        u in TimeManagerApi.User
       )
 
     users = TimeManagerApi.Repo.all(query)
@@ -59,7 +55,7 @@ defmodule TimeManagerApiWeb.UserController do
   # TODO show: must be authenticated
   def show(conn, %{"userID" => id}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, id)
-    user = TimeManagerApi.Repo.preload(user, :team)
+    #user = TimeManagerApi.Repo.preload(user, :team)
 
     case user do
       %TimeManagerApi.User{} = user ->

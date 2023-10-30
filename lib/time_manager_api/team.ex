@@ -5,7 +5,7 @@ defmodule TimeManagerApi.Team do
   @derive {Jason.Encoder, only: [:id, :name]}
   schema "teams" do
     field :name, :string
-    belongs_to :manager, TimeManagerApi.User
+    has_many :users, TimeManagerApi.User
   end
 
   def changeset(team, params \\ %{}) do
