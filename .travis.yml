@@ -17,4 +17,5 @@ jobs:
 
     - stage: Deploy
       script:
+        - echo 'Deploy'
         # Déployez votre application ici (par exemple, en utilisant SSH pour copier docker-compose.yml et redéployer avec Docker Compose)
