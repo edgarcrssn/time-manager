@@ -1,11 +1,11 @@
 #!/bin/bash
 
+source .env
+
 if [ ! -f .env ]; then
   echo "The .env file is not found. Stopping the api container..."
   docker-compose stop api
   echo "api container stopped."
-else
-  source .env
 fi
 
 while ! pg_isready -q -h db -p "$PGPORT" -U postgres
