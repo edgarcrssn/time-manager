@@ -1,6 +1,6 @@
 <template>
   <section class="p-2 flex flex-col items-center">
-    <h2 class="text-3xl">
+    <h2>
       Profile
     </h2>
     <article class="w-full max-w-md">
@@ -12,7 +12,7 @@
       </div>
       <button
         v-if="canDelete"
-        class="bg-red-600 text-white px-4 py-2 mt-4"
+        class="bg-error text-white px-4 py-2 mt-4"
         @click="deleteAccount"
       >
         Delete Account

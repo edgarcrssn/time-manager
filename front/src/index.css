@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h2 {
+  @apply text-3xl mb-4 mt-4;
+}
+
+h3{
+  @apply text-2xl font-semibold mb-4;
+}
+
+button {
+  @apply rounded-xl p-2 mt-4 transition duration-300 ease-in-out;
+}
+
+button:hover {
+  @apply bg-opacity-50;
+}
+
+button.main {
+  @apply bg-secondary text-black hover:bg-opacity-50;
+}
+
+button.error {
+  @apply bg-error text-white;
+}
+
+td, th {
+  @apply border border-black;
+}

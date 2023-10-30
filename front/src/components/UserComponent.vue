@@ -1,10 +1,10 @@
 <template>
   <section>
-    <h2 class="text-center text-4xl">
+    <h2>
       Manage user
     </h2>
     <button
-      class="bg-blue-500 text-white p-2 rounded hover:bg-blue-700"
+      class="main"
       @click="openModal"
     >
       Add User

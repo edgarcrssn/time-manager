@@ -2,7 +2,7 @@
   <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center">
     <div class="modal-bg absolute inset-0 bg-gray-500 opacity-75"></div>
     <div class="modal-content bg-white p-8 rounded shadow-lg z-50">
-      <h2 class="text-2xl font-semibold mb-4">Créer un utilisateur</h2>
+      <h3>Créer un utilisateur</h3>
       <form @submit.prevent="createUser">
         <div class="mb-4">
           <label for="username" class="block text-sm font-medium text-gray-600">Nom d'utilisateur</label>
@@ -12,9 +12,11 @@
           <label for="email" class="block text-sm font-medium text-gray-600">Adresse email</label>
           <input type="email" id="email" v-model="userInput.email" class="mt-1 p-2 w-full border rounded">
         </div>
-        <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-700">Créer</button>
+        <div class="flex justify-between">
+          <button type="submit" class="main">Créer</button>
+          <button @click="closeModal" class="error">Fermer</button>
+        </div>
       </form>
-      <button @click="closeModal" class="mt-4 text-gray-600">Fermer</button>
     </div>
   </div>
 </template>
