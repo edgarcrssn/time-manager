@@ -1,0 +1,19 @@
+language: minimal
+
+stages:
+  - name: Build & Push Image
+  - name: Deploy
+
+jobs:
+  include:
+    - stage: Build & Push Image
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t VOTRE_NOM_UTILISATEUR/NOM_IMAGE:MA_VERSION .
+        - docker push VOTRE_NOM_UTILISATEUR/NOM_IMAGE:MA_VERSION
+
+    - stage: Deploy
+      script:
+        - scp docker-compose.yml utilisateur@adresse_serveur:/chemin/vers/docker-compose.yml
+        - ssh utilisateur@adresse_serveur "docker-compose -f /chemin/vers/docker-compose.yml up -d"
+
