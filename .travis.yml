@@ -1,19 +1,20 @@
 language: minimal
 
+services:
+  - docker
+
 stages:
-  - name: Build & Push Image
+  - name: Build and Push
   - name: Deploy
 
 jobs:
   include:
-    - stage: Build & Push Image
+    - stage: Build and Push
       script:
+        - docker-compose -f docker-compose.yml build
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker build -t VOTRE_NOM_UTILISATEUR/NOM_IMAGE:MA_VERSION .
-        - docker push VOTRE_NOM_UTILISATEUR/NOM_IMAGE:MA_VERSION
+        - docker-compose -f docker-compose.yml push
 
     - stage: Deploy
       script:
-        - scp docker-compose.yml utilisateur@adresse_serveur:/chemin/vers/docker-compose.yml
-        - ssh utilisateur@adresse_serveur "docker-compose -f /chemin/vers/docker-compose.yml up -d"
-
+        # Déployez votre application ici (par exemple, en utilisant SSH pour copier docker-compose.yml et redéployer avec Docker Compose)
