@@ -16,6 +16,7 @@ services:
 
   api:
     container_name: api
+    image: edgarcrssn/time-manager-api
     build:
       context: .
     environment:
@@ -31,6 +32,7 @@ services:
 
   ui:
     container_name: ui
+    image: edgarcrssn/time-manager-ui
     build:
       context: ./front
     ports:

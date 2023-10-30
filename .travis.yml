@@ -3,15 +3,6 @@ language: minimal
 services:
   - docker
 
-env:
-  - DOCKER_COMPOSE_VERSION=v2.22.0
-
-before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-
 stages:
 - name: Build and Push
 - name: Deploy
@@ -20,9 +11,10 @@ jobs:
   include:
     - stage: Build and Push
       script:
-        - docker-compose -f docker-compose.yml build
+        - docker-compose build
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker-compose -f docker-compose.yml push
+        - docker-compose push
+        - docker logout
 
     - stage: Deploy
       script:
