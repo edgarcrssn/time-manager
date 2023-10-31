@@ -35,6 +35,9 @@ services:
     image: edgarcrssn/time-manager-ui
     build:
       context: ./front
+    environment:
+      VITE_API_URL: $VITE_API_URL
+      VITE_FRONT_URL: $VITE_FRONT_URL
     ports:
       - '5173:5173'
     depends_on:

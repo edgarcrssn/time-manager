@@ -4,29 +4,29 @@ services:
   - docker
 
 stages:
-  - name: Build and Push
+  # - name: Build and Push
   - name: Deploy
 
 jobs:
   include:
-    - stage: Build and Push
-      script:
-        - docker-compose build
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker-compose push
-        - docker logout
+    # - stage: Build and Push
+    #   script:
+    #     - docker-compose build
+    #     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    #     - docker-compose push
+    #     - docker logout
 
     - stage: Deploy
       before_script:
         - mkdir -p /home/travis/.ssh
         - openssl aes-256-cbc -K $encrypted_b94b5bb7b73b_key -iv $encrypted_b94b5bb7b73b_iv -in travis_key.enc -out /home/travis/.ssh/travis_key -d
-      script:
         - chmod 600 /home/travis/.ssh/travis_key
+      script:
+        # Create /app directory
+        - ssh -i /home/travis/.ssh/travis_key $GCP_USER@$GCP_VM_IP "mkdir /home/$GCP_USER/app"
+        # Copy local docker-compose.deploy.yml file into GCP VM
         - scp -i /home/travis/.ssh/travis_key -o StrictHostKeyChecking=no ./docker-compose.deploy.yml "$GCP_USER"@"$GCP_VM_IP":/home/"$GCP_USER"/app/docker-compose.yml
-        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "cd /home/$GCP_USER/app && echo 'export ENV="prod"' > .env"
-        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "cd /home/$GCP_USER/app && echo 'export PGUSER=$PGUSER' >> .env"
-        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "cd /home/$GCP_USER/app && echo 'export PGPASSWORD=$PGPASSWORD' >> .env"
-        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "cd /home/$GCP_USER/app && echo 'export PGDATABASE=$PGDATABASE' >> .env"
-        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "cd /home/$GCP_USER/app && echo 'export PGPORT=$PGPORT' >> .env"
-        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "cd /home/$GCP_USER/app && echo 'export PGHOST=$PGHOST' >> .env"
+        # Setup .env file into GCP VM
+        - ssh -i /home/travis/.ssh/travis_key $GCP_USER@$GCP_VM_IP "cd /home/$GCP_USER/app && echo 'export ENV="prod"' > .env && echo 'export PGUSER=$PGUSER' >> .env && echo 'export PGPASSWORD=$PGPASSWORD' >> .env && echo 'export PGDATABASE=$PGDATABASE' >> .env && echo 'export PGPORT=$PGPORT' >> .env && echo 'export PGHOST=$PGHOST' >> .env && echo 'export VITE_FRONT_URL=$VITE_FRONT_URL' >> .env && echo 'export VITE_API_URL=$VITE_API_URL' >> .env"
+        # Clean and run docker-compose into GCP VM
         - ssh -i /home/travis/.ssh/travis_key $GCP_USER@$GCP_VM_IP "cd /home/$GCP_USER/app && docker-compose down && docker rm -f db api ui && docker-compose pull && docker-compose up -d"
