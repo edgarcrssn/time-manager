@@ -97,9 +97,9 @@ const closeUserModal = () => {
 }
 
 const openScheduleModal = (clickedUserId: number) => {
-  isScheduleModalOpen.value = true;
-  schedule.value.id = clickedUserId;
-  getScheduleData(clickedUserId);
+  isScheduleModalOpen.value = true
+  schedule.value.id = clickedUserId
+  getScheduleData(clickedUserId)
 }
 
 const closeScheduleModal = () => {
@@ -112,7 +112,7 @@ const userInput = ref({
   email: ''
 })
 
-const schedule = ref({
+const schedule = ref<{id: number | null, monday: boolean, tuesday: boolean, wednesday: boolean, friday?: boolean, thursday: boolean, saturday: boolean,sunday: boolean, start_time: string, end_time: string}>({
   id: null,
   monday: false,
   tuesday: false,
@@ -192,7 +192,7 @@ const getScheduleData = (userId: number) => {
           sunday: false,
           start_time: '',
           end_time: ''
-        };
+        }
       } else {
         return response.json();
       }

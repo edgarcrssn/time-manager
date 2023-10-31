@@ -79,18 +79,18 @@ type ChartData = {
   datasets: {
     data: number[]
     label?: string
-    backgroundColor: string | string[]
+    backgroundColor?: string | string[]
   }[]
 }
 
 const barChartData = ref<ChartData>({
   labels: [],
-  datasets: [{ data: [], label: 'Hours Worked'}]
+  datasets: [{ data: [], label: 'Hours Worked' }]
 })
 
 const lineChartData = ref<ChartData>({
   labels: [],
-  datasets: [{ data: [], label: 'Hours Worked'}]
+  datasets: [{ data: [], label: 'Hours Worked' }]
 })
 
 const pieChartData = ref<ChartData>({
