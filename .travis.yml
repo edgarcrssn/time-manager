@@ -23,7 +23,7 @@ jobs:
         - chmod 600 /home/travis/.ssh/travis_key
       script:
         # Create /app directory
-        - ssh -o StrictHostKeyChecking=no -i /home/travis/.ssh/travis_key $GCP_USER@$GCP_VM_IP "mkdir /home/$GCP_USER/app"
+        - ssh -o StrictHostKeyChecking=no -i /home/travis/.ssh/travis_key $GCP_USER@$GCP_VM_IP "mkdir -p /home/$GCP_USER/app"
         # Copy local docker-compose.deploy.yml file into GCP VM
         - scp -i /home/travis/.ssh/travis_key ./docker-compose.deploy.yml "$GCP_USER"@"$GCP_VM_IP":/home/"$GCP_USER"/app/docker-compose.yml
         # Setup .env file into GCP VM
