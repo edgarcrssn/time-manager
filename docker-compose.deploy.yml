@@ -17,12 +17,17 @@ services:
   api:
     container_name: api
     image: edgarcrssn/time-manager-api
+    # build:
+    #   context: .
     environment:
+      ENV: $ENV
       PGUSER: $PGUSER
       PGPASSWORD: $PGPASSWORD
       PGDATABASE: $PGDATABASE
       PGPORT: $PGPORT
       PGHOST: $PGHOST
+      VITE_API_URL: $VITE_API_URL
+      VITE_FRONT_URL: $VITE_FRONT_URL
     ports:
       - '4000:4000'
     depends_on:
@@ -31,6 +36,8 @@ services:
   ui:
     container_name: ui
     image: edgarcrssn/time-manager-ui
+    # build:
+    #   context: ./front
     environment:
       VITE_API_URL: $VITE_API_URL
       VITE_FRONT_URL: $VITE_FRONT_URL
