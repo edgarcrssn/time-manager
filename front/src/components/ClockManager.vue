@@ -1,11 +1,11 @@
 <template>
   <section class="text-center">
-    <h2 class="text-3xl mt-4 mb-4">Work Tracking</h2>
+    <h2>Work Tracking</h2>
     <p v-if="!loading && !processing">{{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}</p>
-    <button v-if="!loading && !processing" class="text-white bg-slate-300 rounded-xl p-2 mt-4" @click="clock">
+    <button v-if="!loading && !processing" class="main" @click="clock">
       {{ clockIn ? 'Clock Out' : 'Clock In' }}
     </button>
-    <button v-else disabled class="text-white bg-slate-300 rounded-xl p-2 mt-4">
+    <button v-else disabled class="main">
       Processing...
     </button>
   </section>

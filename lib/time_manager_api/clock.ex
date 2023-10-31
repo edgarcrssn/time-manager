@@ -6,7 +6,7 @@ defmodule TimeManagerApi.Clock do
   schema "clocks" do
     field :status, :boolean, default: false
     field :time, :naive_datetime
-    field :user_id, :id
+    belongs_to :user, TimeManagerApi.User
   end
 
   @doc false

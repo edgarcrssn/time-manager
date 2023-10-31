@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen flex flex-col">
-    <header class="bg-gray-800 text-white p-4 flex items-center justify-between">
+    <header class="bg-main text-white p-4 flex items-center justify-between">
       <h1 class="text-center flex-grow">
         Dashboard deployment
       </h1>
@@ -17,7 +17,7 @@
     </header>
 
     <div class="flex flex-row h-full">
-      <nav class="bg-gray-200 p-4 w-[300px] flex-shrink-0 flex flex-col">
+      <nav class="bg-secondary p-4 w-[300px] flex-shrink-0 flex flex-col">
         <ul>
           <li class="mb-2">
             <router-link
@@ -71,7 +71,7 @@
         </ul>
 
         <button
-          class="bg-red-500 text-white px-4 py-2 mt-4 self-end"
+          class="bg-error text-white px-4 py-2 mt-4 self-end"
           @click="logout"
         >
           Logout
