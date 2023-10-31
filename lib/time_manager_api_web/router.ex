@@ -31,14 +31,17 @@ defmodule TimeManagerApiWeb.Router do
       post "", UserController, :create
       put "/:userID", UserController, :update
       delete "/:userID", UserController, :delete
+      get "/team/:teamId", UserController, :getByTeam
     end
 
     scope "/teams" do
-      get "", TeamController, :index
-      get "/:teamID", TeamController, :show
+      get "", TeamController, :getAllTeam
+      get "/:teamId", TeamController, :getById
       post "", TeamController, :create
-      put "/:teamID", TeamController, :update
-      delete "/:teamID", TeamController, :delete
+      put "/:teamId", TeamController, :update
+      delete "/:teamId", TeamController, :delete
+      post "/:userId/:teamId", TeamController, :addUserTeam
+      delete "/:userId/:teamId", TeamController, :deleteUserTeam
     end
   end
 

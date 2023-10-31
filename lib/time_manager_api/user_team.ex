@@ -4,8 +4,8 @@ defmodule TimeManagerApi.UserTeam do
 
   @derive {Jason.Encoder, only: [:id, :user_id, :team_id, :is_owner]}
   schema "user_teams" do
-    field :user_id, :integer
-    field :team_id, :integer
+    belongs_to :team, TimeManagerApi.Team
+    belongs_to :user, TimeManagerApi.User
     field :is_owner, :boolean, default: false
   end
 

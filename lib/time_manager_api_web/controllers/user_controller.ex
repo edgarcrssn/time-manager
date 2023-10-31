@@ -55,7 +55,6 @@ defmodule TimeManagerApiWeb.UserController do
   # TODO show: must be authenticated
   def show(conn, %{"userID" => id}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, id)
-    #user = TimeManagerApi.Repo.preload(user, :team)
 
     case user do
       %TimeManagerApi.User{} = user ->
@@ -164,6 +163,25 @@ defmodule TimeManagerApiWeb.UserController do
             |> put_status(:internal_server_error)
             |> json(%{message: "Failed to delete user"})
         end
+    end
+  end
+
+  def getByTeam(conn, %{"teamId" => teamId}) do
+    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, String.to_integer(teamId))
+    case team do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "The team with the id #{teamId} doesn't exist"})
+      _ ->
+        query = from(ut in TimeManagerApi.UserTeam,
+                     join: u in assoc(ut, :user),
+                     where: ut.team_id == ^teamId,
+                     select: u)
+        users = TimeManagerApi.Repo.all(query)
+        conn
+        |> put_status(:ok)
+        |> json(users)
     end
   end
 end
