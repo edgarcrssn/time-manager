@@ -17,6 +17,9 @@ jobs:
     #     - docker logout
 
     - stage: Deploy
+      before_script:
+        - openssl aes-256-cbc -K $encrypted_b94b5bb7b73b_key -iv $encrypted_b94b5bb7b73b_iv -in travis_key.enc -out ~\/.ssh/travis/travis_key -d
       script:
-        - scp -i "$PRIVATE_SSH_KEY" -o StrictHostKeyChecking=no ./docker-compose.yml "$GCP_USER"@"$GCP_VM_IP":/home/"$GCP_USER"/app/docker-compose.yml
-        - ssh -i "$PRIVATE_SSH_KEY" "$GCP_USER"@"$GCP_VM_IP" "cd /home/"$GCP_USER"/app && docker-compose pull && docker-compose up -d"
+        - chmod 600 ~/.ssh/travis/travis_key
+        - scp -i ~/.ssh/travis/travis_key -o StrictHostKeyChecking=no ./docker-compose.yml "$GCP_USER"@"$GCP_VM_IP":/home/"$GCP_USER"/app/docker-compose.yml
+        - ssh -i ~/.ssh/travis/travis_key "$GCP_USER"@"$GCP_VM_IP" "cd /home/"$GCP_USER"/app && docker-compose pull && docker-compose up -d"
