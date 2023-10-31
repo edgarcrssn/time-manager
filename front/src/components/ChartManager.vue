@@ -73,6 +73,7 @@ import BarChart from './charts/BarChart.vue'
 import LineChart from './charts/LineChart.vue'
 import PieChart from './charts/PieChart.vue'
 import { WorkingTime } from '../models/WorkingTimes'
+import { apiUrl } from '../constants/urls'
 
 type ChartData = {
   labels: string[]
@@ -104,7 +105,7 @@ const chartOptions = ref<{ responsive: boolean; maintainAspectRatio: boolean }>(
 })
 
 const { userId } = defineProps(['userId'])
-const API_URL = `${import.meta.env.VITE_API_URL}/api/workingtimes/${userId}`
+const API_URL = `${apiUrl}/api/workingtimes/${userId}`
 const currentDate = new Date()
 const viewMode = ref('week')
 

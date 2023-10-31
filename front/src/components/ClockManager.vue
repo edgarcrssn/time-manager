@@ -12,13 +12,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, defineProps } from 'vue';
+import { ref, onMounted, onUnmounted, defineProps } from 'vue'
+import { apiUrl } from '../constants/urls'
 
 const { userId } = defineProps(['userId']);
 
 const startDateTime = ref<string | null>(null);
 const clockIn = ref<boolean | null>(null);
-const API_URL = `${import.meta.env.VITE_API_URL}/api/clocks/${userId}`;
+const API_URL = `${apiUrl}/api/clocks/${userId}`;
 
 const loading = ref(true);
 const processing = ref(false);
@@ -88,7 +89,7 @@ const clock = async () => {
 };
 
 const createWorkingTime = async (startTime: string, endTime: string) => {
-  const workingTimesAPI = `${import.meta.env.VITE_API_URL}/api/workingtimes/${userId}`;
+  const workingTimesAPI = `${apiUrl}/api/workingtimes/${userId}`;
   try {
     await fetch(workingTimesAPI, {
       method: 'POST',

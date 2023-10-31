@@ -87,6 +87,7 @@
 
 <script lang="ts" setup>
 import { formatDate } from '../../helpers/dateUtils'
+import { apiUrl } from '../../constants/urls'
 
 const emit = defineEmits(['itemDeleted'])
 defineProps({
@@ -108,7 +109,7 @@ defineProps({
   }
 })
 const deleteUser = (id: number) => {
-  fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, {
+  fetch(`${apiUrl}/api/users/${id}`, {
     method: 'DELETE',
     redirect: 'follow'
   })
