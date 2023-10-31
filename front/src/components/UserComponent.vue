@@ -10,16 +10,16 @@
     <Modal :is-open="isUserModalOpen" @close="closeUserModal" title="Créer un utilisateur">
       <form ref="userForm" @submit.prevent="createUser">
         <div class="mb-4">
-          <label for="username" class="block text-sm font-medium text-gray-600">Nom d'utilisateur</label>
+          <label for="username" class="block text-sm font-medium text-gray-600">Username</label>
           <input type="text" id="username" v-model="userInput.username" class="mt-1 p-2 w-full border rounded">
         </div>
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-600">Adresse email</label>
+          <label for="email" class="block text-sm font-medium text-gray-600">mail</label>
           <input type="email" id="email" v-model="userInput.email" class="mt-1 p-2 w-full border rounded">
         </div>
         <div class="flex justify-between">
-          <button type="submit" class="main">Confirmer</button>
-          <button type="button" @click="closeUserModal" class="error">Fermer</button>
+          <button type="submit" class="main">Confirm</button>
+          <button type="button" @click="closeUserModal" class="error">Close</button>
         </div>
       </form>
     </Modal>
@@ -27,39 +27,39 @@
     <Modal :is-open="isScheduleModalOpen" @close="closeScheduleModal" title="Horaires de l'utilisateur">
       <form ref="scheduleForm" @submit.prevent="updateOrCreateSchedule">
         <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-600">Jours de travail</label>
+          <label class="block text-sm font-medium text-gray-600">Working days</label>
           <div class="mt-2">
             <label for="monday" class="mr-2">
-              <input type="checkbox" id="monday" v-model="schedule.monday"> Lundi
+              <input type="checkbox" id="monday" v-model="schedule.monday"> Monday
             </label>
             <label for="tuesday" class="mr-2">
-              <input type="checkbox" id="tuesday" v-model="schedule.tuesday"> Mardi
+              <input type="checkbox" id="tuesday" v-model="schedule.tuesday"> Tuesday
             </label>
             <label for="wednesday" class="mr-2">
-              <input type="checkbox" id="wednesday" v-model="schedule.wednesday"> Mercredi
+              <input type="checkbox" id="wednesday" v-model="schedule.wednesday"> Wednesday
             </label>
             <label for="thursday" class="mr-2">
-              <input type="checkbox" id="thursday" v-model="schedule.thursday"> Jeudi
+              <input type="checkbox" id="thursday" v-model="schedule.thursday"> Thursday
             </label>
             <label for="saturday" class="mr-2">
-              <input type="checkbox" id="saturday" v-model="schedule.saturday"> Samedi
+              <input type="checkbox" id="saturday" v-model="schedule.saturday"> Saturday
             </label>
             <label for="sunday">
-              <input type="checkbox" id="sunday" v-model="schedule.sunday"> Dimanche
+              <input type="checkbox" id="sunday" v-model="schedule.sunday"> Sunday
             </label>
           </div>
         </div>
         <div class="mb-4">
-          <label for="start_time" class="block text-sm font-medium text-gray-600">Heure de début</label>
+          <label for="start_time" class="block text-sm font-medium text-gray-600">Start time</label>
           <input type="time" id="start_time" v-model="schedule.start_time" class="mt-1 p-2 w-full border rounded">
         </div>
         <div class="mb-4">
-          <label for="end_time" class="block text-sm font-medium text-gray-600">Heure de fin</label>
+          <label for="end_time" class="block text-sm font-medium text-gray-600">End time</label>
           <input type="time" id="end_time" v-model="schedule.end_time" class="mt-1 p-2 w-full border rounded">
         </div>
         <div class="flex justify-between">
-          <button type="submit" class="main">Mettre à jour</button>
-          <button type="button" @click="closeScheduleModal" class="error">Fermer</button>
+          <button type="submit" class="main">Update</button>
+          <button type="button" @click="closeScheduleModal" class="error">Close</button>
         </div>
       </form>
     </Modal>
