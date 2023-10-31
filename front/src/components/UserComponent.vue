@@ -97,8 +97,9 @@ const closeUserModal = () => {
 }
 
 const openScheduleModal = (clickedUserId: number) => {
-  isScheduleModalOpen.value = true
-  getScheduleData(clickedUserId)
+  isScheduleModalOpen.value = true;
+  schedule.value.id = clickedUserId;
+  getScheduleData(clickedUserId);
 }
 
 const closeScheduleModal = () => {
@@ -165,7 +166,7 @@ const createSchedule = (data: any) => {
     redirect: 'follow'
   }
 
-  fetch(`${import.meta.env.VITE_API_URL}/api/schedules`, createRequestOptions)
+  fetch(`${import.meta.env.VITE_API_URL}/api/schedules/${schedule.value.id}`, createRequestOptions)
     .then((response: Response) => response.json().then(data => {
       if (response.ok) {
         closeScheduleModal();
@@ -176,14 +177,30 @@ const createSchedule = (data: any) => {
     .catch((error: Error) => console.error(error));
 }
 
-
 const getScheduleData = (userId: number) => {
   fetch(`${import.meta.env.VITE_API_URL}/api/schedules/${userId}`)
-    .then((response: Response) => response.json())
-    .then((data) => {
-      schedule.value = data
+    .then((response: Response) => {
+      if (response.status === 404) {
+        schedule.value = {
+          id: userId,
+          monday: false,
+          tuesday: false,
+          wednesday: false,
+          thursday: false,
+          friday: false,
+          saturday: false,
+          sunday: false,
+          start_time: '',
+          end_time: ''
+        };
+      } else {
+        return response.json();
+      }
     })
-    .catch((error: Error) => console.error(error))
+    .then((data) => {
+      if (data) schedule.value = data;
+    })
+    .catch((error: Error) => console.error(error));
 }
 
 const createUser = () => {
