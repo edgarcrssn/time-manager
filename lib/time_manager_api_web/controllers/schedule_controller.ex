@@ -23,21 +23,32 @@ defmodule TimeManagerApiWeb.EmployeeScheduleController do
   Create a new schedule for a specific user.
   """
   def create(conn, %{"userID" => user_id, "schedule" => schedule_params}) do
-    params_with_user = Map.put(schedule_params, "user_id", user_id)
-    changeset = TimeManagerApi.EmployeeSchedule.changeset(%TimeManagerApi.EmployeeSchedule{}, params_with_user)
+    existing_schedule = TimeManagerApi.Repo.get(TimeManagerApi.EmployeeSchedule, user_id)
 
-    case TimeManagerApi.Repo.insert(changeset) do
-      {:ok, schedule} ->
-        conn
-        |> put_status(:created)
-        |> json(%{schedule: schedule})
+    case existing_schedule do
+      nil ->
+        params_with_user = Map.put(schedule_params, "user_id", user_id)
+        changeset = TimeManagerApi.EmployeeSchedule.changeset(%TimeManagerApi.EmployeeSchedule{}, params_with_user)
 
-      {:error, changeset} ->
+        case TimeManagerApi.Repo.insert(changeset) do
+          {:ok, schedule} ->
+            conn
+            |> put_status(:created)
+            |> json(%{schedule: schedule})
+
+          {:error, changeset} ->
+            conn
+            |> put_status(:bad_request)
+            |> json(%{message: "Bad Request", errors: changeset.errors})
+        end
+
+      %TimeManagerApi.EmployeeSchedule{} ->
         conn
-        |> put_status(:bad_request)
-        |> json(%{message: "Bad Request", errors: changeset.errors})
+        |> put_status(:conflict) # 409 Conflict
+        |> json(%{error: "Schedule for user with id #{user_id} already exists"})
     end
   end
+
 
   @doc """
 Update a specific schedule by its ID.
