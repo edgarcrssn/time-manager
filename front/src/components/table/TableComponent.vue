@@ -12,8 +12,12 @@
             <td>{{ donnee.username }}</td>
             <td>{{ donnee.email }}</td>
             <td>
-              <button type="button" @click="deleteUser(donnee.id)"><img alt="delete"
-                  src="../../assets/delete_icon.svg" class="w-5 h-5" /></button>
+              <button type="button" @click="$emit('showSchedule', donnee.id)">
+                <img alt="delete" src="../../assets/calendar_icon.svg" class="w-5 h-5" />
+              </button>
+              <button type="button" @click="deleteUser(donnee.id)">
+                <img alt="delete" src="../../assets/delete_icon.svg" class="w-5 h-5" />
+              </button>
             </td>
           </tr>
 
@@ -21,7 +25,8 @@
             <td>{{ donnee.name }}</td>
             <td>
               <button type="button" @click="deleteUser(id)"><img alt="delete"
-                  src="../../assets/delete_icon.svg" class="w-5 h-5" /></button>
+                src="../../assets/delete_icon.svg" class="w-5 h-5" />
+              </button>
             </td>
           </tr>
 
@@ -36,7 +41,6 @@
     </div>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { formatDate } from '../../helpers/dateUtils'
@@ -74,6 +78,5 @@ const deleteUser = (id: number) => {
     .catch((error: Error) => console.error('error', error))
 }
 </script>
-
 
 <style scoped></style>
