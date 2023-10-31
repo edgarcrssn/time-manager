@@ -4,17 +4,17 @@ services:
   - docker
 
 stages:
-- name: Build and Push
+# - name: Build and Push
 - name: Deploy
 
 jobs:
   include:
-    - stage: Build and Push
-      script:
-        - docker-compose build
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker-compose push
-        - docker logout
+    # - stage: Build and Push
+    #   script:
+    #     - docker-compose build
+    #     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    #     - docker-compose push
+    #     - docker logout
 
     - stage: Deploy
       before_script:
