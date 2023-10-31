@@ -3,41 +3,80 @@
     <h2>
       Manage user
     </h2>
-    <button
-      class="main"
-      @click="openModal"
-    >
+    <button class="main" @click="openUserModal">
       Add User
     </button>
 
-    <user-modal
-      :is-open="isOpenModal"
-      @close="closeModal"
-    />
+    <Modal :is-open="isUserModalOpen" @close="closeUserModal" title="Créer un utilisateur">
+      <form ref="userForm" @submit.prevent="createUser">
+        <div class="mb-4">
+          <label for="username" class="block text-sm font-medium text-gray-600">Username</label>
+          <input type="text" id="username" v-model="userInput.username" class="mt-1 p-2 w-full border rounded">
+        </div>
+        <div class="mb-4">
+          <label for="email" class="block text-sm font-medium text-gray-600">mail</label>
+          <input type="email" id="email" v-model="userInput.email" class="mt-1 p-2 w-full border rounded">
+        </div>
+        <div class="flex justify-between">
+          <button type="submit" class="main">Confirm</button>
+          <button type="button" @click="closeUserModal" class="error">Close</button>
+        </div>
+      </form>
+    </Modal>
 
-    <h2
-      v-if="isManager && usersData.length > 0"
-      class="text-center"
-    >
+    <Modal :is-open="isScheduleModalOpen" @close="closeScheduleModal" title="Horaires de l'utilisateur">
+      <form ref="scheduleForm" @submit.prevent="updateOrCreateSchedule">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-600">Working days</label>
+          <div class="mt-2">
+            <label for="monday" class="mr-2">
+              <input type="checkbox" id="monday" v-model="schedule.monday"> Monday
+            </label>
+            <label for="tuesday" class="mr-2">
+              <input type="checkbox" id="tuesday" v-model="schedule.tuesday"> Tuesday
+            </label>
+            <label for="wednesday" class="mr-2">
+              <input type="checkbox" id="wednesday" v-model="schedule.wednesday"> Wednesday
+            </label>
+            <label for="thursday" class="mr-2">
+              <input type="checkbox" id="thursday" v-model="schedule.thursday"> Thursday
+            </label>
+            <label for="saturday" class="mr-2">
+              <input type="checkbox" id="saturday" v-model="schedule.saturday"> Saturday
+            </label>
+            <label for="sunday">
+              <input type="checkbox" id="sunday" v-model="schedule.sunday"> Sunday
+            </label>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="start_time" class="block text-sm font-medium text-gray-600">Start time</label>
+          <input type="time" id="start_time" v-model="schedule.start_time" class="mt-1 p-2 w-full border rounded">
+        </div>
+        <div class="mb-4">
+          <label for="end_time" class="block text-sm font-medium text-gray-600">End time</label>
+          <input type="time" id="end_time" v-model="schedule.end_time" class="mt-1 p-2 w-full border rounded">
+        </div>
+        <div class="flex justify-between">
+          <button type="submit" class="main">Update</button>
+          <button type="button" @click="closeScheduleModal" class="error">Close</button>
+        </div>
+      </form>
+    </Modal>
+
+    <h2 v-if="isManager && usersData.length > 0" class="text-center">
       Table of the users
     </h2>
-    <TableComponent
-      v-if="isManager"
-      :key="refreshKey"
-      :title-property="['Username', 'Email', 'Actions']"
-      :data="usersData"
-      :table-name="'Table of Users'"
-      :type-table="'user'"
-      @itemDeleted="handleItemDeleted"
-      @addItem="handleItemAdded"
-    />
+    <TableComponent v-if="isManager" :key="refreshKey" :title-property="['Username', 'Email', 'Actions']"
+      :data="usersData" :table-name="'Table of Users'" :type-table="'user'" @itemDeleted="handleItemDeleted"
+      @addItem="handleItemAdded" @showSchedule="openScheduleModal" />
   </section>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import TableComponent from './table/TableComponent.vue'
-import UserModal from './PopUp.vue'
+import Modal from './PopUp.vue'
 import { User } from '../models/Users'
 
 const refreshKey = ref(0)
@@ -45,14 +84,150 @@ const userId = localStorage.getItem('userID')
 const getUserUrl = `${import.meta.env.VITE_API_URL}/api/users/${userId}`
 const usersData = ref<User[]>([])
 const isManager = ref(false)
-const isOpenModal = ref(false)
+const userForm = ref(null)
+const isUserModalOpen = ref(false)
+const isScheduleModalOpen = ref(false)
 
-const openModal = () => {
-  isOpenModal.value = true
+const openUserModal = () => {
+  isUserModalOpen.value = true
 }
 
-const closeModal = () => {
-  isOpenModal.value = false
+const closeUserModal = () => {
+  isUserModalOpen.value = false
+}
+
+const openScheduleModal = (clickedUserId: number) => {
+  isScheduleModalOpen.value = true;
+  schedule.value.id = clickedUserId;
+  getScheduleData(clickedUserId);
+}
+
+const closeScheduleModal = () => {
+  isScheduleModalOpen.value = false
+}
+
+const emit = defineEmits(['close', 'addItem'])
+const userInput = ref({
+  username: '',
+  email: ''
+})
+
+const schedule = ref({
+  id: null,
+  monday: false,
+  tuesday: false,
+  wednesday: false,
+  thursday: false,
+  saturday: false,
+  sunday: false,
+  start_time: '',
+  end_time: ''
+})
+
+const updateOrCreateSchedule = () => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const dataToSend = {
+    schedule: { ...schedule.value }
+  };
+  const raw = JSON.stringify(dataToSend);
+
+  const updateRequestOptions: RequestInit = {
+    method: 'PUT',
+    body: raw,
+    headers: myHeaders,
+    redirect: 'follow'
+  }
+
+  fetch(`${import.meta.env.VITE_API_URL}/api/schedules/${schedule.value.id}`, updateRequestOptions)
+    .then((response: Response) => response.json().then(data => {
+      if (response.ok) {
+        closeScheduleModal();
+      } else if (response.status === 404) {
+        createSchedule(dataToSend);
+      } else {
+        console.error(`Failed to update schedule for user ${schedule.value.id}`, data);
+      }
+    }))
+    .catch((error: Error) => console.error(error));
+}
+
+const createSchedule = (data: any) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const raw = JSON.stringify(data);
+
+  const createRequestOptions: RequestInit = {
+    method: 'POST',
+    body: raw,
+    headers: myHeaders,
+    redirect: 'follow'
+  }
+
+  fetch(`${import.meta.env.VITE_API_URL}/api/schedules/${schedule.value.id}`, createRequestOptions)
+    .then((response: Response) => response.json().then(data => {
+      if (response.ok) {
+        closeScheduleModal();
+      } else {
+        console.error(`Failed to create schedule`, data);
+      }
+    }))
+    .catch((error: Error) => console.error(error));
+}
+
+const getScheduleData = (userId: number) => {
+  fetch(`${import.meta.env.VITE_API_URL}/api/schedules/${userId}`)
+    .then((response: Response) => {
+      if (response.status === 404) {
+        schedule.value = {
+          id: userId,
+          monday: false,
+          tuesday: false,
+          wednesday: false,
+          thursday: false,
+          friday: false,
+          saturday: false,
+          sunday: false,
+          start_time: '',
+          end_time: ''
+        };
+      } else {
+        return response.json();
+      }
+    })
+    .then((data) => {
+      if (data) schedule.value = data;
+    })
+    .catch((error: Error) => console.error(error));
+}
+
+const createUser = () => {
+  if (isUserModalOpen.value = true) {
+    var myHeaders = new Headers()
+    myHeaders.append("Content-Type", "application/json")
+    var raw = JSON.stringify({
+      "user": {
+        "username": `${userInput.value.username}`,
+        "email": `${userInput.value.email}`
+      }
+    })
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      body: raw,
+      headers: myHeaders,
+      redirect: 'follow'
+    }
+    fetch(`${import.meta.env.VITE_API_URL}/api/users`, requestOptions)
+      .then((response: Response) => {
+        if (response.ok) {
+          emit('addItem')
+          closeUserModal()
+        }
+      })
+      .catch((error: Error) => console.error(error))
+  }
 }
 
 const getUser = async () => {
