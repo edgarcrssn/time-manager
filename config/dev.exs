@@ -19,10 +19,10 @@ config :time_manager_api, TimeManagerApi.Repo,
 # to bundle .js and .css sources.
 ip =
   case env do
-    "prod" ->
-      {0, 0, 0, 0}
-    _ ->
+    "dev" ->
       {127, 0, 0, 1}
+    _ ->
+      {0, 0, 0, 0}
   end
 config :time_manager_api, TimeManagerApiWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
