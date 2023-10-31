@@ -3,7 +3,7 @@ FROM node:20.9.0
 WORKDIR /app
 COPY . .
 
-RUN echo 'Hello'
+RUN npm -v
 RUN npm install
 RUN npm run build
 
