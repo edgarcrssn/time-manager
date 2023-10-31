@@ -23,11 +23,5 @@ jobs:
       script:
         - chmod 600 /home/travis/.ssh/travis_key
         - scp -i /home/travis/.ssh/travis_key -o StrictHostKeyChecking=no ./docker-compose.deploy.yml "$GCP_USER"@"$GCP_VM_IP":/home/"$GCP_USER"/app/docker-compose.yml
-        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "docker rm -f db api ui"
-        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "cd /home/$GCP_USER/app && \
-          PGUSER=\$PGUSER PGPASSWORD=\$PGPASSWORD PGDATABASE=\$PGDATABASE PGPORT=\$PGPORT PGHOST=\$PGHOST \
-          docker-compose down && \
-          PGUSER=\$PGUSER PGPASSWORD=\$PGPASSWORD PGDATABASE=\$PGDATABASE PGPORT=\$PGPORT PGHOST=\$PGHOST \
-          docker-compose pull && \
-          PGUSER=\$PGUSER PGPASSWORD=\$PGPASSWORD PGDATABASE=\$PGDATABASE PGPORT=\$PGPORT PGHOST=\$PGHOST \
-          docker-compose up -d"
+        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "docker-compose down && docker rm -f db api ui"
+        - ssh -i /home/travis/.ssh/travis_key "$GCP_USER"@"$GCP_VM_IP" "cd /home/$GCP_USER/app && PGUSER=\$PGUSER PGPASSWORD=\$PGPASSWORD PGDATABASE=\$PGDATABASE PGPORT=\$PGPORT PGHOST=\$PGHOST docker-compose pull && PGUSER=\$PGUSER PGPASSWORD=\$PGPASSWORD PGDATABASE=\$PGDATABASE PGPORT=\$PGPORT PGHOST=\$PGHOST docker-compose up -d"
