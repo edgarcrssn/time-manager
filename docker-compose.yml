@@ -20,11 +20,14 @@ services:
     build:
       context: .
     environment:
+      ENV: $ENV
       PGUSER: $PGUSER
       PGPASSWORD: $PGPASSWORD
       PGDATABASE: $PGDATABASE
       PGPORT: $PGPORT
       PGHOST: $PGHOST
+      VITE_API_URL: $VITE_API_URL
+      VITE_FRONT_URL: $VITE_FRONT_URL
     ports:
       - '4000:4000'
     depends_on:
