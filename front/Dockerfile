@@ -1,4 +1,4 @@
-FROM node:20.9.0
+FROM node:18-bullseye-slim
 
 RUN echo $(node -v)
 RUN echo $(npm -v)
