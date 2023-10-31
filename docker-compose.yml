@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: $PGPASSWORD
       POSTGRES_DB: $PGDATABASE
     ports:
-      - '$PGPORT:$PGPORT'
+      - '5432:5432'
     restart: always
     volumes:
       - dbdata:/var/lib/postgresql/data
