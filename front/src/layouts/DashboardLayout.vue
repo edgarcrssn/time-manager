@@ -2,7 +2,7 @@
   <div class="h-screen flex flex-col">
     <header class="bg-gray-800 text-white p-4 flex items-center justify-between">
       <h1 class="text-center flex-grow">
-        Dashboard
+        Dashboard deploy test
       </h1>
       <router-link
         :to="`/dashboard/profile/${storedUserID}`"
