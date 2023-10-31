@@ -18,5 +18,8 @@ jobs:
 
     - stage: Deploy
       script:
-        - echo 'Deploy'
-        # Déployez votre application ici (par exemple, en utilisant SSH pour copier docker-compose.yml et redéployer avec Docker Compose)
+        - ssh -i /chemin/vers/votre/cle/privee -o StrictHostKeyChecking=no utilisateur@adresse-ip-de-votre-vm << EOF
+        cd /chemin/vers/votre/application
+        docker-compose up -d
+        exit
+        EOF

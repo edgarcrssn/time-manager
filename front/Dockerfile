@@ -1,8 +1,5 @@
 FROM node:18-bullseye-slim
 
-RUN echo $(node -v)
-RUN echo $(npm -v)
-
 WORKDIR /app
 COPY . .
 
