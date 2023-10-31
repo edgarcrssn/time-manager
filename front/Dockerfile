@@ -1,5 +1,8 @@
 FROM node:20.9.0
 
+RUN echo $(node -v)
+RUN echo $(npm -v)
+
 WORKDIR /app
 COPY . .
 
