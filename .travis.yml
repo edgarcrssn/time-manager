@@ -7,6 +7,10 @@ stages:
   - name: Build and Push
   - name: Deploy
 
+branches:
+  only:
+    - develop
+
 jobs:
   include:
     - stage: Build and Push
