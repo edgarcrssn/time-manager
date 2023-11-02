@@ -16,6 +16,7 @@ import { ref, onMounted, watch, Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ClockManager from '../components/ClockManager.vue'
 import ChartManager from '../components/ChartManager.vue'
+import { apiUrl } from '../constants/urls'
 
 const route = useRoute()
 const router = useRouter()
@@ -31,10 +32,10 @@ const getUserInfo = async () => {
       return
     }
 
-    const API_URL_CURRENT_USER = `${import.meta.env.VITE_API_URL}/api/users/${storedUserID}`
+    const API_URL_CURRENT_USER = `${apiUrl}/api/users/${storedUserID}`
     const responseCurrentUser = await fetch(API_URL_CURRENT_USER)
     const currentUser = await responseCurrentUser.json()
-    const API_URL = `${import.meta.env.VITE_API_URL}/api/users/${userId.value}`
+    const API_URL = `${apiUrl}/api/users/${userId.value}`
     const response = await fetch(API_URL)
     const user = await response.json()
 

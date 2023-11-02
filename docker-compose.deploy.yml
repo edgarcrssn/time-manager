@@ -17,8 +17,8 @@ services:
   api:
     container_name: api
     image: edgarcrssn/time-manager-api
-    build:
-      context: .
+    # build:
+    #   context: .
     environment:
       ENV: $ENV
       PGUSER: $PGUSER
@@ -36,8 +36,8 @@ services:
   ui:
     container_name: ui
     image: edgarcrssn/time-manager-ui
-    build:
-      context: ./front
+    # build:
+    #   context: ./front
     environment:
       VITE_API_URL: $VITE_API_URL
     ports:

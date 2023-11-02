@@ -78,10 +78,11 @@ import { onMounted, ref } from 'vue'
 import TableComponent from './table/TableComponent.vue'
 import Modal from './PopUp.vue'
 import { User } from '../models/Users'
+import { apiUrl } from '../constants/urls'
 
 const refreshKey = ref(0)
 const userId = localStorage.getItem('userID')
-const getUserUrl = `${import.meta.env.VITE_API_URL}/api/users/${userId}`
+const getUserUrl = `${apiUrl}/api/users/${userId}`
 const usersData = ref<User[]>([])
 const isManager = ref(false)
 const userForm = ref(null)
@@ -97,9 +98,9 @@ const closeUserModal = () => {
 }
 
 const openScheduleModal = (clickedUserId: number) => {
-  isScheduleModalOpen.value = true;
-  schedule.value.id = clickedUserId;
-  getScheduleData(clickedUserId);
+  isScheduleModalOpen.value = true
+  schedule.value.id = clickedUserId
+  getScheduleData(clickedUserId)
 }
 
 const closeScheduleModal = () => {
@@ -112,7 +113,7 @@ const userInput = ref({
   email: ''
 })
 
-const schedule = ref({
+const schedule = ref<{id: number | null, monday: boolean, tuesday: boolean, wednesday: boolean, friday?: boolean, thursday: boolean, saturday: boolean,sunday: boolean, start_time: string, end_time: string}>({
   id: null,
   monday: false,
   tuesday: false,
@@ -140,7 +141,7 @@ const updateOrCreateSchedule = () => {
     redirect: 'follow'
   }
 
-  fetch(`${import.meta.env.VITE_API_URL}/api/schedules/${schedule.value.id}`, updateRequestOptions)
+  fetch(`${apiUrl}/api/schedules/${schedule.value.id}`, updateRequestOptions)
     .then((response: Response) => response.json().then(data => {
       if (response.ok) {
         closeScheduleModal();
@@ -166,7 +167,7 @@ const createSchedule = (data: any) => {
     redirect: 'follow'
   }
 
-  fetch(`${import.meta.env.VITE_API_URL}/api/schedules/${schedule.value.id}`, createRequestOptions)
+  fetch(`${apiUrl}/api/schedules/${schedule.value.id}`, createRequestOptions)
     .then((response: Response) => response.json().then(data => {
       if (response.ok) {
         closeScheduleModal();
@@ -178,7 +179,7 @@ const createSchedule = (data: any) => {
 }
 
 const getScheduleData = (userId: number) => {
-  fetch(`${import.meta.env.VITE_API_URL}/api/schedules/${userId}`)
+  fetch(`${apiUrl}/api/schedules/${userId}`)
     .then((response: Response) => {
       if (response.status === 404) {
         schedule.value = {
@@ -192,7 +193,7 @@ const getScheduleData = (userId: number) => {
           sunday: false,
           start_time: '',
           end_time: ''
-        };
+        }
       } else {
         return response.json();
       }
@@ -219,7 +220,7 @@ const createUser = () => {
       headers: myHeaders,
       redirect: 'follow'
     }
-    fetch(`${import.meta.env.VITE_API_URL}/api/users`, requestOptions)
+    fetch(`${apiUrl}/api/users`, requestOptions)
       .then((response: Response) => {
         if (response.ok) {
           emit('addItem')
@@ -239,7 +240,7 @@ const getUser = async () => {
         isManager.value = true
         // get all the users of the database
         try {
-          const getAllUsersUrl = `${import.meta.env.VITE_API_URL}/api/users`
+          const getAllUsersUrl = `${apiUrl}/api/users`
           const responseAllUsers = await fetch(getAllUsersUrl)
           const dataUsers = await responseAllUsers.json()
           if (dataUsers) {
@@ -265,7 +266,7 @@ const handleItemDeleted = (itemId: number) => {
 
 const handleItemAdded = async () => {
   try {
-    const getAllUsersUrl = `${import.meta.env.VITE_API_URL}/api/users`
+    const getAllUsersUrl = `${apiUrl}/api/users`
     const responseAllUsers = await fetch(getAllUsersUrl)
     const dataUsers = await responseAllUsers.json()
     if (dataUsers) {

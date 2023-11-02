@@ -17,6 +17,7 @@
 import { ref, onMounted, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TableComponent from '../components/table/TableComponent.vue'
+import { apiUrl } from '../constants/urls'
 
 const route = useRoute()
 const router = useRouter()
@@ -38,7 +39,7 @@ onBeforeMount(() => {
 })
 
 const getWorkingTimes = async () => {
-  const API_URL = `${import.meta.env.VITE_API_URL}/api/workingtimes/${routeParamUserId}`
+  const API_URL = `${apiUrl}/api/workingtimes/${routeParamUserId}`
   try {
     const response = await fetch(API_URL)
     if (!response.ok) {

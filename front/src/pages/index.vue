@@ -17,6 +17,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { apiUrl } from '../constants/urls'
 
 const email = ref('')
 const router = useRouter()
@@ -30,7 +31,7 @@ const checkStoredUserID = () => {
 
 const login = async () => {
   try {
-    const API_URL = `${import.meta.env.VITE_API_URL}/api/users`
+    const API_URL = `${apiUrl}/api/users`
     const response = await fetch(API_URL + '?email=' + email.value)
     const users = await response.json()
 
