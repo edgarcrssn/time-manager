@@ -4,7 +4,6 @@
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
 
-# General application configuration
 import Config
 
 config :time_manager_api,
