@@ -184,4 +184,32 @@ defmodule TimeManagerApiWeb.UserController do
         |> json(users)
     end
   end
+
+  def getTeamMates(conn, %{"userId" => userId}) do
+    query =
+      from(
+        ut in TimeManagerApi.UserTeam,
+        join: u in assoc(ut, :user),
+        where: ut.user_id == ^userId,
+        select: ut.team_id
+      )
+    nestedQuery =
+      from(
+        u in TimeManagerApi.User,
+        join: ut in TimeManagerApi.UserTeam, on: u.id == ut.user_id,
+        where: ut.team_id in subquery(query)
+      )
+    users = TimeManagerApi.Repo.all(nestedQuery)
+    case users do
+      [] ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{message: "There is no team-mates for the user with the id #{userId}"})
+      _ ->
+        conn
+        |> put_status(:ok)
+        |> json(users)
+    end
+    json(conn,users)
+  end
 end
