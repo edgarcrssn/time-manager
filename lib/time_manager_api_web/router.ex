@@ -32,6 +32,7 @@ defmodule TimeManagerApiWeb.Router do
       put "/:userID", UserController, :update
       delete "/:userID", UserController, :delete
       get "/team/:teamId", UserController, :getByTeam
+      get "/teamMate/:userId", UserController, :getTeamMates
     end
 
     scope "/teams" do

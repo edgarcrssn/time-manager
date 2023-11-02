@@ -7,7 +7,5 @@ defmodule TimeManagerApi.Repo.Migrations.JoinUserTeams do
       add :team_id, references(:teams, on_delete: :delete_all)
       add :is_owner, :boolean, on_delete: :delete_all
     end
-
-    create unique_index(:user_teams, [:user_id, :team_id])
   end
 end
