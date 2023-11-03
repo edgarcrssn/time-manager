@@ -57,6 +57,7 @@ defmodule TimeManagerApiWeb.Router do
       delete "/:teamId", TeamController, :delete
       post "/:userId/:teamId", TeamController, :addUserTeam
       delete "/:userId/:teamId", TeamController, :deleteUserTeam
+      get "/:userId/team", TeamController, :getUserTeam
     end
 
     scope "/schedules" do
