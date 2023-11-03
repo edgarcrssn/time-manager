@@ -1,4 +1,4 @@
-defmodule TimeManagerApi.WorkingTimes do
+defmodule TimeManagerApi.Workingtimes do
   use Ecto.Schema
   import Ecto.Changeset
 

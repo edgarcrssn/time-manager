@@ -14,7 +14,7 @@ defmodule TimeManagerApi.User do
     belongs_to :team, TimeManagerApi.Team, foreign_key: :team_id, type: :integer
 
     has_one :clock, TimeManagerApi.Clock
-    has_many :working_times, TimeManagerApi.WorkingTimes
+    has_many :working_times, TimeManagerApi.Workingtimes
     many_to_many :teams, TimeManagerApi.Team, join_through: "user_teams"
   end
 
