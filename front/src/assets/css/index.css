@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* || General Style */
+
+@font-face {
+  font-family: 'Luciole';
+  src: url('~@/assets/fonts/Luciole-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Luciole';
+  src: url('~@/assets/fonts/Regular-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LucioleItalic';
+  src: url('~@/assets/fonts/Luciole-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Luciole';
+  src: url('~@/assets/fonts/Luciole-BoldItalic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+body {
+  font-family: 'Luciole', sans-serif;
+}
+
+/* || Titles */
+
+h2 {
+  @apply text-3xl mb-4 mt-4;
+}
+
+h3 {
+  @apply text-2xl font-semibold mb-4;
+}
+
+/* || Buttons */
+
+button {
+  @apply rounded-xl p-2 mt-4 transition duration-300 ease-in-out;
+}
+
+button:hover,
+button.main:hover {
+  @apply bg-opacity-50;
+}
+
+button.main {
+  @apply bg-customGrey text-customWhite;
+}
+
+button.error {
+  @apply bg-customBrightRed text-white;
+}
+
+/* || Tables */
+
+td,
+th {
+  @apply border border-black;
+}
