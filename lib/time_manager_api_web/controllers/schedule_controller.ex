@@ -1,6 +1,5 @@
 defmodule TimeManagerApiWeb.EmployeeScheduleController do
   use TimeManagerApiWeb, :controller
-  import Ecto.Query
 
   @doc """
   Retrieve the schedule for a specific user.

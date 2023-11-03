@@ -23,6 +23,7 @@ defmodule TimeManagerApiWeb.Router do
     scope "/clocks" do
       get "/:userID", ClockController, :show
       post "/:userID", ClockController, :create
+      post "/team/:teamID", ClockController, :createForMyTeam
     end
 
     scope "/users" do

@@ -26,7 +26,7 @@ defmodule TimeManagerApiWeb.ClockController do
     end
   end
 
-  # TODO create: must be user himself
+  # TODO create: must be user himself or his manager
   def create(conn, %{"userID" => user_id, "clock" => clock_params}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
 
@@ -58,6 +58,29 @@ defmodule TimeManagerApiWeb.ClockController do
         conn
         |> put_status(:internal_server_error)
         |> json(%{"message" => "Internal Server Error"})
+    end
+  end
+
+  # TODO create: must be the team manager
+  def createForMyTeam(conn, %{"teamID" => team_id}) when is_binary(team_id) do
+    team = TimeManagerApi.Repo.one(from t in TimeManagerApi.Team, where: t.id == ^team_id)
+
+    case team do
+      %TimeManagerApi.Team{} = _team ->
+        users_in_team_ids = TimeManagerApi.Repo.all(
+          from u in TimeManagerApi.User,
+          join: ut in TimeManagerApi.UserTeam,
+          on: u.id == ut.user_id,
+          where: ut.team_id == ^team_id,
+          select: u.id
+        )
+
+        Enum.each(users_in_team_ids, fn user_id -> TimeManagerApiWeb.Clock.create(user_id) end)
+
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{"message" => "Team Not Found"})
     end
   end
 end
