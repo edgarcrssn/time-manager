@@ -62,7 +62,8 @@ defmodule TimeManagerApiWeb.ClockController do
   end
 
   # TODO create: must be the team manager
-  def createForMyTeam(conn, %{"teamID" => team_id}) when is_binary(team_id) do
+  @spec createForMyTeam(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def createForMyTeam(conn, %{"teamID" => team_id, "clock" => clock_params}) when is_binary(team_id) do
     team = TimeManagerApi.Repo.one(from t in TimeManagerApi.Team, where: t.id == ^team_id)
 
     case team do
@@ -75,12 +76,34 @@ defmodule TimeManagerApiWeb.ClockController do
           select: u.id
         )
 
-        Enum.each(users_in_team_ids, fn user_id -> TimeManagerApiWeb.Clock.create(user_id) end)
+        case users_in_team_ids do
+          nil ->
+            conn
+            |> put_status(:not_found)
+            |> json(%{"message" => "Users Not Found"})
+
+          _ ->
+            create_clocks_for_users(conn, users_in_team_ids, clock_params)
+
+            conn
+            |> put_status(:created)
+            |> json(%{"message" => "Clocks creation started for team users"})
+        end
 
       nil ->
         conn
         |> put_status(:not_found)
         |> json(%{"message" => "Team Not Found"})
     end
+  end
+
+  defp create_clocks_for_users(conn, user_ids, clock_params) do
+    Enum.each(user_ids, fn user_id ->
+      Task.start(fn -> create_clock_for_user(conn, user_id, clock_params) end)
+    end)
+  end
+
+  defp create_clock_for_user(conn, user_id, clock_params) do
+    create(conn, %{"userID" => Integer.to_string(user_id), "clock" => clock_params})
   end
 end

@@ -17,7 +17,8 @@ defmodule TimeManagerApi.Application do
       # Start a worker by calling: TimeManagerApi.Worker.start_link(arg)
       # {TimeManagerApi.Worker, arg},
       # Start to serve requests, typically the last entry
-      TimeManagerApiWeb.Endpoint
+      TimeManagerApiWeb.Endpoint,
+      {Task.Supervisor, name: YourApp.TaskSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
