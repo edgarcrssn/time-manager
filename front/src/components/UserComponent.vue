@@ -79,9 +79,10 @@ import TableComponent from './table/TableComponent.vue'
 import Modal from './PopUp.vue'
 import { User } from '../models/Users'
 import { apiUrl } from '../constants/urls'
+import { fetchData } from '../services/httpService'
 
 const refreshKey = ref(0)
-const userId = localStorage.getItem('userID')
+const userId = sessionStorage.getItem('userID')
 const getUserUrl = `${apiUrl}/api/users/${userId}`
 const usersData = ref<User[]>([])
 const isManager = ref(false)
@@ -99,7 +100,6 @@ const closeUserModal = () => {
 
 const openScheduleModal = (clickedUserId: number) => {
   isScheduleModalOpen.value = true
-  schedule.value.id = clickedUserId
   getScheduleData(clickedUserId)
 }
 
@@ -125,130 +125,98 @@ const schedule = ref<{id: number | null, monday: boolean, tuesday: boolean, wedn
   end_time: ''
 })
 
-const updateOrCreateSchedule = () => {
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
+const updateOrCreateSchedule = async () => {
   const dataToSend = {
     schedule: { ...schedule.value }
-  };
-  const raw = JSON.stringify(dataToSend);
-
-  const updateRequestOptions: RequestInit = {
-    method: 'PUT',
-    body: raw,
-    headers: myHeaders,
-    redirect: 'follow'
   }
 
-  fetch(`${apiUrl}/api/schedules/${schedule.value.id}`, updateRequestOptions)
-    .then((response: Response) => response.json().then(data => {
-      if (response.ok) {
-        closeScheduleModal();
-      } else if (response.status === 404) {
-        createSchedule(dataToSend);
-      } else {
-        console.error(`Failed to update schedule for user ${schedule.value.id}`, data);
-      }
-    }))
-    .catch((error: Error) => console.error(error));
-}
+  try {
+    const data = await fetchData(`${apiUrl}/api/schedules/${schedule.value.id}`, 'PUT', dataToSend)
 
-const createSchedule = (data: any) => {
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
-  const raw = JSON.stringify(data);
-
-  const createRequestOptions: RequestInit = {
-    method: 'POST',
-    body: raw,
-    headers: myHeaders,
-    redirect: 'follow'
-  }
-
-  fetch(`${apiUrl}/api/schedules/${schedule.value.id}`, createRequestOptions)
-    .then((response: Response) => response.json().then(data => {
-      if (response.ok) {
-        closeScheduleModal();
-      } else {
-        console.error(`Failed to create schedule`, data);
-      }
-    }))
-    .catch((error: Error) => console.error(error));
-}
-
-const getScheduleData = (userId: number) => {
-  fetch(`${apiUrl}/api/schedules/${userId}`)
-    .then((response: Response) => {
-      if (response.status === 404) {
-        schedule.value = {
-          id: userId,
-          monday: false,
-          tuesday: false,
-          wednesday: false,
-          thursday: false,
-          friday: false,
-          saturday: false,
-          sunday: false,
-          start_time: '',
-          end_time: ''
-        }
-      } else {
-        return response.json();
-      }
-    })
-    .then((data) => {
-      if (data) schedule.value = data;
-    })
-    .catch((error: Error) => console.error(error));
-}
-
-const createUser = () => {
-  if (isUserModalOpen.value = true) {
-    var myHeaders = new Headers()
-    myHeaders.append("Content-Type", "application/json")
-    var raw = JSON.stringify({
-      "user": {
-        "username": `${userInput.value.username}`,
-        "email": `${userInput.value.email}`
-      }
-    })
-    const requestOptions: RequestInit = {
-      method: 'POST',
-      body: raw,
-      headers: myHeaders,
-      redirect: 'follow'
+    if (data) {
+      closeScheduleModal()
+    } else {
+      console.error("error")
     }
-    fetch(`${apiUrl}/api/users`, requestOptions)
-      .then((response: Response) => {
-        if (response.ok) {
-          emit('addItem')
-          closeUserModal()
+  } catch (error) {
+    if (error.status === 404) {
+      await createSchedule(dataToSend)
+    } else {
+      console.error(`Failed to update schedule for user ${schedule.value.id}`, error)
+    }
+    console.error('Error with the schedule operation:', error)
+  }
+}
+
+const createSchedule = async (dataToSend: any) => {
+  try {
+    const data = await fetchData(`${apiUrl}/api/schedules/${schedule.value.id}`, 'POST', dataToSend)
+
+    if (data) {
+      closeScheduleModal()
+    } else {
+      console.error("error")
+    }
+  } catch (error) {
+    console.error('Error creating schedule:', error)
+  }
+}
+
+const getScheduleData = async (userId: number) => {
+  schedule.value = {
+    id: userId,
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+    sunday: false,
+    start_time: '',
+    end_time: ''
+  };
+
+  try {
+    const scheduleData = await fetchData(`${apiUrl}/api/schedules/${userId}`);
+    if (scheduleData) {
+      schedule.value = { ...scheduleData, id: userId };
+    }
+  } catch (error) {
+    console.error(`Error fetching schedule for user ${userId}:`, error);
+  }
+}
+
+const createUser = async () => {
+  if (isUserModalOpen.value) {
+    try {
+      const userData = {
+        user: {
+          username: userInput.value.username,
+          email: userInput.value.email
         }
-      })
-      .catch((error: Error) => console.error(error))
+      }
+      await fetchData(`${apiUrl}/api/users`, 'POST', userData)
+      emit('addItem')
+      closeUserModal()
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 
 const getUser = async () => {
   try {
-    const response = await fetch(getUserUrl)
-    const data = await response.json()
-    if (data) {
-      if (data.role === 'manager' || data.role === 'general_manager') {
-        isManager.value = true
-        // get all the users of the database
-        try {
-          const getAllUsersUrl = `${apiUrl}/api/users`
-          const responseAllUsers = await fetch(getAllUsersUrl)
-          const dataUsers = await responseAllUsers.json()
-          if (dataUsers) {
-            usersData.value = dataUsers
-          }
-        } catch (error) {
-          console.error('Error while fetching all the users data')
+    const data = await fetchData(getUserUrl, 'GET')
+
+    if (data && (data.role === 'manager' || data.role === 'general_manager')) {
+      isManager.value = true
+      try {
+        const dataUsers = await fetchData(`${apiUrl}/api/users`, 'GET')
+        if (dataUsers) {
+          usersData.value = dataUsers
         }
+      } catch (error) {
+        console.error('Error while fetching all the users data')
       }
     }
   } catch (error) {

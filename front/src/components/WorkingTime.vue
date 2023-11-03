@@ -66,6 +66,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { apiUrl } from '../constants/urls'
+import { fetchData } from '../services/httpService'
 
 const route = useRoute()
 
@@ -116,52 +117,44 @@ onMounted(() => {
     loadWorkingTimeDetails()
   }
 })
+
 const getUserInfo = async () => {
   try {
-    const storedUserID = localStorage.getItem('userID')
-    const userId = route.params.userId.toString()
+    const storedUserID = sessionStorage.getItem('userID');
+    const userId = route.params.userId.toString();
 
-    const currentUserResponse = await fetch(`${apiUrl}/api/users/${storedUserID}`)
-    const currentUser = await currentUserResponse.json()
-
-    const targetUserResponse = await fetch(`${apiUrl}/api/users/${userId}`)
-    const targetUser = await targetUserResponse.json()
+    const currentUser = await fetchData(`${apiUrl}/api/users/${storedUserID}`);
+    const targetUser = await fetchData(`${apiUrl}/api/users/${userId}`);
 
     return {
       currentUser,
       targetUser
-    }
+    };
   } catch (error) {
-    console.error('Error fetching user information:', error)
-    return { currentUser: null, targetUser: null }
+    console.error('Error fetching user information:', error);
+    return { currentUser: null, targetUser: null };
   }
-}
+};
+
 const loadWorkingTimeDetails = async () => {
   try {
-    const userId = route.params.userId
-    const workingTimeId = route.params.workingTimeId
+    const userId = route.params.userId;
+    const workingTimeId = route.params.workingTimeId;
 
-    const response = await fetch(`${apiUrl}/api/workingtimes/${userId}/${workingTimeId}`)
+    const data = await fetchData(`${apiUrl}/api/workingtimes/${userId}/${workingTimeId}`);
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      console.error('Server responded with:', errorData)
-      throw new Error('Failed to load working time details')
-    }
+    const start = new Date(data.start);
+    const end = new Date(data.end);
 
-    const data = await response.json()
-
-    const start = new Date(data.start)
-    const end = new Date(data.end)
-
-    workingTimeDetails.value.startDate = start.toISOString().split('T')[0]
-    workingTimeDetails.value.startTime = start.toTimeString().slice(0, 5)
-    workingTimeDetails.value.endDate = end.toISOString().split('T')[0]
-    workingTimeDetails.value.endTime = end.toTimeString().slice(0, 5)
+    workingTimeDetails.value.startDate = start.toISOString().split('T')[0];
+    workingTimeDetails.value.startTime = start.toTimeString().slice(0, 5);
+    workingTimeDetails.value.endDate = end.toISOString().split('T')[0];
+    workingTimeDetails.value.endTime = end.toTimeString().slice(0, 5);
   } catch (error) {
     console.error('Error :', error)
   }
-}
+};
+
 const handleSubmit = () => {
   if (isEditMode.value) {
     updateWorkingTime()
@@ -172,143 +165,99 @@ const handleSubmit = () => {
 
 const createWorkingTime = async () => {
   try {
-    const { currentUser, targetUser } = await getUserInfo()
+    const { currentUser, targetUser } = await getUserInfo();
     const isAuthorized =
       (currentUser.role === 'employee' && currentUser.id === targetUser.id) ||
-      (currentUser.role === 'manager' && currentUser.team.id === targetUser.team.id)
+      (currentUser.role === 'manager' && currentUser.team.id === targetUser.team.id);
 
     if (!isAuthorized) {
-      console.error('Unauthorized: You do not have permission to create this working time')
-      return
+      console.error('Unauthorized: You do not have permission to create this working time');
+      return;
     }
 
-    const startDateTime = `${new Date(`${workingTimeDetails.value.startDate}T${workingTimeDetails.value.startTime}`)
-      .toISOString()
-      .slice(0, -5)}Z`
-
-    const endDateTime = `${new Date(`${workingTimeDetails.value.endDate}T${workingTimeDetails.value.endTime}`)
-      .toISOString()
-      .slice(0, -5)}Z`
+    const startDateTime = `${new Date(`${workingTimeDetails.value.startDate}T${workingTimeDetails.value.startTime}`).toISOString().slice(0, -5)}Z`;
+    const endDateTime = `${new Date(`${workingTimeDetails.value.endDate}T${workingTimeDetails.value.endTime}`).toISOString().slice(0, -5)}Z`;
 
     if (new Date(endDateTime) < new Date(startDateTime)) {
-      console.error('Cannot create a working time that ends in the past')
-      return
+      console.error('Cannot create a working time that ends in the past');
+      return;
     }
 
-    const response = await fetch(`${apiUrl}/api/workingtimes/${targetUser.id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+    await fetchData(`${apiUrl}/api/workingtimes/${targetUser.id}`, 'POST', {
+      workingtime: {
+        start: startDateTime,
+        end: endDateTime,
       },
-      body: JSON.stringify({
-        workingtime: {
-          start: startDateTime,
-          end: endDateTime
-        }
-      })
-    })
+    });
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      console.error('Server responded with:', errorData)
-      throw new Error('Failed to create working time')
-    }
-
-    isCreated.value = true
-    alertMessage.value = 'WorkingTime created'
-    alertSuccessMessage.value = 'Working hours have been successfully created.'
-    workingTimeDetails.value = { startDate: '', endDate: '', startTime: '', endTime: '' }
+    isCreated.value = true;
+    alertMessage.value = 'WorkingTime created';
+    alertSuccessMessage.value = 'Working hours have been successfully created.';
+    workingTimeDetails.value = { startDate: '', endDate: '', startTime: '', endTime: '' };
   } catch (error) {
     console.error('Error :', error)
   }
-}
+};
 
 const updateWorkingTime = async () => {
   try {
-    const workingTimeId = route.params.workingTimeId
-    const { currentUser, targetUser } = await getUserInfo()
+    const workingTimeId = route.params.workingTimeId;
+    const { currentUser, targetUser } = await getUserInfo();
     const isAuthorized =
       (currentUser.role === 'employee' && currentUser.id === targetUser.id) ||
-      (currentUser.role === 'manager' && currentUser.team.id === targetUser.team.id)
+      (currentUser.role === 'manager' && currentUser.team.id === targetUser.team.id);
 
     if (!isAuthorized) {
-      console.error('Unauthorized: You do not have permission to update this working time')
-      return
+      console.error('Unauthorized: You do not have permission to update this working time');
+      return;
     }
 
-    const startDateTime = `${new Date(`${workingTimeDetails.value.startDate}T${workingTimeDetails.value.startTime}`)
-      .toISOString()
-      .slice(0, -5)}Z`
-
-    const endDateTime = `${new Date(`${workingTimeDetails.value.endDate}T${workingTimeDetails.value.endTime}`)
-      .toISOString()
-      .slice(0, -5)}Z`
+    const startDateTime = `${new Date(`${workingTimeDetails.value.startDate}T${workingTimeDetails.value.startTime}`).toISOString().slice(0, -5)}Z`;
+    const endDateTime = `${new Date(`${workingTimeDetails.value.endDate}T${workingTimeDetails.value.endTime}`).toISOString().slice(0, -5)}Z`;
 
     if (new Date(endDateTime) < new Date(startDateTime)) {
-      console.error('Cannot create a working time that ends in the past')
-      return
+      console.error('Cannot update a working time that ends in the past');
+      return;
     }
 
-    const response = await fetch(`${apiUrl}/api/workingtimes/${workingTimeId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        workingtime: {
-          start: startDateTime,
-          end: endDateTime,
-          user_id: targetUser.id
-        }
-      })
-    })
+    await fetchData(`${apiUrl}/api/workingtimes/${workingTimeId}`, 'PUT', {
+      workingtime: {
+        start: startDateTime,
+        end: endDateTime,
+        user_id: targetUser.id
+      }
+    });
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      console.error('Server responded with:', errorData)
-      throw new Error('Failed to update working time')
-    }
-
-    isUpdated.value = true
-    alertMessage.value = 'WorkingTime updated'
-    alertSuccessMessage.value = 'Working hours have been successfully updated.'
+    isUpdated.value = true;
+    alertMessage.value = 'WorkingTime updated';
+    alertSuccessMessage.value = 'Working hours have been successfully updated.';
   } catch (error) {
     console.error('Error :', error)
   }
-}
+};
 
 const deleteWorkingTime = async () => {
   try {
-    const workingTimeId = route.params.workingTimeId
-    const { currentUser, targetUser } = await getUserInfo()
+    const workingTimeId = route.params.workingTimeId;
+    const { currentUser, targetUser } = await getUserInfo();
     const isAuthorized =
       (currentUser.role === 'employee' && currentUser.id === targetUser.id) ||
-      (currentUser.role === 'manager' && currentUser.team.id === targetUser.team.id)
+      (currentUser.role === 'manager' && currentUser.team.id === targetUser.team.id);
 
     if (!isAuthorized) {
-      console.error('Unauthorized: You do not have permission to delete this working time')
-      return
+      console.error('Unauthorized: You do not have permission to delete this working time');
+      return;
     }
 
-    const response = await fetch(`${apiUrl}/api/workingtimes/${workingTimeId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    await fetchData(`${apiUrl}/api/workingtimes/${workingTimeId}`, 'DELETE');
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      console.error('Server responded with:', errorData)
-      throw new Error('Failed to delete working time')
-    }
-
-    isDeleted.value = true
-    alertMessage.value = 'WorkingTime deleted'
-    alertSuccessMessage.value = 'Working hours have been successfully deleted.'
-    workingTimeDetails.value = { startDate: '', endDate: '', startTime: '', endTime: '' }
+    isDeleted.value = true;
+    alertMessage.value = 'WorkingTime deleted';
+    alertSuccessMessage.value = 'Working hours have been successfully deleted.';
+    workingTimeDetails.value = { startDate: '', endDate: '', startTime: '', endTime: '' };
   } catch (error) {
     console.error('Error :', error)
   }
-}
+};
+
 </script>

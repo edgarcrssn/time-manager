@@ -75,3 +75,7 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+
+config :time_manager_api, MyApp.Token,
+  secret_key: System.get_env("SECRET_KEY"), # You should use a strong secret from an environment variable
+  algorithm: "HS256"

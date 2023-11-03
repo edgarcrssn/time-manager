@@ -10,10 +10,18 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
+import Argon2
+
+defmodule SeedHelper do
+  def hash_password(plain_text_password) do
+    Argon2.hash_pwd_salt(plain_text_password)
+  end
+end
+
 # Previous users and teams
-user1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user1", email: "user1@example.com", role: :manager})
-user2 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user2", email: "user2@example.com", role: :employee})
-user3 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user3", email: "user3@example.com", role: :employee})
+user1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user1", email: "user1@example.com", role: :manager, password_hash: SeedHelper.hash_password("azerty")})
+user2 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user2", email: "user2@example.com", role: :employee, password_hash: SeedHelper.hash_password("azerty")})
+user3 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user3", email: "user3@example.com", role: :employee, password_hash: SeedHelper.hash_password("azerty")})
 
 team1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.Team{name: "Team1"})
 user_team1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.UserTeam{user: user1, team: team1, is_owner: true})
@@ -22,23 +30,23 @@ user_team1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.UserTeam{user: user1, t
 team2 = TimeManagerApi.Repo.insert!(%TimeManagerApi.Team{name: "Team2"})
 
 # New manager associated with team2
-user4 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user4", email: "user4@example.com", role: :manager})
+user4 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user4", email: "user4@example.com", role: :manager, password_hash: SeedHelper.hash_password("azerty")})
 
 # Update team2 to associate it with user4 as its manager
 user_team2 = TimeManagerApi.Repo.insert!(%TimeManagerApi.UserTeam{user: user4, team: team2, is_owner: true})
 
 
 # Two employees associated with team2
-user5 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user5", email: "user5@example.com", role: :employee,})
-user6 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user6", email: "user6@example.com", role: :employee})
+user5 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user5", email: "user5@example.com", role: :employee, password_hash: SeedHelper.hash_password("azerty")})
+user6 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user6", email: "user6@example.com", role: :employee, password_hash: SeedHelper.hash_password("azerty")})
 user_team3 = TimeManagerApi.Repo.insert!(%TimeManagerApi.UserTeam{user: user5, team: team2, is_owner: false})
 user_team4 = TimeManagerApi.Repo.insert!(%TimeManagerApi.UserTeam{user: user6, team: team2, is_owner: false})
 
 # Employee without any team
-user7 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user7", email: "user7@example.com", role: :employee})
+user7 = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "user7", email: "user7@example.com", role: :employee, password_hash: SeedHelper.hash_password("azerty")})
 
 # General manager
-general_manager = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "general_manager", email: "gm@example.com", role: :general_manager})
+general_manager = TimeManagerApi.Repo.insert!(%TimeManagerApi.User{username: "general_manager", email: "gm@example.com", role: :general_manager, password_hash: SeedHelper.hash_password("azerty")})
 
 # working times
 current_date = Date.utc_today()

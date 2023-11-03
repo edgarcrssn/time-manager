@@ -4,68 +4,35 @@
       <table class="w-full text-center">
         <thead>
           <tr>
-            <th
-              v-for="thName in titleProperty"
-              :key="thName"
-            >
+            <th v-for="thName in titleProperty" :key="thName">
               {{ thName }}
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="donnee in data"
-            v-if="typeTable == 'user'"
-            :key="donnee"
-          >
+          <tr v-for="donnee in data" v-if="typeTable == 'user'" :key="donnee">
             <td>{{ donnee.username }}</td>
             <td>{{ donnee.email }}</td>
             <td>
-              <button type="button" @click="$emit('itemDeleted', donnee.id)">
-                <img
-                  alt="delete"
-                  src="../../assets/calendar_icon.svg"
-                  class="w-5 h-5"
-                >
+              <button type="button" @click="$emit('showSchedule', donnee.id)">
+                <img alt="calendar" src="../../assets/calendar_icon.svg" class="w-5 h-5">
               </button>
-              <button
-                type="button"
-                @click="deleteUser(donnee.id)"
-              >
-                <img
-                  alt="delete"
-                  src="../../assets/delete_icon.svg"
-                  class="w-5 h-5"
-                >
+              <button type="button" @click="deleteUser(donnee.id)">
+                <img alt="delete" src="../../assets/delete_icon.svg" class="w-5 h-5">
               </button>
             </td>
           </tr>
 
-          <tr
-            v-for="(donnee, id) in data"
-            v-if="typeTable == 'team'"
-            :key="id"
-          >
+          <tr v-for="(donnee, id) in data" v-if="typeTable == 'team'" :key="id">
             <td>{{ donnee.name }}</td>
             <td>
-              <button
-                type="button"
-                @click="deleteUser(id)"
-              >
-                <img
-                  alt="delete"
-                  src="../../assets/delete_icon.svg"
-                  class="w-5 h-5"
-                >
+              <button type="button" @click="deleteUser(id)">
+                <img alt="delete" src="../../assets/delete_icon.svg" class="w-5 h-5">
               </button>
             </td>
           </tr>
 
-          <tr
-            v-for="time in data"
-            v-if="typeTable == 'workingTimes'"
-            :key="time.id"
-          >
+          <tr v-for="time in data" v-if="typeTable == 'workingTimes'" :key="time.id">
             <td class="border p-2">
               {{ time.id }}
             </td>
@@ -88,6 +55,7 @@
 <script lang="ts" setup>
 import { formatDate } from '../../helpers/dateUtils'
 import { apiUrl } from '../../constants/urls'
+import { fetchData } from '../../services/httpService'
 
 const emit = defineEmits(['itemDeleted'])
 defineProps({
@@ -108,17 +76,14 @@ defineProps({
     type: String
   }
 })
-const deleteUser = (id: number) => {
-  fetch(`${apiUrl}/api/users/${id}`, {
-    method: 'DELETE',
-    redirect: 'follow'
-  })
-    .then((response: Response) => {
-      if (response.ok) {
-        emit('itemDeleted', id)
-      }
-    })
-    .catch((error: Error) => console.error('error', error))
+const deleteUser = async (id: number) => {
+  try {
+    await fetchData(`${apiUrl}/api/users/${id}`, 'DELETE')
+
+    emit('itemDeleted', id)
+  } catch (error) {
+    console.error('error', error)
+  }
 }
 </script>
 
