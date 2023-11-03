@@ -39,6 +39,7 @@ defmodule TimeManagerApiWeb.Router do
     scope "/teams" do
       get "", TeamController, :getAllTeam
       get "/:teamId", TeamController, :getById
+      get "/:teamId/users", TeamController, :getTeamUsersById
       get "/owned/:userId", TeamController, :getMyOwnedTeams
       post "", TeamController, :create
       put "/:teamId", TeamController, :update

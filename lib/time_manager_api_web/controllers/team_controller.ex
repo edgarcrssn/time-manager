@@ -12,6 +12,49 @@ defmodule TimeManagerApiWeb.TeamController do
       json(conn, teams)
   end
 
+  def getById(conn, %{"teamId" => team_id}) do
+    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, team_id)
+
+    case team do
+      %TimeManagerApi.Team{} = team ->
+        json(conn,team)
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "Team with id #{team_id} doesn't exist"})
+    end
+  end
+
+  def getTeamUsersById(conn, %{"teamId" => team_id}) do
+    team_id = String.to_integer(team_id)
+
+    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, team_id)
+
+    case team do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{"message" => "Team Not Found"})
+
+      _ ->
+        users_in_team = TimeManagerApi.Repo.all(
+          from u in TimeManagerApi.User,
+          join: ut in TimeManagerApi.UserTeam,
+          on: u.id == ut.user_id,
+          where: ut.team_id == ^team_id,
+          select: u
+        )
+
+        users = Enum.map(users_in_team, fn user ->
+          %{id: user.id, username: user.username, email: user.email, role: user.role}
+        end)
+
+        conn
+        |> put_status(:ok)
+        |> json(%{users: users})
+    end
+  end
+
   def getMyOwnedTeams(conn, %{"userId" => user_id}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, user_id)
 
@@ -38,19 +81,6 @@ defmodule TimeManagerApiWeb.TeamController do
         conn
         |> put_status(:unauthorized)
         |> json(%{error: "Unauthorized"})
-    end
-  end
-
-  def getById(conn, %{"teamId" => team_id}) do
-    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, team_id)
-
-    case team do
-      %TimeManagerApi.Team{} = team ->
-        json(conn,team)
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> json(%{error: "Team with id #{team_id} doesn't exist"})
     end
   end
 
