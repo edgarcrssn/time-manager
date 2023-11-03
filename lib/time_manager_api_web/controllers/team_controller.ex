@@ -241,4 +241,25 @@ defmodule TimeManagerApiWeb.TeamController do
     |> json(teams_with_users)
   end
 
+  def getUserTeam(conn,%{"userId" => userId}) do
+    query =
+      from(
+        ut in TimeManagerApi.UserTeam,
+        join: t in TimeManagerApi.Team, on: ut.team_id == t.id,
+        where: ut.user_id == ^userId,
+        select: t
+      )
+    teamsName = TimeManagerApi.Repo.all(query)
+    case teamsName do
+      [] ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "The user with the id #{userId} is not in a team"})
+      _ ->
+        conn
+        |> put_status(:ok)
+        |> json(teamsName)
+    end
+  end
+
 end
