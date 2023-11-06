@@ -138,13 +138,17 @@ const updateOrCreateSchedule = async () => {
     } else {
       console.error("error")
     }
-  } catch (error) {
-    if (error.status === 404) {
-      await createSchedule(dataToSend)
+  } catch (error: unknown) {
+    if (error instanceof Error && 'status' in error) {
+      const errorWithStatus = error as Error & { status: number };
+      if (errorWithStatus.status === 404) {
+        await createSchedule(dataToSend);
+      } else {
+        console.error(`Failed to update schedule for user ${schedule.value.id}`, error);
+      }
     } else {
-      console.error(`Failed to update schedule for user ${schedule.value.id}`, error)
+      console.error('Error with the schedule operation:', error);
     }
-    console.error('Error with the schedule operation:', error)
   }
 }
 
