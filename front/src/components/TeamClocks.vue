@@ -1,5 +1,5 @@
 <template>
-  <section v-if="!processing">
+  <section>
     <h3>{{ team.name }}</h3>
     <p v-if="loading">
       Loading...
@@ -9,7 +9,7 @@
     </p>
     <ul v-else>
       <li v-for="member in teamMembers" :key="member.id">
-        <UserClock v-if="member.id != +userId" :member="member" :refresh="refresh" />
+        <UserClock v-if="member.id != +userId" :member="member" />
       </li>
     </ul>
     <button :disabled="loading || processing" @click="clockForAllTeamMembers">
@@ -24,6 +24,7 @@ import { apiUrl } from '../constants/urls'
 import { Team } from '../models/Teams'
 import { User } from '../models/Users'
 import UserClock from './UserClock.vue'
+import { fetchData } from '../services/httpService'
 
 const { team, userId } = defineProps({
   team: {
@@ -31,7 +32,7 @@ const { team, userId } = defineProps({
     required: true
   },
   userId: {
-    type: String,
+    type: Number || String,
     required: true
   }
 })
@@ -42,8 +43,7 @@ const loading = ref(true)
 const refresh = async () => {
   try {
     const API_URL = `${apiUrl}/api/teams/${team.id}/users`
-    const response = await fetch(API_URL)
-    const data = await response.json()
+    const data = await fetchData(API_URL)
     if (data?.users) teamMembers.value = data.users
   } catch (error) {
     console.error('Error fetching team members:', error)
@@ -67,18 +67,11 @@ const clockForAllTeamMembers = async () => {
   processing.value = true
   try {
     const currentTime = new Date().toISOString()
-    const response = await fetch(`${apiUrl}/api/clocks/team/${team.id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        clock: {
-          time: currentTime
-        }
-      })
+    const data = await fetchData(`${apiUrl}/api/clocks/team/${team.id}`, 'POST', {
+      clock: {
+        time: currentTime
+      }
     })
-    const data = await response.json()
     console.log(data)
   } catch (error) {
     console.error(error)

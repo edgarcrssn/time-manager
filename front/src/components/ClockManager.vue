@@ -25,7 +25,12 @@ import { apiUrl } from '../constants/urls'
 import ClockManagerForTeamManager from './ClockManagerForTeamManager.vue'
 import { fetchData } from '../services/httpService'
 
-const { userId } = defineProps(['userId'])
+const { userId } = defineProps({
+  userId: {
+    type: Number || String,
+    required: true
+  }
+})
 
 const startDateTime = ref<string | null>(null)
 const clockIn = ref<boolean | null>(null)
@@ -38,8 +43,7 @@ const refresh = async () => {
   if (processing.value) return
 
   try {
-    const response = await fetchData(`${API_URL}/last`)
-    const data = await response.json()
+    const data = await fetchData(`${API_URL}/last`)
     if (data && data?.clock) {
       const lastClock = data.clock
       clockIn.value = lastClock.status
@@ -67,13 +71,12 @@ const clock = async () => {
   processing.value = true
   try {
     const currentTime = new Date().toISOString()
-    const response = await fetchData(API_URL, 'POST', {
+    const data = await fetchData(API_URL, 'POST', {
       clock: {
         time: currentTime
       }
     })
 
-    const data = await response.json()
     const lastClock = data.newClock
     clockIn.value = lastClock.status
 
