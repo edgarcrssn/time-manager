@@ -1,7 +1,9 @@
 <template>
   <section class="text-center">
     <h2>Work Tracking</h2>
-    <p v-if="!loading && !processing">{{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}</p>
+    <p v-if="!loading && !processing">
+      {{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}
+    </p>
     <button v-if="!loading && !processing" class="main" @click="clock">
       {{ clockIn ? 'Clock Out' : 'Clock In' }}
     </button>
@@ -14,95 +16,84 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted, defineProps } from 'vue'
 import { apiUrl } from '../constants/urls'
+import { fetchData } from '../services/httpService'
 
-const { userId } = defineProps(['userId']);
+const { userId } = defineProps(['userId'])
 
-const startDateTime = ref<string | null>(null);
-const clockIn = ref<boolean | null>(null);
-const API_URL = `${apiUrl}/api/clocks/${userId}`;
+const startDateTime = ref<string | null>(null)
+const clockIn = ref<boolean | null>(null)
+const API_URL = `${apiUrl}/api/clocks/${userId}`
 
-const loading = ref(true);
-const processing = ref(false);
+const loading = ref(true)
+const processing = ref(false)
 
 const refresh = async () => {
   try {
-    const response = await fetch(API_URL);
-    const data = await response.json();
+    const data = await fetchData(API_URL)
     if (data && data.length > 0) {
-      const lastClock = data[data.length - 1];
-      clockIn.value = lastClock.status;
-      startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null;
+      const lastClock = data[data.length - 1]
+      clockIn.value = lastClock.status
+      startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
     }
-    loading.value = false;
+    loading.value = false
   } catch (error) {
-    console.error('Error fetching clock status:', error);
-    loading.value = false;
+    console.error('Error fetching clock status:', error)
+    loading.value = false
   }
-};
+}
 
-let intervalId: ReturnType<typeof setInterval>;
+let intervalId: ReturnType<typeof setInterval>
 
 onMounted(() => {
-  refresh();
-  intervalId = setInterval(refresh, 10000);
-});
+  refresh()
+  intervalId = setInterval(refresh, 10000)
+})
 
 onUnmounted(() => {
-  clearInterval(intervalId);
-});
+  clearInterval(intervalId)
+})
 
 const clock = async () => {
-  processing.value = true;
+  processing.value = true
   try {
-    const currentTime = new Date().toISOString();
-    await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        clock: {
-          time: currentTime
-        }
-      })
-    });
+    const currentTime = new Date().toISOString()
+    await fetchData(API_URL, 'POST', {
+      clock: {
+        time: currentTime
+      }
+    })
 
-    const response = await fetch(API_URL);
-    const data = await response.json();
-    const lastClock = data[data.length - 1];
-    clockIn.value = lastClock.status;
+    const data = await fetchData(API_URL)
+    const lastClock = data[data.length - 1]
+    clockIn.value = lastClock.status
 
     if (lastClock.status) {
-      startDateTime.value = new Date(lastClock.time).toLocaleString();
+      startDateTime.value = new Date(lastClock.time).toLocaleString()
     } else if (data.length > 1) {
-      const previousClock = data[data.length - 2];
-      await createWorkingTime(previousClock.time, lastClock.time);
-      startDateTime.value = null;
+      const previousClock = data[data.length - 2]
+      await createWorkingTime(previousClock.time, lastClock.time)
+      startDateTime.value = null
     }
   } catch (error) {
-    console.error('Error clocking in/out:', error);
+    console.error('Error clocking in/out:', error)
   } finally {
     setTimeout(() => {
-      processing.value = false;
-    }, 300);
+      processing.value = false
+    }, 300)
   }
-};
+}
 
 const createWorkingTime = async (startTime: string, endTime: string) => {
-  const workingTimesAPI = `${apiUrl}/api/workingtimes/${userId}`;
+  const workingTimesAPI = `${apiUrl}/api/workingtimes/${userId}`
   try {
-    await fetch(workingTimesAPI, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        workingtime: {
-          start: startTime,
-          end: endTime
-        }
-      })
-    });
+    await fetchData(workingTimesAPI, 'POST', {
+      workingtime: {
+        start: startTime,
+        end: endTime
+      }
+    })
   } catch (error) {
-    console.error('Error creating working time:', error);
+    console.error('Error creating working time:', error)
   }
-};
+}
 </script>

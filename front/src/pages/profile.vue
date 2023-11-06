@@ -1,8 +1,6 @@
 <template>
   <section class="p-2 flex flex-col items-center">
-    <h2>
-      Profile
-    </h2>
+    <h2>Profile</h2>
     <article class="w-full max-w-md">
       <div><strong>Username:</strong> {{ user.username }}</div>
       <div><strong>Email:</strong> {{ user.email }}</div>
@@ -10,11 +8,7 @@
       <div v-if="user.team">
         <strong>Team:</strong> {{ user.team.name }}
       </div>
-      <button
-        v-if="canDelete"
-        class="bg-error text-white px-4 py-2 mt-4"
-        @click="deleteAccount"
-      >
+      <button v-if="canDelete" class="bg-error text-white px-4 py-2 mt-4" @click="deleteAccount">
         Delete Account
       </button>
     </article>
@@ -26,13 +20,14 @@ import { ref, onMounted, computed, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { User } from '../models/Users'
 import { apiUrl } from '../constants/urls'
+import { fetchData } from '../services/httpService'
 
 const route = useRoute()
 const router = useRouter()
 const user = ref<Partial<User>>({})
 
-const storedUserID = localStorage.getItem('userID') ? Number(localStorage.getItem('userID')) : null
-const storedUserRole = localStorage.getItem('userRole')
+const storedUserID = sessionStorage.getItem('userID') ? Number(sessionStorage.getItem('userID')) : null
+const storedUserRole = sessionStorage.getItem('userRole')
 
 onBeforeMount(() => {
   if (!storedUserID) {
@@ -44,17 +39,13 @@ const fetchProfile = async () => {
   const userId = route.params.userId
   const API_URL = `${apiUrl}/api/users/${userId}`
   try {
-    const response = await fetch(API_URL)
-    if (!response.ok) {
-      if (response.status === 404) {
-        router.push(`/profile/${storedUserID}`)
-        return
-      }
-      throw new Error('Failed to fetch profile')
-    }
-    user.value = await response.json()
+    user.value = await fetchData(API_URL)
   } catch (error) {
-    console.error('Error fetching profile:', error)
+    if (error.message.includes('404')) {
+      router.push(`/profile/${storedUserID}`)
+    } else {
+      console.error('Error fetching profile:', error)
+    }
   }
 }
 
@@ -62,20 +53,13 @@ const deleteAccount = async () => {
   if (storedUserRole === 'general_manager' || storedUserID === user.value.id) {
     const API_URL = `${apiUrl}/api/users/${user.value.id}`
     try {
-      const response = await fetch(API_URL, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to delete the profile')
-      }
+      await fetchData(API_URL, 'DELETE')
 
       if (storedUserID === user.value.id) {
-        localStorage.removeItem('userID')
-        localStorage.removeItem('userRole')
+        await fetchData(apiUrl + '/logout', 'POST')
+        sessionStorage.removeItem('userID')
+        sessionStorage.removeItem('userRole')
+        sessionStorage.removeItem('csrf_token')
         router.push('/')
       } else {
         router.push(`/dashboard/${storedUserID}`)

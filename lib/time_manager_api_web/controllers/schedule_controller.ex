@@ -23,7 +23,7 @@ defmodule TimeManagerApiWeb.EmployeeScheduleController do
   Create a new schedule for a specific user.
   """
   def create(conn, %{"userID" => user_id, "schedule" => schedule_params}) do
-    existing_schedule = TimeManagerApi.Repo.get(TimeManagerApi.EmployeeSchedule, user_id)
+    existing_schedule = TimeManagerApi.Repo.get_by(TimeManagerApi.EmployeeSchedule, user_id: user_id)
 
     case existing_schedule do
       nil ->

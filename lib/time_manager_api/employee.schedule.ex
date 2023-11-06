@@ -22,5 +22,6 @@ defmodule TimeManagerApi.EmployeeSchedule do
     schedule
     |> cast(attrs, [:user_id, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday, :start_time, :end_time])
     |> validate_required([:user_id, :start_time, :end_time])
+    |> unique_constraint(:user_id, name: "employee_schedule_user_id_index")
   end
 end

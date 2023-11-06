@@ -54,23 +54,32 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
+import { apiUrl } from '../constants/urls'
+import { fetchData } from '../services/httpService'
 
 const router = useRouter()
 const storedUserID = ref('')
 
-const logout = () => {
-  localStorage.removeItem('userID')
-  localStorage.removeItem('userRole')
-  router.push('/')
+const logout = async () => {
+  try {
+    await fetchData(apiUrl + '/logout', 'POST')
+    sessionStorage.removeItem('userID')
+    sessionStorage.removeItem('userRole')
+    sessionStorage.removeItem('csrf_token')
+
+    router.push('/')
+  } catch (error) {
+    console.error('Error during logout attempt:', error)
+  }
 }
 
 const isManagerOrGeneralManager = computed(() => {
-  const storedUserRole = localStorage.getItem('userRole')
+  const storedUserRole = sessionStorage.getItem('userRole')
   return storedUserRole === 'manager' || storedUserRole === 'general_manager'
 })
 
 const getUserInfo = () => {
-  const userID = localStorage.getItem('userID')
+  const userID = sessionStorage.getItem('userID')
   if (!userID) return
   storedUserID.value = userID
 }

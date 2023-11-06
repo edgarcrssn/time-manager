@@ -1,13 +1,7 @@
 <template>
   <div class="p-2 flex flex-col items-center">
-    <ClockManager
-      :key="userId"
-      :user-id="userId"
-    />
-    <ChartManager
-      :key="userId"
-      :user-id="userId"
-    />
+    <ClockManager :key="userId" :user-id="userId" />
+    <ChartManager :key="userId" :user-id="userId" />
   </div>
 </template>
 
@@ -17,6 +11,7 @@ import { useRoute, useRouter } from 'vue-router'
 import ClockManager from '../components/ClockManager.vue'
 import ChartManager from '../components/ChartManager.vue'
 import { apiUrl } from '../constants/urls'
+import { fetchData } from '../services/httpService'
 
 const route = useRoute()
 const router = useRouter()
@@ -25,7 +20,7 @@ const username = ref('')
 
 const getUserInfo = async () => {
   try {
-    const storedUserID = localStorage.getItem('userID')
+    const storedUserID = sessionStorage.getItem('userID')
 
     if (!storedUserID) {
       router.push('/')
@@ -33,11 +28,9 @@ const getUserInfo = async () => {
     }
 
     const API_URL_CURRENT_USER = `${apiUrl}/api/users/${storedUserID}`
-    const responseCurrentUser = await fetch(API_URL_CURRENT_USER)
-    const currentUser = await responseCurrentUser.json()
+    const currentUser = await fetchData(API_URL_CURRENT_USER)
     const API_URL = `${apiUrl}/api/users/${userId.value}`
-    const response = await fetch(API_URL)
-    const user = await response.json()
+    const user = await fetchData(API_URL)
 
     if (user && currentUser) {
       username.value = user.username
