@@ -6,9 +6,11 @@ defmodule TimeManagerApi.Repo.Migrations.CreateUsers do
       add :username, :string
       add :email, :string
       add :role, :string
+      add :password_hash, :string
       add :team_id, references(:teams, on_delete: :nothing)
     end
 
     create unique_index(:users, [:email])
   end
+
 end

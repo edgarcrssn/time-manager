@@ -1,55 +1,38 @@
 <template>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form @submit.prevent="login">
-      <input
-        v-model="email"
-        type="email"
-        placeholder="Enter your email"
-      >
-      <button type="submit">
+  <div class="auth-container">
+    <div class="auth-switch flex justify-center gap-2">
+      <button :class="{ main: currentView === 'login' }" @click="toggleView('login')">
         Login
       </button>
-    </form>
+      <button :class="{ main: currentView === 'register' }" @click="toggleView('register')">
+        Register
+      </button>
+    </div>
+
+    <Login v-if="currentView === 'login'" />
+    <Register v-else />
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { apiUrl } from '../constants/urls'
+import Login from '../components/Login.vue'
+import Register from '../components/Register.vue'
 
-const email = ref('')
+const currentView = ref('login')
+const storedUserID = sessionStorage.getItem('userID')
 const router = useRouter()
 
-const checkStoredUserID = () => {
-  const storedUserID = localStorage.getItem('userID')
-  if (storedUserID) {
-    router.push(`/dashboard/${storedUserID}`)
-  }
-}
-
-const login = async () => {
-  try {
-    const API_URL = `${apiUrl}/api/users`
-    const response = await fetch(API_URL + '?email=' + email.value)
-    const users = await response.json()
-
-    if (users && users.length > 0) {
-      const userID = users[0].id
-      const userRole = users[0].role
-      localStorage.setItem('userID', userID.toString())
-      localStorage.setItem('userRole', userRole.toString())
-      router.push(`/dashboard/${userID}`)
-    } else {
-      console.error('No user found for this email')
-    }
-  } catch (error) {
-    console.error('Error fetching user by email:', error)
-  }
+const toggleView = (view: string) => {
+  currentView.value = view
 }
 
 onMounted(() => {
-  checkStoredUserID()
+  if (storedUserID) {
+    router.push(`/dashboard/${storedUserID}`)
+  }
 })
 </script>
+
+<style scoped></style>

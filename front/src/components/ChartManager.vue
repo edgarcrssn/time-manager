@@ -1,8 +1,6 @@
 <template>
   <section>
-    <h2>
-      User {{ userId }}'s Charts
-    </h2>
+    <h2>User {{ userId }}'s Charts</h2>
 
     <div v-if="viewMode === 'week'" class="mb-2">
       <button class="main mr-2" @click="previousWeek">
@@ -29,10 +27,7 @@
       </button>
     </div>
 
-    <select
-      v-model="viewMode"
-      @change="changeViewMode"
-    >
+    <select v-model="viewMode" @change="changeViewMode">
       <option value="day">
         Daily View
       </option>
@@ -46,22 +41,13 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
       <div>
-        <BarChart
-          :data="barChartData"
-          :options="chartOptions"
-        />
+        <BarChart :data="barChartData" :options="chartOptions" />
       </div>
       <div>
-        <LineChart
-          :data="lineChartData"
-          :options="chartOptions"
-        />
+        <LineChart :data="lineChartData" :options="chartOptions" />
       </div>
       <div v-if="viewMode === 'week'">
-        <PieChart
-          :data="pieChartData"
-          :options="chartOptions"
-        />
+        <PieChart :data="pieChartData" :options="chartOptions" />
       </div>
     </div>
   </section>
@@ -74,6 +60,7 @@ import LineChart from './charts/LineChart.vue'
 import PieChart from './charts/PieChart.vue'
 import { WorkingTime } from '../models/WorkingTimes'
 import { apiUrl } from '../constants/urls'
+import { fetchData } from '../services/httpService'
 
 type ChartData = {
   labels: string[]
@@ -125,8 +112,7 @@ const changeViewMode = () => {
 
 // FETCH DATA
 const fetchDayData = async (date: Date) => {
-  const response = await fetch(API_URL)
-  const data: WorkingTime[] = await response.json()
+  const data = await fetchData<WorkingTime[]>(API_URL)
 
   const dayData = data.filter((item) => {
     return new Date(item.start).toISOString().split('T')[0] === date.toISOString().split('T')[0]
@@ -179,8 +165,7 @@ const fetchWeekData = async (date: Date) => {
   const start = monday
   const end = sunday
 
-  const response = await fetch(API_URL)
-  const data: WorkingTime[] = await response.json()
+  const data = await fetchData<WorkingTime[]>(API_URL)
 
   const weekData = data.filter((item) => {
     const startDate = new Date(item.start).toISOString().split('T')[0]
@@ -222,7 +207,10 @@ const fetchWeekData = async (date: Date) => {
   pieChartData.value = {
     labels: labels,
     datasets: [
-      { data: hoursWorked, backgroundColor: ['#E94E77', '#F9A825', '#F6E05E', '#4CAF50', '#4A90E2', '#667EEA', '#9D48B9'] }
+      {
+        data: hoursWorked,
+        backgroundColor: ['#E94E77', '#F9A825', '#F6E05E', '#4CAF50', '#4A90E2', '#667EEA', '#9D48B9']
+      }
     ]
   }
 }
@@ -231,8 +219,7 @@ const fetchMonthData = async (date: Date) => {
   const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)
   const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
-  const response = await fetch(API_URL)
-  const data: WorkingTime[] = await response.json()
+  const data = await fetchData<WorkingTime[]>(API_URL)
 
   const monthData = data.filter((item) => {
     const startDate = new Date(item.start).toISOString().split('T')[0]

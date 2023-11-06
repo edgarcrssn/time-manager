@@ -23,6 +23,7 @@
 import { ref, onMounted, onUnmounted, defineProps } from 'vue'
 import { apiUrl } from '../constants/urls'
 import ClockManagerForTeamManager from './ClockManagerForTeamManager.vue'
+import { fetchData } from '../services/httpService'
 
 const { userId } = defineProps(['userId'])
 
@@ -37,7 +38,7 @@ const refresh = async () => {
   if (processing.value) return
 
   try {
-    const response = await fetch(`${API_URL}/last`)
+    const response = await fetchData(`${API_URL}/last`)
     const data = await response.json()
     if (data && data?.clock) {
       const lastClock = data.clock
@@ -66,16 +67,10 @@ const clock = async () => {
   processing.value = true
   try {
     const currentTime = new Date().toISOString()
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        clock: {
-          time: currentTime
-        }
-      })
+    const response = await fetchData(API_URL, 'POST', {
+      clock: {
+        time: currentTime
+      }
     })
 
     const data = await response.json()
@@ -99,15 +94,11 @@ const clock = async () => {
 const createWorkingTime = async (startTime: string, endTime: string) => {
   const workingTimesAPI = `${apiUrl}/api/workingtimes/${userId}`
   try {
-    await fetch(workingTimesAPI, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        workingtime: {
-          start: startTime,
-          end: endTime
-        }
-      })
+    await fetchData(workingTimesAPI, 'POST', {
+      workingtime: {
+        start: startTime,
+        end: endTime
+      }
     })
   } catch (error) {
     console.error('Error creating working time:', error)

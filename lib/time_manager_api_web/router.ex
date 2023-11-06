@@ -5,12 +5,22 @@ defmodule TimeManagerApiWeb.Router do
     plug :accepts, ["json", "html"]
   end
 
-  scope "/", TimeManagerApiWeb, as: :browser do
+  pipeline :authenticated do
+    plug TimeManagerApiWeb.Plugs.VerifyJWT
+  end
+
+  scope "/", TimeManagerApiWeb do
+    pipe_through :api
+
     get "/", HomeController, :index
+
+    post "/login", AuthController, :login
+    post "/register", AuthController, :register
+    post "/logout", AuthController, :logout
   end
 
   scope "/api", TimeManagerApiWeb do
-    pipe_through :api
+    pipe_through [:api, :authenticated]
 
     scope "/workingtimes" do
       get "/:userID", WorkingtimesController, :index
