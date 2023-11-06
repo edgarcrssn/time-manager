@@ -3,17 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "electron.cjs",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "pretty-quick": "pretty-quick --staged",
-    "start": "electron ."
+    "pretty-quick": "pretty-quick --staged"
   },
   "dependencies": {
     "chart.js": "^4.4.0",
-    "electron-is-dev": "^2.0.0",
     "eslint-plugin-vue": "^9.18.0",
     "vue": "^3.3.4",
     "vue-chartjs": "^5.2.0",
