@@ -93,10 +93,20 @@
       My Team(s)
     </h2>
     <div class="flex justify-between items-center">
-      <button type="button" class="bg-main text-white px-4 py-2 mt-4 self-end" @click="openAddUserTeamModal">
+      <button
+        v-if="isManager"
+        type="button"
+        class="bg-main text-white px-4 py-2 mt-4 self-end"
+        @click="openAddUserTeamModal"
+      >
         Add a user in a team
       </button>
-      <button type="button" class="bg-error text-white px-4 py-2 mt-4 self-end" @click="openDeleteUserTeamModal">
+      <button
+        v-if="isManager"
+        type="button"
+        class="bg-error text-white px-4 py-2 mt-4 self-end"
+        @click="openDeleteUserTeamModal"
+      >
         Delete a user of a team
       </button>
     </div>
@@ -145,7 +155,7 @@ interface TeamsUsersInterface {
 const isDeleteUserModalOpen = ref(false)
 const isAddUserModalOpen = ref(false)
 const teamsUsersData = ref<TeamsUsersInterface[]>([])
-
+const isManager = ref(false)
 const userId = localStorage.getItem('userID')
 const userList = ref<User[]>([])
 const teamList = ref<TeamInterface[]>([])
@@ -166,7 +176,17 @@ onMounted(async () => {
   getTeamsofUser()
   populateTeamList()
   populateUserList()
+  checkIsManager()
 })
+
+const checkIsManager = () => {
+  const userRole = localStorage.getItem('userRole')
+  if (userRole === 'manager' || userRole === 'general_manager') {
+    isManager.value = true
+  } else {
+    isManager.value = false
+  }
+}
 
 const openAddUserTeamModal = () => {
   isAddUserModalOpen.value = true
