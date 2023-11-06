@@ -24,6 +24,66 @@ defmodule TimeManagerApiWeb.TeamController do
         |> json(%{error: "Team with id #{team_id} doesn't exist"})
     end
   end
+
+  def getTeamUsersById(conn, %{"teamId" => team_id}) do
+    team_id = String.to_integer(team_id)
+
+    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, team_id)
+
+    case team do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{"message" => "Team Not Found"})
+
+      _ ->
+        users_in_team = TimeManagerApi.Repo.all(
+          from u in TimeManagerApi.User,
+          join: ut in TimeManagerApi.UserTeam,
+          on: u.id == ut.user_id,
+          where: ut.team_id == ^team_id,
+          select: u
+        )
+
+        users = Enum.map(users_in_team, fn user ->
+          %{id: user.id, username: user.username, email: user.email, role: user.role}
+        end)
+
+        conn
+        |> put_status(:ok)
+        |> json(%{users: users})
+    end
+  end
+
+  def getMyOwnedTeams(conn, %{"userId" => user_id}) do
+    user = TimeManagerApi.Repo.get(TimeManagerApi.User, user_id)
+
+    case user do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "User Not Found"})
+
+      %TimeManagerApi.User{role: role} when role in [:manager, :general_manager] ->
+        owned_teams = TimeManagerApi.Repo.all(
+          from t in TimeManagerApi.Team,
+          join: ut in TimeManagerApi.UserTeam,
+          on: ut.team_id == t.id,
+          where: ut.user_id == ^user_id and ut.is_owner == true,
+          select: t
+        )
+
+        conn
+        |> put_status(:ok)
+        |> json(%{teams: owned_teams})
+
+      _ ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: "Unauthorized"})
+    end
+  end
+
   def create(conn, %{"team" => team_params, "user_id" => user_id}) do
     case TimeManagerApi.Repo.get(TimeManagerApi.User, String.to_integer(user_id)) do
       nil ->
@@ -153,5 +213,4 @@ defmodule TimeManagerApiWeb.TeamController do
         |> json(%{error: "An error occured while the removing of the user in the team"})
     end
   end
-
 end

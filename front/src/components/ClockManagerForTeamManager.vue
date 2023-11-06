@@ -1,0 +1,50 @@
+<template>
+  <section class="text-center">
+    <h2>My team(s) Work Tracking</h2>
+    <ul v-if="!loading">
+      <li v-for="team in ownedTeams" :key="team.id">
+        <TeamClocks :user-id="userId" :team="team" />
+      </li>
+    </ul>
+  </section>
+</template>
+
+<script lang="ts" setup>
+import TeamClocks from './TeamClocks.vue'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { apiUrl } from '../constants/urls'
+import { Team } from '../models/Teams'
+import { fetchData } from '../services/httpService'
+
+const { userId } = defineProps({
+  userId: {
+    type: Number || String,
+    required: true
+  }
+})
+
+const ownedTeams = ref<Team[] | null>(null)
+
+const loading = ref(true)
+
+const refresh = async () => {
+  try {
+    const API_URL = `${apiUrl}/api/teams/owned/${userId}`
+    const data = await fetchData(API_URL)
+    if (data?.teams) ownedTeams.value = data.teams
+  } catch (error) {
+    console.error('Error fetching owned teams:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+let intervalId: ReturnType<typeof setInterval>
+onMounted(() => {
+  refresh()
+  intervalId = setInterval(refresh, 10000)
+})
+onUnmounted(() => {
+  clearInterval(intervalId)
+})
+</script>

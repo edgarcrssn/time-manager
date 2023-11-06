@@ -1,4 +1,4 @@
 export type Team = {
-  number: number
+  id: number
   name: string
 }

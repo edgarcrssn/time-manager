@@ -32,7 +32,9 @@ defmodule TimeManagerApiWeb.Router do
 
     scope "/clocks" do
       get "/:userID", ClockController, :show
+      get "/:userID/last", ClockController, :getLastClock
       post "/:userID", ClockController, :create
+      post "/team/:teamID", ClockController, :createForMyTeam
     end
 
     scope "/users" do
@@ -48,6 +50,8 @@ defmodule TimeManagerApiWeb.Router do
     scope "/teams" do
       get "", TeamController, :getAllTeam
       get "/:teamId", TeamController, :getById
+      get "/:teamId/users", TeamController, :getTeamUsersById
+      get "/owned/:userId", TeamController, :getMyOwnedTeams
       post "", TeamController, :create
       put "/:teamId", TeamController, :update
       delete "/:teamId", TeamController, :delete

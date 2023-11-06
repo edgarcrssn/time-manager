@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "1bc5f831-e43e-4c3d-86b8-ac3e0bca127e",
+		"_postman_id": "b010b433-f3c5-4564-984d-35461fc72d55",
 		"name": "Time Manager",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "18635507"
+		"_exporter_id": "25226995"
 	},
 	"item": [
 		{
@@ -380,6 +380,34 @@
 					"response": []
 				},
 				{
+					"name": "Get last clock",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/clocks/:userID/last",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"clocks",
+								":userID",
+								"last"
+							],
+							"variable": [
+								{
+									"key": "userID",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Post clocking",
 					"request": {
 						"method": "POST",
@@ -399,6 +427,43 @@
 							"variable": [
 								{
 									"key": "userID",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post clocking for my team",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clock\": {\n        \"time\": \"2025-11-03T10:59:26.262Z\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/clocks/team/:teamID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"clocks",
+								"team",
+								":teamID"
+							],
+							"variable": [
+								{
+									"key": "teamID",
 									"value": ""
 								}
 							]
@@ -448,6 +513,62 @@
 								"api",
 								"teams",
 								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get team users by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/teams/:teamId/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"teams",
+								":teamId",
+								"users"
+							],
+							"variable": [
+								{
+									"key": "teamId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get my owned teams",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/teams/owned/:userId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"teams",
+								"owned",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
 							]
 						}
 					},

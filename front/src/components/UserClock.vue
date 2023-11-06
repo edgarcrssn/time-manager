@@ -1,6 +1,6 @@
 <template>
-  <section class="text-center">
-    <h2>Work Tracking</h2>
+  <div>
+    {{ member.username }}
     <p v-if="loading">
       Loading...
     </p>
@@ -13,37 +13,37 @@
     <button :disabled="loading || processing" class="main" @click="clock">
       {{ loading ? 'Loading...' : processing ? 'Processing...' : clockIn ? 'Clock Out' : 'Clock In' }}
     </button>
-
-    <!-- TODO Display only if current user role is manager -->
-    <ClockManagerForTeamManager :user-id="userId" />
-  </section>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, defineProps } from 'vue'
+import { onMounted, ref } from 'vue'
 import { apiUrl } from '../constants/urls'
-import ClockManagerForTeamManager from './ClockManagerForTeamManager.vue'
+import { User } from '../models/Users'
 import { fetchData } from '../services/httpService'
 
-const { userId } = defineProps({
-  userId: {
-    type: Number || String,
+const { member } = defineProps({
+  member: {
+    type: Object as () => Omit<User, 'team'>,
     required: true
   }
 })
 
 const startDateTime = ref<string | null>(null)
 const clockIn = ref<boolean | null>(null)
-const API_URL = `${apiUrl}/api/clocks/${userId}`
 
 const loading = ref(true)
 const processing = ref(false)
 
-const refresh = async () => {
+onMounted(() => {
+  getLastClocks()
+})
+
+const getLastClocks = async () => {
   if (processing.value) return
 
   try {
-    const data = await fetchData(`${API_URL}/last`)
+    const data = await fetchData(`${apiUrl}/api/clocks/${member.id}/last`)
     if (data && data?.clock) {
       const lastClock = data.clock
       clockIn.value = lastClock.status
@@ -56,22 +56,11 @@ const refresh = async () => {
   }
 }
 
-let intervalId: ReturnType<typeof setInterval>
-
-onMounted(() => {
-  refresh()
-  intervalId = setInterval(refresh, 10000)
-})
-
-onUnmounted(() => {
-  clearInterval(intervalId)
-})
-
 const clock = async () => {
   processing.value = true
   try {
     const currentTime = new Date().toISOString()
-    const data = await fetchData(API_URL, 'POST', {
+    const data = await fetchData(`${apiUrl}/api/clocks/${member.id}`, 'POST', {
       clock: {
         time: currentTime
       }
@@ -95,7 +84,7 @@ const clock = async () => {
 }
 
 const createWorkingTime = async (startTime: string, endTime: string) => {
-  const workingTimesAPI = `${apiUrl}/api/workingtimes/${userId}`
+  const workingTimesAPI = `${apiUrl}/api/workingtimes/${member.id}`
   try {
     await fetchData(workingTimesAPI, 'POST', {
       workingtime: {
