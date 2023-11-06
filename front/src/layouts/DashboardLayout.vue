@@ -54,7 +54,7 @@
       </main>
     </div>
 
-    <div class="bg-customGrey p-4 sm:hidden fixed inset-x-0 bottom-0 flex justify-between">
+    <div class="bg-customGrey p-4 sm:hidden fixed inset-x-0 bottom-0 flex justify-between text-center">
       <router-link :to="`/dashboard/${storedUserID}`" class="flex flex-col items-center">
         <img alt="dashboard" src="../assets/chart_icon.svg" class="w-8 h-8">
         <span class="text-xs text-customWhite">Dashboard</span>
