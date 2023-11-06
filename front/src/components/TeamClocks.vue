@@ -4,12 +4,15 @@
     <p v-if="loading">
       Loading...
     </p>
+    <p v-else-if="processing">
+      Processing...
+    </p>
     <ul v-else>
       <li v-for="member in teamMembers" :key="member.id">
-        <UserClock :member="member" :refresh="refresh" />
+        <UserClock v-if="member.id != +userId" :member="member" :refresh="refresh" />
       </li>
     </ul>
-    <button :disabled="processing" @click="clockForAllTeamMembers">
+    <button :disabled="loading || processing" @click="clockForAllTeamMembers">
       Clock-in for all team members
     </button>
   </section>
@@ -22,9 +25,13 @@ import { Team } from '../models/Teams'
 import { User } from '../models/Users'
 import UserClock from './UserClock.vue'
 
-const { team } = defineProps({
+const { team, userId } = defineProps({
   team: {
     type: Object as () => Team,
+    required: true
+  },
+  userId: {
+    type: String,
     required: true
   }
 })

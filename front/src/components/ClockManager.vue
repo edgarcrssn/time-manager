@@ -1,25 +1,28 @@
 <template>
   <section class="text-center">
     <h2>Work Tracking</h2>
-    <p v-if="!loading && !processing">
+    <p v-if="loading">
+      Loading...
+    </p>
+    <p v-else-if="processing">
+      Processing...
+    </p>
+    <p v-else>
       {{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}
     </p>
-    <button v-if="!loading && !processing" class="main" @click="clock">
-      {{ clockIn ? 'Clock Out' : 'Clock In' }}
-    </button>
-    <button v-else disabled class="main">
-      Processing...
+    <button :disabled="loading || processing" class="main" @click="clock">
+      {{ loading ? 'Loading...' : processing ? 'Processing...' : clockIn ? 'Clock Out' : 'Clock In' }}
     </button>
 
     <!-- TODO Display only if current user role is manager -->
-    <!-- <ClockManagerForTeamManager :user-id="userId" /> -->
+    <ClockManagerForTeamManager :user-id="userId" />
   </section>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted, defineProps } from 'vue'
 import { apiUrl } from '../constants/urls'
-// import ClockManagerForTeamManager from './ClockManagerForTeamManager.vue'
+import ClockManagerForTeamManager from './ClockManagerForTeamManager.vue'
 
 const { userId } = defineProps(['userId'])
 
@@ -31,17 +34,19 @@ const loading = ref(true)
 const processing = ref(false)
 
 const refresh = async () => {
+  if (processing.value) return
+
   try {
-    const response = await fetch(API_URL)
+    const response = await fetch(`${API_URL}/last`)
     const data = await response.json()
-    if (data && data.length > 0) {
-      const lastClock = data[data.length - 1]
+    if (data && data?.clock) {
+      const lastClock = data.clock
       clockIn.value = lastClock.status
       startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
     }
-    loading.value = false
   } catch (error) {
     console.error('Error fetching clock status:', error)
+  } finally {
     loading.value = false
   }
 }
@@ -61,7 +66,7 @@ const clock = async () => {
   processing.value = true
   try {
     const currentTime = new Date().toISOString()
-    await fetch(API_URL, {
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -73,9 +78,8 @@ const clock = async () => {
       })
     })
 
-    const response = await fetch(API_URL)
     const data = await response.json()
-    const lastClock = data[data.length - 1]
+    const lastClock = data.newClock
     clockIn.value = lastClock.status
 
     if (lastClock.status) {
@@ -88,9 +92,7 @@ const clock = async () => {
   } catch (error) {
     console.error('Error clocking in/out:', error)
   } finally {
-    setTimeout(() => {
-      processing.value = false
-    }, 300)
+    processing.value = false
   }
 }
 

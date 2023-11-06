@@ -3,7 +3,7 @@
     <h2>My team(s) Work Tracking</h2>
     <ul v-if="!loading">
       <li v-for="team in ownedTeams" :key="team.id">
-        <TeamClocks :team="team" />
+        <TeamClocks :user-id="userId" :team="team" />
       </li>
     </ul>
   </section>

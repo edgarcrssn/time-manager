@@ -1,11 +1,17 @@
 <template>
   <div>
     {{ member.username }}
-    <p v-if="!loading && !processing">
+    <p v-if="loading">
+      Loading...
+    </p>
+    <p v-else-if="processing">
+      Processing...
+    </p>
+    <p v-else>
       {{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}
     </p>
-    <button v-if="!loading && !processing" class="main" @click="clock">
-      {{ clockIn ? 'Clock Out' : 'Clock In' }}
+    <button :disabled="loading || processing" class="main" @click="clock">
+      {{ loading ? 'Loading...' : processing ? 'Processing...' : clockIn ? 'Clock Out' : 'Clock In' }}
     </button>
   </div>
 </template>
@@ -20,11 +26,6 @@ const { member } = defineProps({
     type: Object as () => Omit<User, 'team'>,
     required: true
   }
-  // refresh: {
-  //   type: Function as () => Promise<void>,
-  //   required: false,
-  //   default: () => {}
-  // }
 })
 
 const startDateTime = ref<string | null>(null)
@@ -38,22 +39,25 @@ onMounted(() => {
 })
 
 const getLastClocks = async () => {
+  if (processing.value) return
+
   try {
-    const response = await fetch(`${apiUrl}/api/clocks/${member.id}`)
+    const response = await fetch(`${apiUrl}/api/clocks/${member.id}/last`)
     const data = await response.json()
-    if (data && data.length > 0) {
-      const lastClock = data[data.length - 1]
+    if (data && data?.clock) {
+      const lastClock = data.clock
       clockIn.value = lastClock.status
       startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
     }
-    loading.value = false
   } catch (error) {
     console.error('Error fetching clock status:', error)
+  } finally {
     loading.value = false
   }
 }
 
 const clock = async () => {
+  processing.value = true
   try {
     const currentTime = new Date().toISOString()
     const response = await fetch(`${apiUrl}/api/clocks/${member.id}`, {
@@ -67,12 +71,40 @@ const clock = async () => {
         }
       })
     })
+
     const data = await response.json()
-    console.log(data)
+    const lastClock = data.newClock
+    clockIn.value = lastClock.status
+
+    if (lastClock.status) {
+      startDateTime.value = new Date(lastClock.time).toLocaleString()
+    } else if (data.length > 1) {
+      const previousClock = data[data.length - 2]
+      await createWorkingTime(previousClock.time, lastClock.time)
+      startDateTime.value = null
+    }
   } catch (error) {
-    console.error(error)
+    console.error('Error clocking in/out:', error)
   } finally {
-    // refresh()
+    processing.value = false
+  }
+}
+
+const createWorkingTime = async (startTime: string, endTime: string) => {
+  const workingTimesAPI = `${apiUrl}/api/workingtimes/${member.id}`
+  try {
+    await fetch(workingTimesAPI, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        workingtime: {
+          start: startTime,
+          end: endTime
+        }
+      })
+    })
+  } catch (error) {
+    console.error('Error creating working time:', error)
   }
 }
 </script>
