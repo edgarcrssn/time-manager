@@ -26,6 +26,38 @@ defmodule TimeManagerApiWeb.ClockController do
     end
   end
 
+  # TODO show: must be "general_manager" or "manager" of the user or user himself
+  def getLastClock(conn, %{"userID" => user_id}) when is_binary(user_id) do
+    user_id = String.to_integer(user_id)
+
+    try do
+      last_clock =
+        TimeManagerApi.Repo.one(
+          from c in TimeManagerApi.Clock,
+          where: c.user_id == ^user_id,
+          order_by: [desc: c.id],
+          limit: 1
+        )
+
+      case last_clock do
+        nil ->
+          conn
+          |> put_status(:not_found)
+          |> json(%{"message" => "Clock not found"})
+        _ ->
+          conn
+          |> put_status(:ok)
+          |> json(%{clock: last_clock})
+      end
+    rescue
+      exception ->
+        IO.inspect(exception, label: "Exception")
+        conn
+        |> put_status(:internal_server_error)
+        |> json(%{"message" => "Internal Server Error"})
+    end
+  end
+
   # TODO create: must be user himself or his manager
   def create(conn, %{"userID" => user_id, "clock" => clock_params}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
