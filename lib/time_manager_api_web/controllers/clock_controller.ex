@@ -62,7 +62,7 @@ defmodule TimeManagerApiWeb.ClockController do
   def create(conn, %{"userID" => user_id, "clock" => clock_params}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
 
-    last_clock = TimeManagerApi.Repo.one(from c in TimeManagerApi.Clock, where: c.user_id == ^user_id, order_by: [desc: c.time], limit: 1)
+    last_clock = TimeManagerApi.Repo.one(from c in TimeManagerApi.Clock, where: c.user_id == ^user_id, order_by: [desc: c.id], limit: 1)
 
     new_status = case last_clock do
       nil -> true
@@ -78,7 +78,7 @@ defmodule TimeManagerApiWeb.ClockController do
         {:ok, clock} ->
           conn
           |> put_status(:created)
-          |> json(clock)
+          |> json(%{newClock: clock})
 
         {:error, changeset} ->
           conn
@@ -104,7 +104,7 @@ defmodule TimeManagerApiWeb.ClockController do
           from u in TimeManagerApi.User,
           join: ut in TimeManagerApi.UserTeam,
           on: u.id == ut.user_id,
-          where: ut.team_id == ^team_id,
+          where: ut.team_id == ^team_id and not ut.is_owner,
           select: u.id
         )
 
