@@ -43,8 +43,8 @@ const getWorkingTimes = async () => {
   try {
     const data = await fetchData(API_URL)
     workingTimes.value = data
-  } catch (error) {
-    if (error.message.includes('404')) {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message.includes('404')) {
       router.push(`/dashboard/${storedUserID}`)
       return
     }

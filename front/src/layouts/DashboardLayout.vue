@@ -5,35 +5,40 @@
         Dashboard
       </h1>
       <router-link :to="`/dashboard/profile/${storedUserID}`" class="ml-4">
-        <img alt="profile" src="../assets/user_icon.svg" class="w-5 h-5">
+        <img alt="profile" src="../assets/user_icon.svg" class="w-8 h-8">
       </router-link>
     </header>
 
     <div class="flex flex-row h-full">
-      <nav class="bg-customGrey p-4 w-[300px] flex-shrink-0 flex flex-col">
+      <nav class="bg-customGrey p-4 w-[300px] flex-shrink-0 flex-col hidden sm:flex">
         <ul>
           <li class="mb-2">
-            <router-link :to="`/dashboard/${storedUserID}`" class="text-customWhite">
+            <router-link :to="`/dashboard/${storedUserID}`" class="text-customWhite flex items-center">
+              <img alt="dashboard" src="../assets/chart_icon.svg" class="w-8 h-8 mr-2">
               My Dashboard
             </router-link>
           </li>
           <li class="mb-2">
-            <router-link :to="`/dashboard/working-times/${storedUserID}`" class="text-customWhite">
+            <router-link :to="`/dashboard/working-times/${storedUserID}`" class="text-customWhite flex items-center">
+              <img alt="workingtime" src="../assets/wokingtime_icon.svg" class="w-8 h-8 mr-2">
               Working Time
             </router-link>
           </li>
           <li v-if="isManagerOrGeneralManager" class="mb-2">
-            <router-link to="/my-team" class="text-customWhite">
+            <router-link to="/my-team" class="text-customWhite flex items-center">
+              <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
               My Team
             </router-link>
           </li>
           <li v-if="isManagerOrGeneralManager" class="mb-2">
-            <router-link to="/create-team" class="text-customWhite">
+            <router-link to="/create-team" class="text-customWhite flex items-center">
+              <img alt="create" src="../assets/plus.svg" class="w-8 h-8 mr-2">
               Create My Team
             </router-link>
           </li>
           <li v-if="isManagerOrGeneralManager" class="mb-2">
-            <router-link to="/view-users" class="text-customWhite">
+            <router-link to="/view-users" class="text-customWhite flex items-center">
+              <img alt="users" src="../assets/users_icon.svg" class="w-8 h-8 mr-2">
               View Users
             </router-link>
           </li>
@@ -47,6 +52,29 @@
       <main class="flex-grow p-4">
         <router-view />
       </main>
+    </div>
+
+    <div class="bg-customGrey p-4 sm:hidden fixed inset-x-0 bottom-0 flex justify-between">
+      <router-link :to="`/dashboard/${storedUserID}`" class="flex flex-col items-center">
+        <img alt="dashboard" src="../assets/chart_icon.svg" class="w-8 h-8">
+        <span class="text-xs text-customWhite">Dashboard</span>
+      </router-link>
+      <router-link :to="`/dashboard/working-times/${storedUserID}`" class="flex flex-col items-center">
+        <img alt="workingtime" src="../assets/wokingtime_icon.svg" class="w-8 h-8 mr-2">
+        <span class="text-xs text-customWhite">Working Time</span>
+      </router-link>
+      <router-link v-if="isManagerOrGeneralManager" to="/my-team" class="flex flex-col items-center">
+        <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
+        <span class="text-xs text-customWhite">My Team</span>
+      </router-link>
+      <router-link v-if="isManagerOrGeneralManager" to="/create-team" class="flex flex-col items-center">
+        <img alt="create" src="../assets/plus.svg" class="w-8 h-8 mr-2">
+        <span class="text-xs text-customWhite">Create My Team</span>
+      </router-link>
+      <router-link v-if="isManagerOrGeneralManager" to="/view-users" class="flex flex-col items-center">
+        <img alt="users" src="../assets/users_icon.svg" class="w-8 h-8 mr-2">
+        <span class="text-xs text-customWhite">View Users</span>
+      </router-link>
     </div>
   </div>
 </template>

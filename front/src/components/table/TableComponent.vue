@@ -57,7 +57,7 @@ import { formatDate } from '../../helpers/dateUtils'
 import { apiUrl } from '../../constants/urls'
 import { fetchData } from '../../services/httpService'
 
-const emit = defineEmits(['itemDeleted'])
+const emit = defineEmits(['itemDeleted', 'showSchedule'])
 defineProps({
   titleProperty: {
     required: true,

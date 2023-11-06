@@ -1,3 +1,7 @@
+interface ErrorWithStatus extends Error {
+  status?: number;
+}
+
 export const getCsrfToken = (): string | null => {
   return sessionStorage.getItem('csrf_token')
 }
@@ -22,8 +26,8 @@ export const fetchData = async (url: string, method: string = 'GET', data?: obje
   })
 
   if (!response.ok) {
-    const errorBody = await response.text()
-    const error = new Error(`Fetch failed: ${errorBody}`)
+    const errorBody = await response.text();
+    const error: ErrorWithStatus = new Error(`Fetch failed: ${errorBody}`);
     error.status = response.status
     throw error
   }
