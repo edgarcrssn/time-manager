@@ -92,21 +92,11 @@
     <h2 class="text-center">
       My Team(s)
     </h2>
-    <div class="flex justify-between items-center">
-      <button
-        v-if="isManager"
-        type="button"
-        class="bg-main text-white px-4 py-2 mt-4 self-end"
-        @click="openAddUserTeamModal"
-      >
+    <div :key="refreshKey" class="flex justify-between items-center">
+      <button v-if="isManager" type="button" class="main" @click="openAddUserTeamModal">
         Add a user in a team
       </button>
-      <button
-        v-if="isManager"
-        type="button"
-        class="bg-error text-white px-4 py-2 mt-4 self-end"
-        @click="openDeleteUserTeamModal"
-      >
+      <button v-if="isManager" type="button" class="error" @click="openDeleteUserTeamModal">
         Delete a user of a team
       </button>
     </div>
@@ -139,6 +129,7 @@ import { onMounted, ref } from 'vue'
 import { apiUrl } from '../constants/urls'
 import { User } from '../models/Users'
 import Modal from './AddUserTeamPopUp.vue'
+import { fetchData } from '../services/httpService'
 
 interface TeamInterface {
   id: number
@@ -156,17 +147,17 @@ const isDeleteUserModalOpen = ref(false)
 const isAddUserModalOpen = ref(false)
 const teamsUsersData = ref<TeamsUsersInterface[]>([])
 const isManager = ref(false)
-const userId = localStorage.getItem('userID')
+const userId = sessionStorage.getItem('userID')
 const userList = ref<User[]>([])
 const teamList = ref<TeamInterface[]>([])
 const selectedTeam = ref<number>(0)
 const selectedUser = ref<number>(0)
+const refreshKey = ref<number>(0)
 const getTeamsofUser = async () => {
   try {
-    const response = await fetch(`${apiUrl}/api/teams/${userId}/team`)
-    const data = await response.json()
-    if (data) {
-      teamsUsersData.value = data
+    const response = await fetchData(`${apiUrl}/api/teams/${userId}/team`, 'GET')
+    if (response) {
+      teamsUsersData.value = response
     }
   } catch (error) {
     console.error('An error occured while the fetching of the data')
@@ -180,7 +171,7 @@ onMounted(async () => {
 })
 
 const checkIsManager = () => {
-  const userRole = localStorage.getItem('userRole')
+  const userRole = sessionStorage.getItem('userRole')
   if (userRole === 'manager' || userRole === 'general_manager') {
     isManager.value = true
   } else {
@@ -196,6 +187,7 @@ const closeAddUserTeamModal = () => {
   isAddUserModalOpen.value = false
   selectedTeam.value = 0
   selectedUser.value = 0
+  getTeamsofUser()
 }
 
 const openDeleteUserTeamModal = () => {
@@ -206,23 +198,13 @@ const closeDeleteUserTeamModal = () => {
   isDeleteUserModalOpen.value = false
   selectedTeam.value = 0
   selectedUser.value = 0
+  getTeamsofUser()
 }
 
 const addUserTeam = async (userId: number, teamId: number) => {
   try {
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-    fetch(`${apiUrl}/api/teams/${userId}/${teamId}`, requestOptions).then((response) => {
-      if (!response.ok) {
-        throw new Error('An error occured while the adding of the user in the team')
-      } else {
-        closeAddUserTeamModal()
-      }
-    })
+    await fetchData(`${apiUrl}/api/teams/${userId}/${teamId}`, 'POST')
+    closeAddUserTeamModal()
   } catch (error) {
     console.error('An error occured while the adding of the user in the team')
   }
@@ -230,19 +212,8 @@ const addUserTeam = async (userId: number, teamId: number) => {
 
 const deleteUserTeam = async (userId: number, teamId: number) => {
   try {
-    const requestOptions = {
-      method: 'DELETE',
-      header: {
-        'Content-Type': 'application/json'
-      }
-    }
-    fetch(`${apiUrl}/api/teams/${userId}/${teamId}`, requestOptions).then((response) => {
-      if (!response.ok) {
-        throw new Error('An error occured while the deleting of the user in the team')
-      } else {
-        closeDeleteUserTeamModal()
-      }
-    })
+    await fetchData(`${apiUrl}/api/teams/${userId}/${teamId}`, 'DELETE')
+    closeDeleteUserTeamModal()
   } catch (error) {
     console.error('An error occured while the deleting of the user in the team')
   }
@@ -250,10 +221,9 @@ const deleteUserTeam = async (userId: number, teamId: number) => {
 
 const populateUserList = async () => {
   try {
-    const response = await fetch(`${apiUrl}/api/users/`)
-    const data = await response.json()
-    if (data) {
-      userList.value = data
+    const response = await fetchData(`${apiUrl}/api/users/`)
+    if (response) {
+      userList.value = response
     }
   } catch (error) {
     console.error('An error occured while the fetching of the users')
@@ -262,10 +232,9 @@ const populateUserList = async () => {
 
 const populateTeamList = async () => {
   try {
-    const response = await fetch(`${apiUrl}/api/teams/`)
-    const data = await response.json()
-    if (data) {
-      teamList.value = data
+    const response = await fetchData(`${apiUrl}/api/teams/`)
+    if (response) {
+      teamList.value = response
     }
   } catch (error) {
     console.error('An error occured while the fetching of the teams')

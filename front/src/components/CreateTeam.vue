@@ -18,9 +18,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { apiUrl } from '../constants/urls'
+import { fetchData } from '../services/httpService'
 
 const teamName = ref<string>('')
-const userId = localStorage.getItem('userID')
+const userId = sessionStorage.getItem('userID')
 
 const createTeam = async () => {
   try {
@@ -30,18 +31,7 @@ const createTeam = async () => {
       },
       user_id: userId
     }
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    }
-    await fetch(`${apiUrl}/api/teams`, requestOptions).then((response) => {
-      if (!response.ok) {
-        throw new Error('An error occured while the creation of the team')
-      }
-    })
+    fetchData(`${apiUrl}/api/teams`, 'POST', body)
   } catch (error) {
     console.error('An error occured while the creation of the team')
   }
