@@ -21,8 +21,6 @@ defmodule TimeManagerApi.Plugs.Authorization do
   defp is_authorized?(conn, opts) do
     current_user = conn.assigns.current_user
 
-    IO.inspect(opts)
-
     cond_1 = current_user.role == "general_manager"
 
     cond_2 = Enum.member?(opts, "is_manager") && current_user.role == "manager"
