@@ -63,6 +63,7 @@ const getLastClock = async () => {
 }
 
 const showNotificationFunction = () => {
+  console.log(clockIn.value)
   if (!clockIn.value) {
     createToast(
       { title: "Don't forget to clock'in" },
