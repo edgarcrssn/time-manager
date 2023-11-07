@@ -62,6 +62,14 @@ const getLastClock = async () => {
   }
 }
 
+const showNotificationFunction = () => {
+  if (!clockIn.value) {
+    createToast(
+      { title: "Don't forget to clock'in" },
+      { type: 'warning', position: 'bottom-right', transition: 'zoom', timeout: 8000 }
+    )
+  }
+}
 
 let intervalId: ReturnType<typeof setInterval>
 onMounted(() => {
