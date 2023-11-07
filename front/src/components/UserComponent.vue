@@ -1,65 +1,80 @@
 <template>
   <section>
-    <h2>
-      Manage user
-    </h2>
+    <h2>Manage user</h2>
     <button class="main" @click="openUserModal">
       Add User
     </button>
 
-    <Modal :is-open="isUserModalOpen" @close="closeUserModal" title="Créer un utilisateur">
+    <Modal :is-open="isUserModalOpen" title="Créer un utilisateur" @close="closeUserModal">
       <form ref="userForm" @submit.prevent="createUser">
         <div class="mb-4">
           <label for="username" class="block text-sm font-medium text-gray-600">Username</label>
-          <input type="text" id="username" v-model="userInput.username" class="mt-1 p-2 w-full border rounded">
+          <input id="username" v-model="userInput.username" type="text" class="mt-1 p-2 w-full border rounded">
         </div>
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-600">mail</label>
-          <input type="email" id="email" v-model="userInput.email" class="mt-1 p-2 w-full border rounded">
+          <label for="email" class="block text-sm font-medium text-gray-600">Mail</label>
+          <input id="email" v-model="userInput.email" type="email" class="mt-1 p-2 w-full border rounded">
         </div>
+        <select id="role" v-model="userInput.role" class="mt-1 p-2 w-full border rounded">
+          <option value="employee">
+            Employee
+          </option>
+          <option value="manager">
+            Manager
+          </option>
+          <option v-if="isGeneralManager" value="general manager">
+            General Manager
+          </option>
+        </select>
         <div class="flex justify-between">
-          <button type="submit" class="main">Confirm</button>
-          <button type="button" @click="closeUserModal" class="error">Close</button>
+          <button type="submit" class="main">
+            Confirm
+          </button>
+          <button type="button" class="error" @click="closeUserModal">
+            Close
+          </button>
         </div>
       </form>
     </Modal>
 
-    <Modal :is-open="isScheduleModalOpen" @close="closeScheduleModal" title="Horaires de l'utilisateur">
+    <Modal :is-open="isScheduleModalOpen" title="Horaires de l'utilisateur" @close="closeScheduleModal">
       <form ref="scheduleForm" @submit.prevent="updateOrCreateSchedule">
         <div class="mb-4">
           <label class="block text-sm font-medium text-gray-600">Working days</label>
           <div class="mt-2">
             <label for="monday" class="mr-2">
-              <input type="checkbox" id="monday" v-model="schedule.monday"> Monday
+              <input id="monday" v-model="schedule.monday" type="checkbox"> Monday
             </label>
             <label for="tuesday" class="mr-2">
-              <input type="checkbox" id="tuesday" v-model="schedule.tuesday"> Tuesday
+              <input id="tuesday" v-model="schedule.tuesday" type="checkbox"> Tuesday
             </label>
             <label for="wednesday" class="mr-2">
-              <input type="checkbox" id="wednesday" v-model="schedule.wednesday"> Wednesday
+              <input id="wednesday" v-model="schedule.wednesday" type="checkbox"> Wednesday
             </label>
             <label for="thursday" class="mr-2">
-              <input type="checkbox" id="thursday" v-model="schedule.thursday"> Thursday
+              <input id="thursday" v-model="schedule.thursday" type="checkbox"> Thursday
             </label>
             <label for="saturday" class="mr-2">
-              <input type="checkbox" id="saturday" v-model="schedule.saturday"> Saturday
+              <input id="saturday" v-model="schedule.saturday" type="checkbox"> Saturday
             </label>
-            <label for="sunday">
-              <input type="checkbox" id="sunday" v-model="schedule.sunday"> Sunday
-            </label>
+            <label for="sunday"> <input id="sunday" v-model="schedule.sunday" type="checkbox"> Sunday </label>
           </div>
         </div>
         <div class="mb-4">
           <label for="start_time" class="block text-sm font-medium text-gray-600">Start time</label>
-          <input type="time" id="start_time" v-model="schedule.start_time" class="mt-1 p-2 w-full border rounded">
+          <input id="start_time" v-model="schedule.start_time" type="time" class="mt-1 p-2 w-full border rounded">
         </div>
         <div class="mb-4">
           <label for="end_time" class="block text-sm font-medium text-gray-600">End time</label>
-          <input type="time" id="end_time" v-model="schedule.end_time" class="mt-1 p-2 w-full border rounded">
+          <input id="end_time" v-model="schedule.end_time" type="time" class="mt-1 p-2 w-full border rounded">
         </div>
         <div class="flex justify-between">
-          <button type="submit" class="main">Update</button>
-          <button type="button" @click="closeScheduleModal" class="error">Close</button>
+          <button type="submit" class="main">
+            Update
+          </button>
+          <button type="button" class="error" @click="closeScheduleModal">
+            Close
+          </button>
         </div>
       </form>
     </Modal>
@@ -67,9 +82,17 @@
     <h2 v-if="isManager && usersData.length > 0" class="text-center">
       Table of the users
     </h2>
-    <TableComponent v-if="isManager" :key="refreshKey" :title-property="['Username', 'Email', 'Actions']"
-      :data="usersData" :table-name="'Table of Users'" :type-table="'user'" @itemDeleted="handleItemDeleted"
-      @addItem="handleItemAdded" @showSchedule="openScheduleModal" />
+    <TableComponent
+      v-if="isManager"
+      :key="refreshKey"
+      :title-property="['Username', 'Email', 'Actions']"
+      :data="usersData"
+      :table-name="'Table of Users'"
+      :type-table="'user'"
+      @itemDeleted="handleItemDeleted"
+      @addItem="handleItemAdded"
+      @showSchedule="openScheduleModal"
+    />
   </section>
 </template>
 
@@ -89,6 +112,7 @@ const isManager = ref(false)
 const userForm = ref(null)
 const isUserModalOpen = ref(false)
 const isScheduleModalOpen = ref(false)
+const isGeneralManager = ref(false)
 
 const openUserModal = () => {
   isUserModalOpen.value = true
@@ -110,10 +134,22 @@ const closeScheduleModal = () => {
 const emit = defineEmits(['close', 'addItem'])
 const userInput = ref({
   username: '',
-  email: ''
+  email: '',
+  role: 'employee'
 })
 
-const schedule = ref<{id: number | null, monday: boolean, tuesday: boolean, wednesday: boolean, friday?: boolean, thursday: boolean, saturday: boolean,sunday: boolean, start_time: string, end_time: string}>({
+const schedule = ref<{
+  id: number | null
+  monday: boolean
+  tuesday: boolean
+  wednesday: boolean
+  friday?: boolean
+  thursday: boolean
+  saturday: boolean
+  sunday: boolean
+  start_time: string
+  end_time: string
+}>({
   id: null,
   monday: false,
   tuesday: false,
@@ -136,7 +172,7 @@ const updateOrCreateSchedule = async () => {
     if (data) {
       closeScheduleModal()
     } else {
-      console.error("error")
+      console.error('error')
     }
   } catch (error: unknown) {
     if (error instanceof Error && 'status' in error) {
@@ -159,7 +195,7 @@ const createSchedule = async (dataToSend: any) => {
     if (data) {
       closeScheduleModal()
     } else {
-      console.error("error")
+      console.error('error')
     }
   } catch (error) {
     console.error('Error creating schedule:', error)
@@ -178,15 +214,15 @@ const getScheduleData = async (userId: number) => {
     sunday: false,
     start_time: '',
     end_time: ''
-  };
+  }
 
   try {
-    const scheduleData = await fetchData(`${apiUrl}/api/schedules/${userId}`);
+    const scheduleData = await fetchData(`${apiUrl}/api/schedules/${userId}`)
     if (scheduleData) {
-      schedule.value = { ...scheduleData, id: userId };
+      schedule.value = { ...scheduleData, id: userId }
     }
   } catch (error) {
-    console.error(`Error fetching schedule for user ${userId}:`, error);
+    console.error(`Error fetching schedule for user ${userId}:`, error)
   }
 }
 
@@ -196,7 +232,8 @@ const createUser = async () => {
       const userData = {
         user: {
           username: userInput.value.username,
-          email: userInput.value.email
+          email: userInput.value.email,
+          role: userInput.value.role
         }
       }
       await fetchData(`${apiUrl}/api/users`, 'POST', userData)
@@ -211,6 +248,9 @@ const createUser = async () => {
 const getUser = async () => {
   try {
     const data = await fetchData(getUserUrl, 'GET')
+    if (data.role === 'general_manager') {
+      isGeneralManager.value = true
+    }
 
     if (data && (data.role === 'manager' || data.role === 'general_manager')) {
       isManager.value = true

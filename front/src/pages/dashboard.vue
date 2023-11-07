@@ -1,12 +1,12 @@
 <template>
   <div class="p-2 flex flex-col items-center">
-    <ClockManager :key="userId" :user-id="numericUserId" />
-    <ChartManager :key="userId" :user-id="numericUserId" />
+    <ClockManager :key="userId" :user-id="+userId" />
+    <ChartManager :key="userId" :user-id="+userId" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch, Ref, computed } from 'vue'
+import { ref, onMounted, watch, Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ClockManager from '../components/ClockManager.vue'
 import ChartManager from '../components/ChartManager.vue'
@@ -16,7 +16,6 @@ import { fetchData } from '../services/httpService'
 const route = useRoute()
 const router = useRouter()
 const userId = ref(route.params.userId) as Ref<string>
-const numericUserId = computed(() => Number(userId.value))
 const username = ref('')
 
 const getUserInfo = async () => {

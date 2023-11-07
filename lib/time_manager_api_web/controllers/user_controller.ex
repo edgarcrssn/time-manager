@@ -5,7 +5,6 @@ defmodule TimeManagerApiWeb.UserController do
   @doc """
   Retrieve users. Can be filtered by email and/or username.
   """
-  # TODO index: must be authenticated
   def index(conn, %{"email" => email, "username" => username} = params) when is_map(params) do
     query =
       from(
@@ -41,9 +40,7 @@ defmodule TimeManagerApiWeb.UserController do
 
   def index(conn, _params) do
     query =
-      from(
-        u in TimeManagerApi.User
-      )
+      from(u in TimeManagerApi.User)
 
     users = TimeManagerApi.Repo.all(query)
     json(conn, users)
@@ -52,7 +49,6 @@ defmodule TimeManagerApiWeb.UserController do
   @doc """
   Retrieve a user by id.
   """
-  # TODO show: must be authenticated
   def show(conn, %{"userID" => id}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, id)
 
@@ -81,9 +77,11 @@ defmodule TimeManagerApiWeb.UserController do
 
       {:error, changeset} ->
         if Enum.any?(changeset.errors, fn {field, error} ->
-          field == :email and
-          error == {"has already been taken", [constraint: :unique, constraint_name: "users_email_index"]}
-        end) do
+             field == :email and
+               error ==
+                 {"has already been taken",
+                  [constraint: :unique, constraint_name: "users_email_index"]}
+           end) do
           conn
           |> put_status(:conflict)
           |> json(%{message: "Email is already taken"})
@@ -98,7 +96,6 @@ defmodule TimeManagerApiWeb.UserController do
   @doc """
   Update an existing user by id.
   """
-  # TODO update: must be "general_manager" or user himself
   def update(conn, %{"userID" => id, "user" => user_params}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, id)
 
@@ -108,7 +105,7 @@ defmodule TimeManagerApiWeb.UserController do
         |> put_status(:not_found)
         |> json(%{message: "User not found"})
 
-      %TimeManagerApi.User{role: role} when role in ["manager", "general_manager"] ->
+      _user ->
         changeset = TimeManagerApi.User.changeset(user, user_params)
 
         case TimeManagerApi.Repo.update(changeset) do
@@ -119,9 +116,11 @@ defmodule TimeManagerApiWeb.UserController do
 
           {:error, changeset} ->
             if Enum.any?(changeset.errors, fn {field, error} ->
-                field == :email and
-                error == {"has already been taken", [constraint: :unique, constraint_name: "users_email_index"]}
-            end) do
+                 field == :email and
+                   error ==
+                     {"has already been taken",
+                      [constraint: :unique, constraint_name: "users_email_index"]}
+               end) do
               conn
               |> put_status(:conflict)
               |> json(%{message: "Email is already taken"})
@@ -131,17 +130,12 @@ defmodule TimeManagerApiWeb.UserController do
               |> json(%{message: "Bad Request"})
             end
         end
-        _ ->
-          conn
-          |> put_status(:forbidden)
-          |> json(%{message: "Permission denied"})
-      end
     end
+  end
 
   @doc """
   Delete an existing user by id.
   """
-  # TODO delete: must be "general_manager" or user himself
   def delete(conn, %{"userID" => id}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, id)
 
@@ -167,18 +161,25 @@ defmodule TimeManagerApiWeb.UserController do
   end
 
   def getByTeam(conn, %{"teamId" => teamId}) do
-    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, String.to_integer(teamId))
+    teamId = String.to_integer(teamId)
+    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, teamId)
+    
     case team do
       nil ->
         conn
         |> put_status(:not_found)
         |> json(%{error: "The team with the id #{teamId} doesn't exist"})
+
       _ ->
-        query = from(ut in TimeManagerApi.UserTeam,
-                     join: u in assoc(ut, :user),
-                     where: ut.team_id == ^teamId,
-                     select: u)
+        query =
+          from(ut in TimeManagerApi.UserTeam,
+            join: u in assoc(ut, :user),
+            where: ut.team_id == ^teamId,
+            select: u
+          )
+
         users = TimeManagerApi.Repo.all(query)
+
         conn
         |> put_status(:ok)
         |> json(users)
@@ -193,23 +194,29 @@ defmodule TimeManagerApiWeb.UserController do
         where: ut.user_id == ^userId,
         select: ut.team_id
       )
+
     nestedQuery =
       from(
         u in TimeManagerApi.User,
-        join: ut in TimeManagerApi.UserTeam, on: u.id == ut.user_id,
+        join: ut in TimeManagerApi.UserTeam,
+        on: u.id == ut.user_id,
         where: ut.team_id in subquery(query)
       )
+
     users = TimeManagerApi.Repo.all(nestedQuery)
+
     case users do
       [] ->
         conn
         |> put_status(:not_found)
         |> json(%{message: "There is no team-mates for the user with the id #{userId}"})
+
       _ ->
         conn
         |> put_status(:ok)
         |> json(users)
     end
-    json(conn,users)
+
+    json(conn, users)
   end
 end

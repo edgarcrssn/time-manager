@@ -22,7 +22,7 @@ defmodule TimeManagerApiWeb.Plugs.VerifyJWT do
   defp verify_csrf_token(conn, claims, csrf_header) do
     case Map.fetch(claims, "x_csrf_token") do
       {:ok, csrf_token} when csrf_token == csrf_header ->
-        assign(conn, :current_user, claims["sub"])
+        assign(conn, :current_user, %{sub: claims["sub"], role: claims["role"]})
       {:ok, _csrf_token} ->
         forbidden_response(conn, "CSRF token mismatch")
       :error ->

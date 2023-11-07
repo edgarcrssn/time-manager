@@ -10,6 +10,7 @@ defmodule TimeManagerApi.Application do
     children = [
       TimeManagerApiWeb.Telemetry,
       TimeManagerApi.Repo,
+      TimeManagerApi.Scheduler,
       {DNSCluster, query: Application.get_env(:time_manager_api, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: TimeManagerApi.PubSub},
       # Start the Finch HTTP client for sending emails
