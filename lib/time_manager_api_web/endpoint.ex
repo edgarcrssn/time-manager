@@ -45,6 +45,6 @@ defmodule TimeManagerApiWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug CORSPlug, origin: System.get_env("VITE_FRONT_URL")
+  plug CORSPlug, origin: "*"
   plug TimeManagerApiWeb.Router
 end
