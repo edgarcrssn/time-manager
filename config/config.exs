@@ -55,8 +55,14 @@ config :tailwind,
     cd: Path.expand("../assets", __DIR__)
   ]
 
+config :time_manager_api, TimeManagerApi.Scheduler,
+  jobs: [
+    {"0 0 * * *", fn -> TimeManagerApi.SchedulerJobs.increment_paid_leave_balance() end}
+  ]
+
 # Configures Elixir's Logger
 config :logger, :console,
+  level: :debug,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 

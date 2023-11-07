@@ -49,7 +49,9 @@ defmodule TimeManagerApi.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:cors_plug, "~> 2.0"},
       {:joken, "~> 2.0"},
-      {:argon2_elixir, "~> 2.0"}
+      {:argon2_elixir, "~> 2.0"},
+      {:quantum, ">= 2.2.1"},
+      {:timex, "~> 3.0"}
     ]
   end
 
