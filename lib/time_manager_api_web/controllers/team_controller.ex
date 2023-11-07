@@ -213,4 +213,60 @@ defmodule TimeManagerApiWeb.TeamController do
         |> json(%{error: "An error occured while the removing of the user in the team"})
     end
   end
+  def getUserTeam(conn,%{"userId" => userId}) do
+    user_teams_query =
+      from(
+        ut in TimeManagerApi.UserTeam,
+        join: t in TimeManagerApi.Team, on: ut.team_id == t.id,
+        where: ut.user_id == ^userId,
+        select: {t, ut.is_owner}
+      )
+
+      teams_and_owners = TimeManagerApi.Repo.all(user_teams_query)
+
+      teams_with_users =
+        Enum.map(teams_and_owners, fn {team, is_owner} ->
+          users_query =
+            from(
+              ut in TimeManagerApi.UserTeam,
+              join: u in TimeManagerApi.User, on: ut.user_id == u.id,
+              where: ut.team_id == ^team.id,
+              select: u
+            )
+          users = TimeManagerApi.Repo.all(users_query)
+          %{team: team, is_owner: is_owner, users: users}
+        end)
+    conn
+    |> put_status(:ok)
+    |> json(teams_with_users)
+  end
+
+  def getUserTeam(conn,%{"userId" => userId}) do
+    user_teams_query =
+      from(
+        ut in TimeManagerApi.UserTeam,
+        join: t in TimeManagerApi.Team, on: ut.team_id == t.id,
+        where: ut.user_id == ^userId,
+        select: {t, ut.is_owner}
+      )
+
+      teams_and_owners = TimeManagerApi.Repo.all(user_teams_query)
+
+      teams_with_users =
+        Enum.map(teams_and_owners, fn {team, is_owner} ->
+          users_query =
+            from(
+              ut in TimeManagerApi.UserTeam,
+              join: u in TimeManagerApi.User, on: ut.user_id == u.id,
+              where: ut.team_id == ^team.id,
+              select: u
+            )
+          users = TimeManagerApi.Repo.all(users_query)
+          %{team: team, is_owner: is_owner, users: users}
+        end)
+    conn
+    |> put_status(:ok)
+    |> json(teams_with_users)
+  end
+
 end
