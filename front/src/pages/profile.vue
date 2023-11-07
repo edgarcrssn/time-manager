@@ -40,8 +40,8 @@ const fetchProfile = async () => {
   const API_URL = `${apiUrl}/api/users/${userId}`
   try {
     user.value = await fetchData(API_URL)
-  } catch (error) {
-    if (error.message.includes('404')) {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message.includes('404')) {
       router.push(`/profile/${storedUserID}`)
     } else {
       console.error('Error fetching profile:', error)
@@ -64,8 +64,10 @@ const deleteAccount = async () => {
       } else {
         router.push(`/dashboard/${storedUserID}`)
       }
-    } catch (error) {
-      console.error('Error deleting profile:', error)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Error deleting profile:', error)
+      }
     }
   }
 }

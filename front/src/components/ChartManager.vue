@@ -112,15 +112,15 @@ const changeViewMode = () => {
 
 // FETCH DATA
 const fetchDayData = async (date: Date) => {
-  const data = await fetchData<WorkingTime[]>(API_URL)
+  const data: WorkingTime[] = await fetchData(API_URL);
 
-  const dayData = data.filter((item) => {
+  const dayData = data.filter((item: WorkingTime) => {
     return new Date(item.start).toISOString().split('T')[0] === date.toISOString().split('T')[0]
   })
 
   const aggregatedHours: { [date: string]: number } = {}
 
-  dayData.forEach((item) => {
+  dayData.forEach((item: WorkingTime) => {
     const start = new Date(item.start)
     const end = new Date(item.end)
     const hours = (+end - +start) / (1000 * 60 * 60)
@@ -165,16 +165,16 @@ const fetchWeekData = async (date: Date) => {
   const start = monday
   const end = sunday
 
-  const data = await fetchData<WorkingTime[]>(API_URL)
+  const data: WorkingTime[] = await fetchData(API_URL);
 
-  const weekData = data.filter((item) => {
+  const weekData = data.filter((item: WorkingTime) => {
     const startDate = new Date(item.start).toISOString().split('T')[0]
     return startDate >= start.toISOString().split('T')[0] && startDate <= end.toISOString().split('T')[0]
   })
 
   const aggregatedHours: { [date: string]: number } = {}
 
-  weekData.forEach((item) => {
+  weekData.forEach((item: WorkingTime) => {
     const start = new Date(item.start)
     const end = new Date(item.end)
     const hours = (+end - +start) / (1000 * 60 * 60)
@@ -219,16 +219,16 @@ const fetchMonthData = async (date: Date) => {
   const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)
   const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
-  const data = await fetchData<WorkingTime[]>(API_URL)
+  const data: WorkingTime[] = await fetchData(API_URL);
 
-  const monthData = data.filter((item) => {
+  const monthData = data.filter((item: WorkingTime) => {
     const startDate = new Date(item.start).toISOString().split('T')[0]
     return startDate >= startOfMonth.toISOString().split('T')[0] && startDate <= endOfMonth.toISOString().split('T')[0]
   })
 
   const aggregatedHours: { [date: string]: number } = {}
 
-  monthData.forEach((item) => {
+  monthData.forEach((item: WorkingTime) => {
     const start = new Date(item.start)
     const end = new Date(item.end)
     const hours = (+end - +start) / (1000 * 60 * 60)
