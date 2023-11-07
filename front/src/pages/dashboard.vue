@@ -1,7 +1,7 @@
 <template>
   <div class="p-2 flex flex-col items-center">
-    <ClockManager :key="userId" :user-id="userId" />
-    <ChartManager :key="userId" :user-id="userId" />
+    <ClockManager :key="userId" :user-id="+userId" />
+    <ChartManager :key="userId" :user-id="+userId" />
   </div>
 </template>
 

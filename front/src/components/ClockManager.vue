@@ -15,7 +15,7 @@
     </button>
 
     <!-- TODO Display only if current user role is manager -->
-    <ClockManagerForTeamManager :user-id="userId" />
+    <ClockManagerForTeamManager :user-id="+userId" />
   </section>
 </template>
 
@@ -27,7 +27,7 @@ import { fetchData } from '../services/httpService'
 
 const { userId } = defineProps({
   userId: {
-    type: Number || String,
+    type: Number,
     required: true
   }
 })
