@@ -82,8 +82,8 @@ defmodule TimeManagerApiWeb.ClockController do
                 |> json(%{newClock: clock, newWorkingTime: workingtime})
               {:error, _changeset} ->
                 conn
-                |> put_status(:bad_request)
-                |> json(%{error: "Bad request occurred"})
+                |> put_status(500)
+                |> json(%{message: "New clock has been created but not working time."})
             end
           else
             conn
