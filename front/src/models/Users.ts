@@ -12,4 +12,7 @@ export type User = {
   email: string
   role: Role
   team: Team
+  hourly_rate: number
+  additional_hourly_rate: number
+  night_hourly_rate: number
 }
