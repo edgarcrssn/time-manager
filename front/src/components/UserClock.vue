@@ -35,11 +35,7 @@ const clockIn = ref<boolean | null>(null)
 const loading = ref(true)
 const processing = ref(false)
 
-onMounted(() => {
-  getLastClocks()
-})
-
-const getLastClocks = async () => {
+const getLastClock = async () => {
   if (processing.value) return
 
   try {
@@ -56,6 +52,10 @@ const getLastClocks = async () => {
   }
 }
 
+onMounted(() => {
+  getLastClock()
+})
+
 const clock = async () => {
   processing.value = true
   try {
@@ -68,32 +68,11 @@ const clock = async () => {
 
     const lastClock = data.newClock
     clockIn.value = lastClock.status
-
-    if (lastClock.status) {
-      startDateTime.value = new Date(lastClock.time).toLocaleString()
-    } else if (data.length > 1) {
-      const previousClock = data[data.length - 2]
-      await createWorkingTime(previousClock.time, lastClock.time)
-      startDateTime.value = null
-    }
+    startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
   } catch (error) {
     console.error('Error clocking in/out:', error)
   } finally {
     processing.value = false
-  }
-}
-
-const createWorkingTime = async (startTime: string, endTime: string) => {
-  const workingTimesAPI = `${apiUrl}/api/workingtimes/${member.id}`
-  try {
-    await fetchData(workingTimesAPI, 'POST', {
-      workingtime: {
-        start: startTime,
-        end: endTime
-      }
-    })
-  } catch (error) {
-    console.error('Error creating working time:', error)
   }
 }
 </script>

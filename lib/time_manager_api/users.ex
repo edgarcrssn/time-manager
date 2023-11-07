@@ -20,7 +20,6 @@ defmodule TimeManagerApi.User do
     field :email, :string
     field :role, Ecto.Enum, values: [:employee, :manager, :general_manager], default: :employee
     field :password_hash, :string
-    field :password, :string, virtual: true
     field :hourly_rate, :float
     field :night_hourly_rate, :float
     field :additional_hourly_rate, :float

@@ -14,8 +14,7 @@
       {{ loading ? 'Loading...' : processing ? 'Processing...' : clockIn ? 'Clock Out' : 'Clock In' }}
     </button>
 
-    <!-- TODO Display only if current user role is manager -->
-    <ClockManagerForTeamManager :user-id="+userId" />
+    <ClockManagerForTeamManager v-if="['manager', 'general_manager'].includes(currentUserRole)" :user-id="+userId" />
   </section>
 </template>
 
@@ -32,6 +31,7 @@ const { userId } = defineProps({
   }
 })
 
+const currentUserRole = ref<string>('')
 const startDateTime = ref<string | null>(null)
 const clockIn = ref<boolean | null>(null)
 const API_URL = `${apiUrl}/api/clocks/${userId}`
@@ -39,7 +39,7 @@ const API_URL = `${apiUrl}/api/clocks/${userId}`
 const loading = ref(true)
 const processing = ref(false)
 
-const refresh = async () => {
+const getLastClock = async () => {
   if (processing.value) return
 
   try {
@@ -57,12 +57,11 @@ const refresh = async () => {
 }
 
 let intervalId: ReturnType<typeof setInterval>
-
 onMounted(() => {
-  refresh()
-  intervalId = setInterval(refresh, 10000)
+  currentUserRole.value = sessionStorage.getItem('userRole') || ''
+  getLastClock()
+  intervalId = setInterval(getLastClock, 10000)
 })
-
 onUnmounted(() => {
   clearInterval(intervalId)
 })
@@ -79,32 +78,11 @@ const clock = async () => {
 
     const lastClock = data.newClock
     clockIn.value = lastClock.status
-
-    if (lastClock.status) {
-      startDateTime.value = new Date(lastClock.time).toLocaleString()
-    } else if (data.length > 1) {
-      const previousClock = data[data.length - 2]
-      await createWorkingTime(previousClock.time, lastClock.time)
-      startDateTime.value = null
-    }
+    startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
   } catch (error) {
     console.error('Error clocking in/out:', error)
   } finally {
     processing.value = false
-  }
-}
-
-const createWorkingTime = async (startTime: string, endTime: string) => {
-  const workingTimesAPI = `${apiUrl}/api/workingtimes/${userId}`
-  try {
-    await fetchData(workingTimesAPI, 'POST', {
-      workingtime: {
-        start: startTime,
-        end: endTime
-      }
-    })
-  } catch (error) {
-    console.error('Error creating working time:', error)
   }
 }
 </script>

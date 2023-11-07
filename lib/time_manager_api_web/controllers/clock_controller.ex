@@ -73,10 +73,23 @@ defmodule TimeManagerApiWeb.ClockController do
     try do
       case TimeManagerApi.Repo.insert(changeset) do
         {:ok, clock} ->
-          conn
-          |> put_status(:created)
-          |> json(%{newClock: clock})
-
+          if (!clock.status) do
+            changeset = TimeManagerApi.Workingtimes.changeset(%TimeManagerApi.Workingtimes{},  %{"start" => last_clock.time, "end" => clock.time, "user_id" => user_id})
+            case TimeManagerApi.Repo.insert(changeset) do
+              {:ok, workingtime} ->
+                conn
+                |> put_status(:created)
+                |> json(%{newClock: clock, newWorkingTime: workingtime})
+              {:error, _changeset} ->
+                conn
+                |> put_status(500)
+                |> json(%{message: "New clock has been created but not working time."})
+            end
+          else
+            conn
+            |> put_status(:created)
+            |> json(%{newClock: clock})
+          end
         {:error, changeset} ->
           conn
           |> put_status(:bad_request)
