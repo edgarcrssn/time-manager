@@ -5,7 +5,6 @@ defmodule TimeManagerApiWeb.UserController do
   @doc """
   Retrieve users. Can be filtered by email and/or username.
   """
-  # TODO index: must be authenticated
   def index(conn, %{"email" => email, "username" => username} = params) when is_map(params) do
     query =
       from(
@@ -50,7 +49,6 @@ defmodule TimeManagerApiWeb.UserController do
   @doc """
   Retrieve a user by id.
   """
-  # TODO show: must be authenticated
   def show(conn, %{"userID" => id}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, id)
 
@@ -98,7 +96,6 @@ defmodule TimeManagerApiWeb.UserController do
   @doc """
   Update an existing user by id.
   """
-  # TODO update: must be "general_manager" or user himself
   def update(conn, %{"userID" => id, "user" => user_params}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, id)
 
@@ -139,7 +136,6 @@ defmodule TimeManagerApiWeb.UserController do
   @doc """
   Delete an existing user by id.
   """
-  # TODO delete: must be "general_manager" or user himself
   def delete(conn, %{"userID" => id}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, id)
 
@@ -165,8 +161,9 @@ defmodule TimeManagerApiWeb.UserController do
   end
 
   def getByTeam(conn, %{"teamId" => teamId}) do
-    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, String.to_integer(teamId))
-
+    teamId = String.to_integer(teamId)
+    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, teamId)
+    
     case team do
       nil ->
         conn

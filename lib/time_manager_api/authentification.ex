@@ -16,7 +16,7 @@ defmodule TimeManagerApi.Authentication do
   end
 
   def generate_jwt(user) do
-    claims = %{sub: user.id}
+    claims = %{sub: user.id, role: user.role}
     csrf_token = generate_csrf_token()
     claims = Map.put(claims, "x_csrf_token", csrf_token)
 
