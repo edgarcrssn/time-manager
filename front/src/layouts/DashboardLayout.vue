@@ -7,7 +7,9 @@
       <h1 class="flex-1 text-center">
         EpicHourly
       </h1>
-      <router-link :to="`/dashboard/profile/${storedUserID}`" class="flex-1 flex justify-end">
+      <img v-if="isClock" alt="clockIn" src="../assets/clock-in.svg" class="w-8 h-8">
+      <img v-else alt="clockOut" src="../assets/clock-out.svg" class="w-8 h-8">
+      <router-link :to="`/dashboard/profile/${storedUserID}`" class="ml-4">
         <img alt="profile" src="../assets/user_icon.svg" class="w-8 h-8">
       </router-link>
     </header>
@@ -84,12 +86,13 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { apiUrl } from '../constants/urls'
 import { fetchData } from '../services/httpService'
 
 const router = useRouter()
 const storedUserID = ref('')
+const isClock = ref(false)
 
 const logout = async () => {
   try {
@@ -115,7 +118,28 @@ const getUserInfo = () => {
   storedUserID.value = userID
 }
 
-onMounted(() => {
+const getClock = async () => {
+  try {
+    console.log('api trigger')
+    const API_URL = `${apiUrl}/api/clocks/${storedUserID.value}`
+    const data = await fetchData(`${API_URL}/last`)
+    if (data && data?.clock) {
+      const lastClock = data.clock
+      isClock.value = lastClock.status
+    }
+  } catch (error) {
+    console.error('Error fetching clock status:', error)
+  }
+}
+
+onMounted(async () => {
   getUserInfo()
+  await getClock()
+})
+
+const intervalId = setInterval(getClock, 5000)
+
+onUnmounted(() => {
+  clearInterval(intervalId)
 })
 </script>
