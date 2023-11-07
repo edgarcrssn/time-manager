@@ -48,51 +48,47 @@ defmodule TimeManagerApiWeb.EmployeeScheduleController do
     end
   end
 
+    @doc """
+  Update a specific schedule by its ID.
+  """
+  def update(conn, %{"userID" => user_id, "schedule" => schedule_params}) do
+    schedule = TimeManagerApi.Repo.get(TimeManagerApi.EmployeeSchedule, user_id)
+
+    case schedule do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "Schedule not found"})
+
+      _ ->
+        changeset = TimeManagerApi.EmployeeSchedule.changeset(schedule, schedule_params)
+        case TimeManagerApi.Repo.update(changeset) do
+          {:ok, updated_schedule} ->
+            json(conn, %{schedule: updated_schedule})
+
+          {:error, changeset} ->
+            conn
+            |> put_status(:bad_request)
+            |> json(%{message: "Bad Request", errors: changeset.errors})
+        end
+    end
+  end
 
   @doc """
-Update a specific schedule by its ID.
-"""
-def update(conn, %{"userID" => user_id, "schedule" => schedule_params}) do
-  schedule = TimeManagerApi.Repo.get(TimeManagerApi.EmployeeSchedule, user_id)
+  Delete a specific schedule by its ID.
+  """
+  def delete(conn, %{"userID" => _user_id, "id" => id}) do
+    schedule = TimeManagerApi.Repo.get(TimeManagerApi.EmployeeSchedule, id)
 
-  case schedule do
-    nil ->
-      conn
-      |> put_status(:not_found)
-      |> json(%{error: "Schedule not found"})
+    case schedule do
+      %TimeManagerApi.EmployeeSchedule{} = schedule ->
+        {:ok, _} = TimeManagerApi.Repo.delete(schedule)
+        json(conn, %{message: "Schedule deleted successfully"})
 
-    _ ->
-      changeset = TimeManagerApi.EmployeeSchedule.changeset(schedule, schedule_params)
-      case TimeManagerApi.Repo.update(changeset) do
-        {:ok, updated_schedule} ->
-          json(conn, %{schedule: updated_schedule})
-
-        {:error, changeset} ->
-          conn
-          |> put_status(:bad_request)
-          |> json(%{message: "Bad Request", errors: changeset.errors})
-      end
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "Schedule with id #{id} does not exist"})
+    end
   end
-end
-
-
-@doc """
-Delete a specific schedule by its ID.
-"""
-# TODO delete: must be authenticated
-def delete(conn, %{"userID" => _user_id, "id" => id}) do
-  schedule = TimeManagerApi.Repo.get(TimeManagerApi.EmployeeSchedule, id)
-
-  case schedule do
-    %TimeManagerApi.EmployeeSchedule{} = schedule ->
-      {:ok, _} = TimeManagerApi.Repo.delete(schedule)
-      json(conn, %{message: "Schedule deleted successfully"})
-
-    nil ->
-      conn
-      |> put_status(:not_found)
-      |> json(%{error: "Schedule with id #{id} does not exist"})
-  end
-end
-
 end

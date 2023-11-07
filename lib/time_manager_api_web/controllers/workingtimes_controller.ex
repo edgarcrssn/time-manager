@@ -3,7 +3,6 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
   import Plug.Conn
   import Ecto.Query
 
-  # TODO index: must be "general_manager" or "manager" of the user or user himself
   def index(conn, %{"userID" => userId} = params) when is_map(params) do
     case userId do
       nil ->
@@ -50,7 +49,6 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
     end
   end
 
-  # TODO show: must be "general_manager" or "manager" of the user or user himself
   def show(conn, %{"userID" => userId, "id" => id} = params) when is_map(params) do
     _query =
       from(
@@ -70,7 +68,6 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
     json(conn,workingtime)
   end
 
-  # TODO create: must be "general_manager" or user himself
   def create(conn, %{"userID" => userId, "workingtime" => workingtime_param}) when is_binary(userId) do
     user_id = String.to_integer(userId)
     user = TimeManagerApi.Repo.get(TimeManagerApi.User,userId)
@@ -102,50 +99,59 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
     end
   end
 
-  # TODO update: must be "general_manager" or workingtime owner himself
   def update(conn, %{"id" => id, "workingtime" => workingtime_param}) do
-    workingtime = TimeManagerApi.Repo.get(TimeManagerApi.Workingtimes,id)
+    workingtime = TimeManagerApi.Repo.get(TimeManagerApi.Workingtimes, id)
+
+    current_user = conn.assigns.current_user
+
     case workingtime do
       nil ->
         conn
         |> put_status(:not_found)
         |> json(%{message: "Workingtime not found"})
       _ ->
-        user_id = Map.get(workingtime_param,"user_id")
-        user = TimeManagerApi.Repo.get(TimeManagerApi.User,user_id)
-        case user do
-          nil ->
-            conn
-            |> put_status(:not_found)
-            |> json(%{error: "User not found"})
-          _ ->
-            workingtime = TimeManagerApi.Repo.get(TimeManagerApi.Workingtimes,id)
-            case workingtime do
-              nil ->
-                conn
-                |> put_status(:not_found)
-                |> json(%{message: "Workingtime not found"})
-              _ ->
-                changeset = TimeManagerApi.Workingtimes.changeset(workingtime,workingtime_param)
-                case TimeManagerApi.Repo.update(changeset) do
-                  {:ok, updated_workingtime} ->
-                    conn
-                    |> put_status(:ok)
-                    |> json(%{workingtime: updated_workingtime})
+        if (current_user.sub != workingtime.user_id) do
+          conn
+          |> put_status(:forbidden)
+          |> json(%{message: "Forbidden"})
+        else
+          user_id = Map.get(workingtime_param,"user_id")
+          user = TimeManagerApi.Repo.get(TimeManagerApi.User,user_id)
+          case user do
+            nil ->
+              conn
+              |> put_status(:not_found)
+              |> json(%{error: "User not found"})
+            _ ->
+              workingtime = TimeManagerApi.Repo.get(TimeManagerApi.Workingtimes,id)
+              case workingtime do
+                nil ->
+                  conn
+                  |> put_status(:not_found)
+                  |> json(%{message: "Workingtime not found"})
+                _ ->
+                  changeset = TimeManagerApi.Workingtimes.changeset(workingtime,workingtime_param)
+                  case TimeManagerApi.Repo.update(changeset) do
+                    {:ok, updated_workingtime} ->
+                      conn
+                      |> put_status(:ok)
+                      |> json(%{workingtime: updated_workingtime})
 
-                  {:error, _changeset} ->
-                    conn
-                    |> put_status(:bad_request)
-                    |> json(%{message: "Bad request occurred"})
-                end
-            end
+                    {:error, _changeset} ->
+                      conn
+                      |> put_status(:bad_request)
+                      |> json(%{message: "Bad request occurred"})
+                  end
+              end
+          end
         end
     end
   end
 
-  # TODO delete: must be "general_manager" or workingtime owner himself
   def delete(conn, %{"id" => id}) do
     workingtime = TimeManagerApi.Repo.get(TimeManagerApi.Workingtimes, id)
+
+    current_user = conn.assigns.current_user
 
     case workingtime do
       nil ->
@@ -153,16 +159,22 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
         |> put_status(:not_found)
         |> json(%{message: "Workingtime not found"})
       _ ->
-        case TimeManagerApi.Repo.delete(workingtime) do
-          {:ok,_} ->
-            conn
-            |> put_status(:ok)
-            |> json(%{message: "Workingtime deleted"})
+        if (current_user.sub != workingtime.user_id) do
+          conn
+          |> put_status(:forbidden)
+          |> json(%{message: "Forbidden"})
+        else
+          case TimeManagerApi.Repo.delete(workingtime) do
+            {:ok,_} ->
+              conn
+              |> put_status(:ok)
+              |> json(%{message: "Workingtime deleted"})
 
-          _ ->
-            conn
-            |> put_status(:internal_server_error)
-            |> json(%{message: "Failed to delete workingtime"})
+            _ ->
+              conn
+              |> put_status(:internal_server_error)
+              |> json(%{message: "Failed to delete workingtime"})
+          end
         end
     end
   end

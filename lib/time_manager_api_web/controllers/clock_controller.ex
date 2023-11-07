@@ -2,7 +2,6 @@ defmodule TimeManagerApiWeb.ClockController do
   use TimeManagerApiWeb, :controller
   import Ecto.Query
 
-  # TODO show: must be "general_manager" or "manager" of the user or user himself
   def show(conn, %{"userID" => user_id}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
 
@@ -26,7 +25,6 @@ defmodule TimeManagerApiWeb.ClockController do
     end
   end
 
-  # TODO show: must be "general_manager" or "manager" of the user or user himself
   def getLastClock(conn, %{"userID" => user_id}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
 
@@ -58,7 +56,6 @@ defmodule TimeManagerApiWeb.ClockController do
     end
   end
 
-  # TODO create: must be user himself or his manager
   def create(conn, %{"userID" => user_id, "clock" => clock_params}) when is_binary(user_id) do
     user_id = String.to_integer(user_id)
 
@@ -93,7 +90,6 @@ defmodule TimeManagerApiWeb.ClockController do
     end
   end
 
-  # TODO create: must be the team manager
   @spec createForMyTeam(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def createForMyTeam(conn, %{"teamID" => team_id, "clock" => clock_params}) when is_binary(team_id) do
     team = TimeManagerApi.Repo.one(from t in TimeManagerApi.Team, where: t.id == ^team_id)
