@@ -1,17 +1,22 @@
 <template>
   <section class="text-center">
     <h2>My team(s) Work Tracking</h2>
-    <ul v-if="!loading">
-      <li v-for="team in ownedTeams" :key="team.id">
-        <TeamClocks :user-id="userId" :team="team" />
-      </li>
-    </ul>
+    <div v-if="!loading">
+      <ul v-if="ownedTeams?.length">
+        <li v-for="team in ownedTeams" :key="team.id">
+          <TeamClocks :user-id="userId" :team="team" />
+        </li>
+      </ul>
+      <p v-else>
+        You have no team.
+      </p>
+    </div>
   </section>
 </template>
 
 <script lang="ts" setup>
 import TeamClocks from './TeamClocks.vue'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { apiUrl } from '../constants/urls'
 import { Team } from '../models/Teams'
 import { fetchData } from '../services/httpService'
@@ -27,7 +32,7 @@ const ownedTeams = ref<Team[] | null>(null)
 
 const loading = ref(true)
 
-const refresh = async () => {
+const getTeams = async () => {
   try {
     const API_URL = `${apiUrl}/api/teams/owned/${userId}`
     const data = await fetchData(API_URL)
@@ -39,12 +44,7 @@ const refresh = async () => {
   }
 }
 
-let intervalId: ReturnType<typeof setInterval>
 onMounted(() => {
-  refresh()
-  intervalId = setInterval(refresh, 10000)
-})
-onUnmounted(() => {
-  clearInterval(intervalId)
+  getTeams()
 })
 </script>

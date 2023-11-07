@@ -7,19 +7,24 @@
     <p v-else-if="processing">
       Processing...
     </p>
-    <ul v-else>
-      <li v-for="member in teamMembers" :key="member.id">
-        <UserClock v-if="member.id != +userId" :member="member" />
-      </li>
-    </ul>
+    <div v-else>
+      <ul v-if="teamMembers?.length">
+        <li v-for="member in teamMembers" :key="member.id">
+          <UserClock v-if="member.id != +userId" :member="member" />
+        </li>
+      </ul>
+      <p v-else>
+        There is no member in this team.
+      </p>
+    </div>
     <button :disabled="loading || processing" @click="clockForAllTeamMembers">
-      Clock-in for all team members
+      Toggle clock for all team members
     </button>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { apiUrl } from '../constants/urls'
 import { Team } from '../models/Teams'
 import { User } from '../models/Users'
@@ -40,7 +45,7 @@ const { team, userId } = defineProps({
 const teamMembers = ref<Omit<User, 'team'>[] | null>(null)
 const loading = ref(true)
 
-const refresh = async () => {
+const getTeamUsers = async () => {
   try {
     const API_URL = `${apiUrl}/api/teams/${team.id}/users`
     const data = await fetchData(API_URL)
@@ -52,13 +57,8 @@ const refresh = async () => {
   }
 }
 
-let intervalId: ReturnType<typeof setInterval>
 onMounted(() => {
-  refresh()
-  intervalId = setInterval(refresh, 10000)
-})
-onUnmounted(() => {
-  clearInterval(intervalId)
+  getTeamUsers()
 })
 
 const processing = ref(false)
@@ -77,7 +77,7 @@ const clockForAllTeamMembers = async () => {
     console.error(error)
   } finally {
     processing.value = false
-    refresh()
+    getTeamUsers()
   }
 }
 </script>
