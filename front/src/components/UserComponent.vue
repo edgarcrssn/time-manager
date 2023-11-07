@@ -103,6 +103,8 @@ import Modal from './PopUp.vue'
 import { User } from '../models/Users'
 import { apiUrl } from '../constants/urls'
 import { fetchData } from '../services/httpService'
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
 
 const refreshKey = ref(0)
 const userId = sessionStorage.getItem('userID')
@@ -172,18 +174,30 @@ const updateOrCreateSchedule = async () => {
     if (data) {
       closeScheduleModal()
     } else {
+      createToast(
+        { title: 'An error occured while the updating of the schedule' },
+        { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+      )
       console.error('error')
     }
   } catch (error: unknown) {
     if (error instanceof Error && 'status' in error) {
-      const errorWithStatus = error as Error & { status: number };
+      const errorWithStatus = error as Error & { status: number }
       if (errorWithStatus.status === 404) {
-        await createSchedule(dataToSend);
+        await createSchedule(dataToSend)
       } else {
-        console.error(`Failed to update schedule for user ${schedule.value.id}`, error);
+        createToast(
+          { title: 'An error occured while the updating of the schedule' },
+          { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+        )
+        console.error(`Failed to update schedule for user ${schedule.value.id}`, error)
       }
     } else {
-      console.error('Error with the schedule operation:', error);
+      createToast(
+        { title: 'An error occured while the creating or the updating of the schedule' },
+        { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+      )
+      console.error('Error with the schedule operation:', error)
     }
   }
 }
@@ -195,9 +209,17 @@ const createSchedule = async (dataToSend: any) => {
     if (data) {
       closeScheduleModal()
     } else {
+      createToast(
+        { title: 'An error occured while the creating of the schedule' },
+        { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+      )
       console.error('error')
     }
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the creating of the schedule' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error('Error creating schedule:', error)
   }
 }
@@ -222,6 +244,10 @@ const getScheduleData = async (userId: number) => {
       schedule.value = { ...scheduleData, id: userId }
     }
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the fetching of the schedule of the user' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error(`Error fetching schedule for user ${userId}:`, error)
   }
 }
@@ -238,8 +264,16 @@ const createUser = async () => {
       }
       await fetchData(`${apiUrl}/api/users`, 'POST', userData)
       emit('addItem')
+      createToast(
+        { title: 'The user has been created with success' },
+        { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+      )
       closeUserModal()
     } catch (error) {
+      createToast(
+        { title: 'An error occured while the creation of the user' },
+        { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+      )
       console.error(error)
     }
   }
@@ -260,10 +294,18 @@ const getUser = async () => {
           usersData.value = dataUsers
         }
       } catch (error) {
+        createToast(
+          { title: 'An error occured while the fetching the data of all the users' },
+          { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+        )
         console.error('Error while fetching all the users data')
       }
     }
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the fetching the data of all the users' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error(error)
   }
 }
@@ -285,6 +327,10 @@ const handleItemAdded = async () => {
       usersData.value = dataUsers
     }
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the fetching the data of all the users' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error('Error while fetching all the users data')
   }
 }

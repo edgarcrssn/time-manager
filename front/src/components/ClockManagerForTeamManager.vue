@@ -20,6 +20,8 @@ import { onMounted, ref } from 'vue'
 import { apiUrl } from '../constants/urls'
 import { Team } from '../models/Teams'
 import { fetchData } from '../services/httpService'
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
 
 const { userId } = defineProps({
   userId: {
@@ -38,6 +40,10 @@ const getTeams = async () => {
     const data = await fetchData(API_URL)
     if (data?.teams) ownedTeams.value = data.teams
   } catch (error) {
+    createToast(
+      { title: "An error occured while the clock'in/out operation" },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error('Error fetching owned teams:', error)
   } finally {
     loading.value = false

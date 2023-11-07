@@ -1,27 +1,33 @@
 <template>
   <section class="p-2 flex flex-col items-center">
     <h2>Register</h2>
-    <form @submit.prevent="submitRegister" class="w-full max-w-md">
+    <form class="w-full max-w-md" @submit.prevent="submitRegister">
       <div>
         <label for="username">Username:</label>
-        <input v-model="newUser.username" type="text" id="username" required>
+        <input id="username" v-model="newUser.username" type="text" required>
       </div>
       <div>
         <label for="email">Email:</label>
-        <input v-model="newUser.email" type="email" id="email" required>
+        <input id="email" v-model="newUser.email" type="email" required>
       </div>
       <div>
         <label for="password">Password:</label>
-        <input v-model="newUser.password" type="password" id="password" required>
+        <input id="password" v-model="newUser.password" type="password" required>
       </div>
       <div>
         <label for="role">Role:</label>
-        <select v-model="newUser.role" id="role" required>
-          <option value="employee">Employee</option>
-          <option value="manager">Manager</option>
+        <select id="role" v-model="newUser.role" required>
+          <option value="employee">
+            Employee
+          </option>
+          <option value="manager">
+            Manager
+          </option>
         </select>
       </div>
-      <button type="submit" class="main">Register</button>
+      <button type="submit" class="main">
+        Register
+      </button>
     </form>
   </section>
 </template>
@@ -31,6 +37,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { apiUrl } from '../constants/urls'
 import { fetchData } from '../services/httpService'
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
 
 const newUser = ref({
   username: '',
@@ -45,17 +53,24 @@ const submitRegister = async () => {
   const API_URL = `${apiUrl}/register`
 
   try {
-    const data = await fetchData(API_URL, 'POST', { user: newUser.value });
+    const data = await fetchData(API_URL, 'POST', { user: newUser.value })
 
-    const { csrf_token, user } = data;
+    const { csrf_token, user } = data
 
-    sessionStorage.setItem('csrf_token', csrf_token);
-    sessionStorage.setItem('userID', user.id.toString());
-    sessionStorage.setItem('userRole', user.role);
-
-    router.push(`/dashboard/${user.id}`);
+    sessionStorage.setItem('csrf_token', csrf_token)
+    sessionStorage.setItem('userID', user.id.toString())
+    sessionStorage.setItem('userRole', user.role)
+    createToast(
+      { title: 'Your account has been created with success' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
+    router.push(`/dashboard/${user.id}`)
   } catch (error) {
-    console.error('Registration error:', error);
+    createToast(
+      { title: 'An error occured while the creation of the account' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
+    console.error('Registration error:', error)
   }
 }
 </script>
