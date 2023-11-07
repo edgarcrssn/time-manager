@@ -20,7 +20,7 @@ config :time_manager_api, TimeManagerApi.Repo,
 ip =
   case env do
     "dev" ->
-      {0, 0, 0, 0} # Change to listen on all interfaces when in dev environment.
+      {127, 0, 0, 1}
     _ ->
       {0, 0, 0, 0}
   end
