@@ -9,16 +9,14 @@ defmodule TimeManagerApiWeb.Router do
     plug TimeManagerApiWeb.Plugs.VerifyJWT
   end
 
-  pipeline :authorize_general_manager do
-    plug TimeManagerApi.Plugs.Authorization, opts: ["is_general_manager", "is_user_himself"]
+  pipeline :authorize_user_himself_only do
+    plug TimeManagerApi.Plugs.Authorization, opts: ["is_user_himself"]
   end
-
-  pipeline :authorize_manager do
+  pipeline :authorize_manager_only do
     plug TimeManagerApi.Plugs.Authorization, opts: ["is_manager"]
   end
-
-  pipeline :authorize_user_himself do
-    plug TimeManagerApi.Plugs.Authorization, opts: ["is_user_himself"]
+  pipeline :authorize_manager_or_user_himself do
+    plug TimeManagerApi.Plugs.Authorization, opts: ["is_manager", "is_user_himself"]
   end
 
   scope "/", TimeManagerApiWeb do
@@ -31,10 +29,10 @@ defmodule TimeManagerApiWeb.Router do
     post "/logout", AuthController, :logout
 
     scope "/api" do
-      pipe_through [:authenticated]
+      pipe_through [:authenticated, :authorize_manager_or_user_himself]
 
       scope "/workingtimes" do
-        get "/:userID", WorkingtimesController, :index, [pipe_through [:authorize_general_manager]]
+        get "/:userID", WorkingtimesController, :index
         get "/:userID/:id", WorkingtimesController, :show
         post "/:userID", WorkingtimesController, :create
         put "/:id", WorkingtimesController, :update

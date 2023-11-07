@@ -23,11 +23,17 @@ defmodule TimeManagerApi.Plugs.Authorization do
 
     IO.inspect(opts)
 
-    cond_1 = Enum.member?(opts, "is_general_manager") && current_user.role == "general_manager"
+    cond_1 = current_user.role == "general_manager"
 
     cond_2 = Enum.member?(opts, "is_manager") && current_user.role == "manager"
 
-    user_id = String.to_integer(conn.params["userID"] || conn.params["userId"])
+    user_id =
+      case {conn.params["userID"], conn.params["userId"]} do
+        {nil, nil} -> nil
+        {user_id, nil} -> String.to_integer(user_id)
+        {nil, user_id} -> String.to_integer(user_id)
+        {user_id, user_id} -> String.to_integer(user_id)
+      end
     cond_3 = Enum.member?(opts, "is_user_himself") && current_user.sub == user_id
 
     cond_1 || cond_2 || cond_3

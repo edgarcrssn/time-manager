@@ -167,7 +167,9 @@ defmodule TimeManagerApiWeb.UserController do
   end
 
   def getByTeam(conn, %{"teamId" => teamId}) do
-    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, String.to_integer(teamId))
+    teamId = String.to_integer(teamId)
+
+    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, teamId)
     case team do
       nil ->
         conn
