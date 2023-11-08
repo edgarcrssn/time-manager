@@ -71,48 +71,18 @@ const clock = async () => {
     const lastClock = data.newClock
     clockIn.value = lastClock.status
     startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
-
-    if (lastClock.status) {
-      startDateTime.value = new Date(lastClock.time).toLocaleString()
-    } else if (data.length > 1) {
-      const previousClock = data[data.length - 2]
-      await createWorkingTime(previousClock.time, lastClock.time)
-      startDateTime.value = null
-      createToast(
-        { title: "You have clock'in with success" },
-        { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
-      )
-    }
+    createToast(
+      { title: "You have clock'in with success" },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
   } catch (error) {
     createToast(
-      { title: "An error occured while the clock'in operation" },
+      { title: "An error occurred while the clock'in operation" },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error clocking in/out:', error)
   } finally {
     processing.value = false
-  }
-}
-
-const createWorkingTime = async (startTime: string, endTime: string) => {
-  const workingTimesAPI = `${apiUrl}/api/workingtimes/${member.id}`
-  try {
-    await fetchData(workingTimesAPI, 'POST', {
-      workingtime: {
-        start: startTime,
-        end: endTime
-      }
-    })
-    createToast(
-      { title: 'The workingtimes has been created with success' },
-      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
-    )
-  } catch (error) {
-    createToast(
-      { title: 'An error occured while the creation of the workingtimes' },
-      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
-    )
-    console.error('Error creating working time:', error)
   }
 }
 </script>
