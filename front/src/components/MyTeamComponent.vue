@@ -45,75 +45,96 @@
         </form>
       </Modal>
     </section>
-    <h2 class="text-center">
-      My Team(s)
-    </h2>
-    <div :key="refreshKey" class="flex justify-between items-center mb-3">
-      <button v-if="isManager" type="button" class="main" @click="openAddUserTeamModal">
-        Add a user in a team
-      </button>
-    </div>
-    <section v-for="teamUserData in teamsUsersData" :key="teamUserData.team.id" class="[&:not(:last-of-type)]:mb-6">
-      <div class="flex items-center justify-center mb-3 gap-2">
-        <h3 class="text-center mb-0">
-          {{ teamUserData.team.name }}
-        </h3>
-        <button type="button" class="main mt-0" @click="deleteTeam(teamUserData.team.id)">
-          <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
+    <section class="bg-white border rounded-3xl p-4 mb-6">
+      <h3 class="text-center">
+        Create a team
+      </h3>
+      <CreateTeam
+        :on-create="
+          () => {
+            getTeamsOfUser()
+            populateTeamList()
+          }
+        "
+      />
+    </section>
+    <section v-if="teamsUsersData.length" class="bg-white border rounded-3xl p-4">
+      <h3 class="text-center">
+        My team{{ teamsUsersData.length > 1 ? 's' : '' }}
+      </h3>
+      <div :key="refreshKey" class="flex justify-between items-center mb-3">
+        <button v-if="isManager" type="button" class="main" @click="openAddUserTeamModal">
+          Add a user in a team
         </button>
       </div>
-      <div class="overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left text-white overflow-x-auto shadow-md sm:rounded-lg">
-          <thead class="text-xs uppercase bg-customMain">
-            <tr>
-              <th scope="col" class="px-6 py-3">
-                Username
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Email
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Role
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(teamUserDataInUser, index) in teamUserData.users"
-              :key="teamUserDataInUser.id"
-              :class="
-                index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
-              "
-            >
-              <td class="px-6 py-4 font-medium whitespace-nowrap">
-                {{ teamUserDataInUser.username }}
-              </td>
-              <td class="px-6 py-4">
-                {{ teamUserDataInUser.email }}
-              </td>
-              <td class="px-6 py-4">
-                {{ teamUserDataInUser.role }}
-              </td>
-              <td class="px-6 py-4">
-                <button
-                  v-if="
-                    { ...teamUserDataInUser }.id !== +(userId || 0) ||
-                      { ...teamUserDataInUser }.role !== 'general_manager'
-                  "
-                  type="button"
-                  class="mt-0"
-                  @click="deleteUserFromTeam({ ...teamUserDataInUser }.id, teamUserData.team.id)"
-                >
-                  <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <section v-for="teamUserData in teamsUsersData" :key="teamUserData.team.id" class="[&:not(:last-of-type)]:mb-6">
+        <div class="flex items-center justify-between mb-3 gap-2">
+          <h4 class="text-center mb-0">
+            {{ teamUserData.team.name }}
+          </h4>
+          <button type="button" class="error mt-0" @click="deleteTeam(teamUserData.team.id)">
+            <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
+          </button>
+        </div>
+        <div class="overflow-x-auto shadow-md sm:rounded-lg">
+          <table class="w-full text-sm text-left text-white overflow-x-auto shadow-md sm:rounded-lg">
+            <thead class="text-xs uppercase bg-customMain">
+              <tr>
+                <th scope="col" class="px-6 py-3">
+                  Username
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Email
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Role
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Clock
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(teamUserDataInUser, index) in teamUserData.users"
+                :key="teamUserDataInUser.id"
+                :class="
+                  index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
+                "
+              >
+                <td class="px-6 py-4 font-medium whitespace-nowrap">
+                  {{ teamUserDataInUser.username }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ teamUserDataInUser.email }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ getRoleLabel(teamUserDataInUser.role) }}
+                </td>
+                <td class="px-6 py-4">
+                  <UserClock :user-id="teamUserDataInUser.id" :on-clock="getTeamsOfUser" />
+                </td>
+                <td class="px-6 py-4">
+                  <button
+                    v-if="
+                      { ...teamUserDataInUser }.id !== +(userId || 0) ||
+                        { ...teamUserDataInUser }.role !== 'general_manager'
+                    "
+                    type="button"
+                    class="mt-0"
+                    @click="deleteUserFromTeam({ ...teamUserDataInUser }.id, teamUserData.team.id)"
+                  >
+                    <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </section>
   </div>
 </template>
@@ -126,16 +147,15 @@ import Modal from './AddUserTeamPopUp.vue'
 import { fetchData } from '../services/httpService'
 import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
-
-interface TeamInterface {
-  id: number
-  name: string
-}
+import CreateTeam from './CreateTeam.vue'
+import UserClock from './UserClock.vue'
+import { Team } from '../models/Teams'
+import { getRoleLabel } from '../helpers/getRoleLabel'
 
 interface TeamsUsersInterface {
   // eslint-disable-next-line camelcase
   is_owner: boolean
-  team: TeamInterface
+  team: Team
   users: User[]
 }
 
@@ -146,7 +166,7 @@ const userId = sessionStorage.getItem('userID')
 const userList = ref<User[]>([])
 const availableUserList = ref<User[]>([])
 const alreadyAddedUsersIds = ref<number[]>([])
-const teamList = ref<TeamInterface[]>([])
+const teamList = ref<Team[]>([])
 const selectedTeam = ref<number>(0)
 const selectedUser = ref<number>(0)
 const refreshKey = ref<number>(0)

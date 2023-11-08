@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ member.username }}
     <p v-if="loading">
       Loading...
     </p>
@@ -8,7 +7,7 @@
       Processing...
     </p>
     <p v-else>
-      {{ clockIn ? 'Work started at: ' + startDateTime + ' 🧠' : 'Rest 😴' }}
+      {{ clockIn ? '🧠 Since: ' + timeSinceLastClockIn : '😴 Rest' }}
     </p>
     <button :disabled="loading || processing" class="main" @click="clock">
       {{ loading ? 'Loading...' : processing ? 'Processing...' : clockIn ? 'Clock Out' : 'Clock In' }}
@@ -17,35 +16,59 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { apiUrl } from '../constants/urls'
-import { User } from '../models/Users'
 import { fetchData } from '../services/httpService'
 import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
+import { getTimeElapsedSinceDate } from '../helpers/dateUtils'
 
-const { member } = defineProps({
-  member: {
-    type: Object as () => Omit<User, 'team'>,
+const { userId, onClock } = defineProps({
+  userId: {
+    type: Number,
     required: true
+  },
+  onClock: {
+    type: Function,
+    default: () => {},
+    required: false
   }
 })
 
-const startDateTime = ref<string | null>(null)
 const clockIn = ref<boolean | null>(null)
+const timeSinceLastClockIn = ref<string>('0')
 
 const loading = ref(true)
 const processing = ref(false)
+
+let timer: ReturnType<typeof setInterval>
+
+onMounted(() => {
+  getLastClock()
+})
+
+onUnmounted(() => {
+  clearInterval(timer)
+})
 
 const getLastClock = async () => {
   if (processing.value) return
 
   try {
-    const data = await fetchData(`${apiUrl}/api/clocks/${member.id}/last`)
+    const data = await fetchData(`${apiUrl}/api/clocks/${userId}/last`)
     if (data && data?.clock) {
       const lastClock = data.clock
       clockIn.value = lastClock.status
-      startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
+
+      if (lastClock.status) {
+        timeSinceLastClockIn.value = getTimeElapsedSinceDate(lastClock.time)
+        timer = setInterval(() => {
+          timeSinceLastClockIn.value = getTimeElapsedSinceDate(lastClock.time)
+        }, 1000)
+      } else {
+        clearInterval(timer)
+        timeSinceLastClockIn.value = '0'
+      }
     }
   } catch (error) {
     console.error('Error fetching clock status:', error)
@@ -54,15 +77,11 @@ const getLastClock = async () => {
   }
 }
 
-onMounted(() => {
-  getLastClock()
-})
-
 const clock = async () => {
   processing.value = true
   try {
     const currentTime = new Date().toISOString()
-    const data = await fetchData(`${apiUrl}/api/clocks/${member.id}`, 'POST', {
+    const data = await fetchData(`${apiUrl}/api/clocks/${userId}`, 'POST', {
       clock: {
         time: currentTime
       }
@@ -70,11 +89,22 @@ const clock = async () => {
 
     const lastClock = data.newClock
     clockIn.value = lastClock.status
-    startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
+
+    if (lastClock.status) {
+      timeSinceLastClockIn.value = getTimeElapsedSinceDate(lastClock.time)
+      timer = setInterval(() => {
+        timeSinceLastClockIn.value = getTimeElapsedSinceDate(lastClock.time)
+      }, 1000)
+    } else {
+      clearInterval(timer)
+      timeSinceLastClockIn.value = '0'
+    }
+
     createToast(
       { title: "You have clock'in with success" },
       { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
     )
+    onClock()
   } catch (error) {
     createToast(
       { title: "An error occurred while the clock'in operation" },

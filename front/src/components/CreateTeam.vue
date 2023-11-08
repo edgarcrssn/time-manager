@@ -1,6 +1,5 @@
 <template>
   <div class="mb-4 text-center flex flex-col items-center">
-    <h2>Create Team</h2>
     <form class="w-full flex flex-col items-center" @submit.prevent="createTeam">
       <label for="input" placeholder="Name" class="block text-sm font-medium text-gray-600">Enter the name of the new team</label>
       <input
@@ -22,6 +21,14 @@ import { fetchData } from '../services/httpService'
 import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 
+const { onCreate } = defineProps({
+  onCreate: {
+    type: Function,
+    default: () => {},
+    required: false
+  }
+})
+
 const teamName = ref<string>('')
 const userId = sessionStorage.getItem('userID')
 
@@ -38,6 +45,8 @@ const createTeam = async () => {
       { title: 'The team has been created' },
       { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
     )
+    onCreate()
+    teamName.value = ''
   } catch (error) {
     createToast(
       { title: 'An error occurred while the creation of the team' },

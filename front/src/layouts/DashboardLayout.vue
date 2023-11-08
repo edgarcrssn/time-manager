@@ -28,15 +28,9 @@
             </router-link>
           </li>
           <li v-if="isManagerOrGeneralManager" class="mb-2">
-            <router-link to="/my-team" class="text-customWhite flex items-center">
+            <router-link to="/teams" class="text-customWhite flex items-center">
               <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
-              My Team
-            </router-link>
-          </li>
-          <li v-if="isManagerOrGeneralManager" class="mb-2">
-            <router-link to="/create-team" class="text-customWhite flex items-center">
-              <img alt="create" src="../assets/plus.svg" class="w-8 h-8 mr-2">
-              Create My Team
+              Teams
             </router-link>
           </li>
           <li v-if="isManagerOrGeneralManager" class="mb-2">
@@ -66,13 +60,9 @@
         <img alt="workingtime" src="../assets/wokingtime_icon.svg" class="w-8 h-8 mr-2">
         <span class="text-xs text-customWhite">Working Time</span>
       </router-link>
-      <router-link v-if="isManagerOrGeneralManager" to="/my-team" class="flex flex-col items-center">
+      <router-link v-if="isManagerOrGeneralManager" to="/teams" class="flex flex-col items-center">
         <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
-        <span class="text-xs text-customWhite">My Team</span>
-      </router-link>
-      <router-link v-if="isManagerOrGeneralManager" to="/create-team" class="flex flex-col items-center">
-        <img alt="create" src="../assets/plus.svg" class="w-8 h-8 mr-2">
-        <span class="text-xs text-customWhite">Create My Team</span>
+        <span class="text-xs text-customWhite">Teams</span>
       </router-link>
       <router-link v-if="isManagerOrGeneralManager" to="/view-users" class="flex flex-col items-center">
         <img alt="users" src="../assets/users_icon.svg" class="w-8 h-8 mr-2">
