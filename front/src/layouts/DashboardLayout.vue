@@ -49,7 +49,7 @@
         </button>
       </nav>
 
-      <main class="flex-grow p-4 overflow-auto">
+      <main class="flex-grow p-4 overflow-auto pb-20">
         <router-view />
       </main>
     </div>
