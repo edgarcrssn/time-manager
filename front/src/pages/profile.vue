@@ -1,5 +1,5 @@
 <template>
-  <section class="p-2 flex flex-col items-center">
+  <section class="p-4 flex flex-col items-center card">
     <h2>Profile</h2>
     <article class="w-full max-w-md">
       <div><strong>Username:</strong> {{ user.username }}</div>
