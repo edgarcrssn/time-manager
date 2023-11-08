@@ -1,51 +1,60 @@
 <template>
-  <div class="rounded-xl overflow-hidden bg-black">
-    <div class="rounded-xl bg-white">
-      <table class="w-full text-center">
-        <thead>
+  <div class="overflow-hidden">
+    <div class="overflow-x-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left text-white">
+        <thead class="text-xs uppercase bg-customGrey">
           <tr>
-            <th v-for="thName in titleProperty" :key="thName">
+            <th v-for="thName in titleProperty" :key="thName" scope="col" class="px-6 py-3">
               {{ thName }}
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="donnee in data" v-if="typeTable == 'user'" :key="donnee">
-            <td>{{ donnee.username }}</td>
-            <td>{{ donnee.email }}</td>
-            <td>
+          <tr
+            v-for="(donnee, index) in data"
+            v-if="typeTable == 'user'"
+            :key="donnee"
+            :class="
+              index % 2 === 0 ? 'bg-customLightGrey border-b border-white' : 'bg-customGrey border-b border-white'
+            "
+          >
+            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+              {{ donnee.username }}
+            </th>
+            <td class="px-6 py-4">
+              {{ donnee.email }}
+            </td>
+            <td class="px-6 py-4">
               <button type="button" @click="$emit('showSchedule', donnee.id)">
-                <img alt="calendar" src="../../assets/calendar_icon.svg" class="w-5 h-5" />
+                <img alt="calendar" src="../../assets/calendar_icon.svg" class="w-5 h-5">
               </button>
               <button type="button" @click="openUpdateModal(donnee)">
-                <img alt="update" src="../../assets/update_icon.svg" class="w-5 h-5" />
+                <img alt="update" src="../../assets/update_icon.svg" class="w-5 h-5">
               </button>
               <button type="button" @click="deleteUser(donnee.id)">
-                <img alt="delete" src="../../assets/delete_icon.svg" class="w-5 h-5" />
+                <img alt="delete" src="../../assets/delete_icon.svg" class="w-5 h-5">
               </button>
             </td>
           </tr>
 
-          <tr v-for="(donnee, id) in data" v-if="typeTable == 'team'" :key="id">
-            <td>{{ donnee.name }}</td>
-            <td>
-              <button type="button" @click="deleteUser(id)">
-                <img alt="delete" src="../../assets/delete_icon.svg" class="w-5 h-5" />
-              </button>
-            </td>
-          </tr>
-
-          <tr v-for="time in data" v-if="typeTable == 'workingTimes'" :key="time.id">
-            <td class="border p-2">
+          <tr
+            v-for="(time, index) in data"
+            v-if="typeTable == 'workingTimes'"
+            :key="time.id"
+            :class="
+              index % 2 === 0 ? 'bg-customLightGrey border-b border-white' : 'bg-customGrey border-b border-white'
+            "
+          >
+            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
               {{ time.id }}
-            </td>
-            <td class="border p-2">
+            </th>
+            <td class="px-6 py-4">
               {{ formatDate(time.start) }}
             </td>
-            <td class="border p-2">
+            <td class="px-6 py-4">
               {{ formatDate(time.end) }}
             </td>
-            <td class="border p-2">
+            <td class="px-6 py-4">
               {{ time.user_id }}
             </td>
           </tr>
@@ -54,16 +63,26 @@
     </div>
     <Modal :is-open="isModalOpen" title="Update User">
       <form v-if="userToUpdate" @submit.prevent="updateUser(userToUpdate.id)">
-        <input v-model="userToUpdate.username" placeholder="Username" />
-        <input v-model="userToUpdate.email" placeholder="Email" />
+        <input v-model="userToUpdate.username" placeholder="Username">
+        <input v-model="userToUpdate.email" placeholder="Email">
         <select v-model="userToUpdate.role">
-          <option value="employee">Employee</option>
-          <option value="manager">Manager</option>
-          <option value="general_manager">General Manager</option>
+          <option value="employee">
+            Employee
+          </option>
+          <option value="manager">
+            Manager
+          </option>
+          <option value="general_manager">
+            General Manager
+          </option>
         </select>
-        <input v-model="userToUpdate.hourly_rate" type="integer" placeholder="Hourly Rate" />
-        <button type="submit">Update</button>
-        <button @click="isModalOpen = false">Cancel</button>
+        <input v-model="userToUpdate.hourly_rate" type="integer" placeholder="Hourly Rate">
+        <button type="submit">
+          Update
+        </button>
+        <button @click="isModalOpen = false">
+          Cancel
+        </button>
       </form>
     </Modal>
   </div>
@@ -84,20 +103,20 @@ const emit = defineEmits(['itemDeleted', 'showSchedule', 'userUpdated'])
 defineProps({
   titleProperty: {
     required: true,
-    type: Array as () => string[],
+    type: Array as () => string[]
   },
   data: {
     required: true,
-    type: Array as () => any[],
+    type: Array as () => any[]
   },
   tableName: {
     required: true,
-    type: String,
+    type: String
   },
   typeTable: {
     required: true,
-    type: String,
-  },
+    type: String
+  }
 })
 const deleteUser = async (id: number) => {
   try {

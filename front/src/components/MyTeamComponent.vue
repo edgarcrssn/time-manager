@@ -104,22 +104,42 @@
       <h3 class="text-center">
         {{ teamUserData.team.name }}
       </h3>
-      <table class="w-full text-center">
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="teamUserDataInUser in teamUserData.users" :key="teamUserDataInUser.id">
-            <td>{{ teamUserDataInUser.username }}</td>
-            <td>{{ teamUserDataInUser.email }}</td>
-            <td>{{ teamUserDataInUser.role }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left text-white overflow-x-auto shadow-md sm:rounded-lg">
+          <thead class="text-xs uppercase bg-customGrey">
+            <tr>
+              <th scope="col" class="px-6 py-3">
+                Username
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Email
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Role
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(teamUserDataInUser, index) in teamUserData.users"
+              :key="teamUserDataInUser.id"
+              :class="
+                index % 2 === 0 ? 'bg-customLightGrey border-b border-white' : 'bg-customGrey border-b border-white'
+              "
+            >
+              <td class="px-6 py-4 font-medium whitespace-nowrap">
+                {{ teamUserDataInUser.username }}
+              </td>
+              <td class="px-6 py-4">
+                {{ teamUserDataInUser.email }}
+              </td>
+              <td class="px-6 py-4">
+                {{ teamUserDataInUser.role }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   </div>
 </template>

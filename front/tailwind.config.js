@@ -7,6 +7,7 @@ export default {
         // Chart Colors
         customRed: '#831010',
         customGrey: '#564D4D',
+        customLightGrey: '#665e5e',
         customWhite: '#FFFFFF',
         customBlack: '#000000',
         customBrightRed: '#DB0000',

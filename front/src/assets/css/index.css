@@ -64,10 +64,3 @@ button.main {
 button.error {
   @apply bg-customBrightRed text-white;
 }
-
-/* || Tables */
-
-td,
-th {
-  @apply border border-black;
-}
