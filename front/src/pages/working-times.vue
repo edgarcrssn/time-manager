@@ -1,7 +1,7 @@
 <template>
   <section class="p-2 flex flex-col items-center">
     <h2>Working times</h2>
-    <article class="w-full max-w-md">
+    <article class="w-full">
       <TableComponent
         :data="workingTimes"
         :title-property="['ID', 'Start Time', 'End Time', 'User ID']"

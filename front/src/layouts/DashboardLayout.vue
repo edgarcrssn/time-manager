@@ -9,7 +9,7 @@
       </router-link>
     </header>
 
-    <div class="flex flex-row h-full">
+    <div class="flex flex-row h-full overflow-hidden">
       <nav class="bg-customGrey p-4 w-[300px] flex-shrink-0 flex-col hidden sm:flex">
         <ul>
           <li class="mb-2">
@@ -49,7 +49,7 @@
         </button>
       </nav>
 
-      <main class="flex-grow p-4">
+      <main class="flex-grow p-4 overflow-auto">
         <router-view />
       </main>
     </div>
