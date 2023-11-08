@@ -40,7 +40,7 @@
     </select>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      <div>
+      <div class="h-[300px]">
         <BarChart :data="barChartData" :options="chartOptions" />
       </div>
       <div>
