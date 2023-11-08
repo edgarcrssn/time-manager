@@ -8,7 +8,7 @@
       <div v-if="user.team">
         <strong>Team:</strong> {{ user.team.name }}
       </div>
-      <button v-if="canDelete" class="bg-error text-white px-4 py-2 mt-4" @click="deleteAccount">
+      <button v-if="canDelete" class="error" @click="deleteAccount">
         Delete Account
       </button>
     </article>
