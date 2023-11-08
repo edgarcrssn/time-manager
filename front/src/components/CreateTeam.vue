@@ -19,6 +19,8 @@
 import { ref } from 'vue'
 import { apiUrl } from '../constants/urls'
 import { fetchData } from '../services/httpService'
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
 
 const teamName = ref<string>('')
 const userId = sessionStorage.getItem('userID')
@@ -31,8 +33,16 @@ const createTeam = async () => {
       },
       user_id: userId
     }
-    fetchData(`${apiUrl}/api/teams`, 'POST', body)
+    await fetchData(`${apiUrl}/api/teams`, 'POST', body)
+    createToast(
+      { title: 'The team has been created' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the creation of the team' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
     console.error('An error occured while the creation of the team')
   }
 }

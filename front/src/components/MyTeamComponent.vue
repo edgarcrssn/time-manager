@@ -130,6 +130,8 @@ import { apiUrl } from '../constants/urls'
 import { User } from '../models/Users'
 import Modal from './AddUserTeamPopUp.vue'
 import { fetchData } from '../services/httpService'
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
 
 interface TeamInterface {
   id: number
@@ -160,6 +162,10 @@ const getTeamsofUser = async () => {
       teamsUsersData.value = response
     }
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the fetching of the users' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error('An error occured while the fetching of the data')
   }
 }
@@ -204,8 +210,16 @@ const closeDeleteUserTeamModal = () => {
 const addUserTeam = async (userId: number, teamId: number) => {
   try {
     await fetchData(`${apiUrl}/api/teams/${userId}/${teamId}`, 'POST')
+    createToast(
+      { title: 'The user has been add in the team with success' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
     closeAddUserTeamModal()
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the adding of the user in the team' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error('An error occured while the adding of the user in the team')
   }
 }
@@ -213,8 +227,16 @@ const addUserTeam = async (userId: number, teamId: number) => {
 const deleteUserTeam = async (userId: number, teamId: number) => {
   try {
     await fetchData(`${apiUrl}/api/teams/${userId}/${teamId}`, 'DELETE')
+    createToast(
+      { title: 'The user has been delete of the team with success' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
     closeDeleteUserTeamModal()
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the deleting of the user in the team' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error('An error occured while the deleting of the user in the team')
   }
 }
@@ -226,6 +248,10 @@ const populateUserList = async () => {
       userList.value = response
     }
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the fetching of the users' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
     console.error('An error occured while the fetching of the users')
   }
 }
@@ -237,6 +263,10 @@ const populateTeamList = async () => {
       teamList.value = response
     }
   } catch (error) {
+    createToast(
+      { title: 'An error occured while the fetching of the team' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
     console.error('An error occured while the fetching of the teams')
   }
 }

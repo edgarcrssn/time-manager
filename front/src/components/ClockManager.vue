@@ -23,6 +23,8 @@ import { ref, onMounted, onUnmounted, defineProps } from 'vue'
 import { apiUrl } from '../constants/urls'
 import ClockManagerForTeamManager from './ClockManagerForTeamManager.vue'
 import { fetchData } from '../services/httpService'
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
 
 const { userId } = defineProps({
   userId: {
@@ -50,6 +52,10 @@ const getLastClock = async () => {
       startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
     }
   } catch (error) {
+    createToast(
+      { title: 'An error occurred while fetching' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error('Error fetching clock status:', error)
   } finally {
     loading.value = false
@@ -79,7 +85,15 @@ const clock = async () => {
     const lastClock = data.newClock
     clockIn.value = lastClock.status
     startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
+    createToast(
+      { title: "The clock'in/out operation is a success" },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
   } catch (error) {
+    createToast(
+      { title: "An error occurred while the clock'in/out operation" },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error('Error clocking in/out:', error)
   } finally {
     processing.value = false
