@@ -45,6 +45,7 @@
         </form>
       </Modal>
     </section>
+
     <section class="bg-white border rounded-3xl p-4 mb-6">
       <h3 class="text-center">
         Create a team
@@ -58,6 +59,7 @@
         "
       />
     </section>
+
     <section v-if="teamsUsersData.length" class="bg-white border rounded-3xl p-4">
       <h3 class="text-center">
         My team{{ teamsUsersData.length > 1 ? 's' : '' }}
@@ -115,7 +117,11 @@
                   {{ getRoleLabel(teamUserDataInUser.role) }}
                 </td>
                 <td class="px-6 py-4">
-                  <UserClock :user-id="teamUserDataInUser.id" :on-clock="getTeamsOfUser" />
+                  <UserClock
+                    :key="`userClock-${teamUserDataInUser.id}-${refresh}`"
+                    :user-id="teamUserDataInUser.id"
+                    :on-clock="refreshUserClocks"
+                  />
                 </td>
                 <td class="px-6 py-4">
                   <button
@@ -170,6 +176,11 @@ const teamList = ref<Team[]>([])
 const selectedTeam = ref<number>(0)
 const selectedUser = ref<number>(0)
 const refreshKey = ref<number>(0)
+
+const refresh = ref(1)
+const refreshUserClocks = () => {
+  refresh.value = refresh.value + 1
+}
 
 const getTeamsOfUser = async () => {
   try {

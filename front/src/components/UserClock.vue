@@ -104,7 +104,6 @@ const clock = async () => {
       { title: "You have clock'in with success" },
       { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
     )
-    onClock()
   } catch (error) {
     createToast(
       { title: "An error occurred while the clock'in operation" },
@@ -113,6 +112,7 @@ const clock = async () => {
     console.error('Error clocking in/out:', error)
   } finally {
     processing.value = false
+    onClock()
   }
 }
 </script>
