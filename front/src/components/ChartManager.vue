@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="w-full">
     <h2>User {{ userId }}'s Charts</h2>
 
     <div v-if="viewMode === 'week'" class="mb-2">
@@ -46,7 +46,7 @@
       <div>
         <LineChart :data="lineChartData" :options="chartOptions" />
       </div>
-      <div v-if="viewMode === 'week'">
+      <div v-if="viewMode === 'week'" class="mt-10">
         <PieChart :data="pieChartData" :options="chartOptions" />
       </div>
     </div>
@@ -112,7 +112,7 @@ const changeViewMode = () => {
 
 // FETCH DATA
 const fetchDayData = async (date: Date) => {
-  const data: WorkingTime[] = await fetchData(API_URL);
+  const data: WorkingTime[] = await fetchData(API_URL)
 
   const dayData = data.filter((item: WorkingTime) => {
     return new Date(item.start).toISOString().split('T')[0] === date.toISOString().split('T')[0]
@@ -165,7 +165,7 @@ const fetchWeekData = async (date: Date) => {
   const start = monday
   const end = sunday
 
-  const data: WorkingTime[] = await fetchData(API_URL);
+  const data: WorkingTime[] = await fetchData(API_URL)
 
   const weekData = data.filter((item: WorkingTime) => {
     const startDate = new Date(item.start).toISOString().split('T')[0]
@@ -219,7 +219,7 @@ const fetchMonthData = async (date: Date) => {
   const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)
   const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0)
 
-  const data: WorkingTime[] = await fetchData(API_URL);
+  const data: WorkingTime[] = await fetchData(API_URL)
 
   const monthData = data.filter((item: WorkingTime) => {
     const startDate = new Date(item.start).toISOString().split('T')[0]
