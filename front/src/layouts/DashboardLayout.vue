@@ -86,9 +86,15 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, ref, provide } from 'vue'
 import { apiUrl } from '../constants/urls'
 import { fetchData } from '../services/httpService'
+import { provideEventBus } from '../event/event-bus'
+
+const eventBus = provideEventBus()
+
+// Fournir le service d'événements dans le contexte global
+provide('eventBus', eventBus)
 
 const router = useRouter()
 const storedUserID = ref('')
@@ -120,7 +126,6 @@ const getUserInfo = () => {
 
 const getClock = async () => {
   try {
-    console.log('api trigger')
     const API_URL = `${apiUrl}/api/clocks/${storedUserID.value}`
     const data = await fetchData(`${API_URL}/last`)
     if (data && data?.clock) {
@@ -135,11 +140,10 @@ const getClock = async () => {
 onMounted(async () => {
   getUserInfo()
   await getClock()
-})
-
-const intervalId = setInterval(getClock, 5000)
-
-onUnmounted(() => {
-  clearInterval(intervalId)
+  eventBus?.onEvent(async (eventName: string) => {
+    if (eventName === 'clockIn') {
+      await getClock()
+    }
+  })
 })
 </script>
