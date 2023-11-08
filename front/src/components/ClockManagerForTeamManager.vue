@@ -41,7 +41,7 @@ const getTeams = async () => {
     if (data?.teams) ownedTeams.value = data.teams
   } catch (error) {
     createToast(
-      { title: "An error occured while the clock'in/out operation" },
+      { title: "An error occurred while the clock'in/out operation" },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error fetching owned teams:', error)

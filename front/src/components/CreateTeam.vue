@@ -40,10 +40,10 @@ const createTeam = async () => {
     )
   } catch (error) {
     createToast(
-      { title: 'An error occured while the creation of the team' },
+      { title: 'An error occurred while the creation of the team' },
       { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
     )
-    console.error('An error occured while the creation of the team')
+    console.error('An error occurred while the creation of the team')
   }
 }
 </script>

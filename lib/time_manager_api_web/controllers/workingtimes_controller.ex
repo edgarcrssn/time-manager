@@ -88,7 +88,7 @@ defmodule TimeManagerApiWeb.WorkingtimesController do
             {:error, _changeset} ->
               conn
               |> put_status(:bad_request)
-              |> json(%{error: "Bad request occured"})
+              |> json(%{error: "Bad request occurred"})
           end
         rescue
           _ ->

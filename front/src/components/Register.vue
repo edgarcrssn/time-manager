@@ -67,7 +67,7 @@ const submitRegister = async () => {
     router.push(`/dashboard/${user.id}`)
   } catch (error) {
     createToast(
-      { title: 'An error occured while the creation of the account' },
+      { title: 'An error occurred while the creation of the account' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Registration error:', error)

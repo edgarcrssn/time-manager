@@ -68,7 +68,7 @@ const getUserInfo = async () => {
     }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the fetching of the data of the user' },
+      { title: 'An error occurred while the fetching of the data of the user' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error fetching user information:', error)
@@ -92,7 +92,7 @@ const loadWorkingTimeDetails = async () => {
     workingTimeDetails.value.endTime = end.toTimeString().slice(0, 5)
   } catch (error) {
     createToast(
-      { title: 'An error occured while the loading of the details of the workingtime' },
+      { title: 'An error occurred while the loading of the details of the workingtime' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error :', error)
@@ -116,7 +116,7 @@ const createWorkingTime = async () => {
 
     if (!isAuthorized) {
       createToast(
-        { title: 'An error occured because, you are not authorized' },
+        { title: 'An error occurred because, you are not authorized' },
         { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
       )
       console.error('Unauthorized: You do not have permission to create this working time')
@@ -132,7 +132,7 @@ const createWorkingTime = async () => {
 
     if (new Date(endDateTime) < new Date(startDateTime)) {
       createToast(
-        { title: 'An error occured because the workingtime ends in the past' },
+        { title: 'An error occurred because the workingtime ends in the past' },
         { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
       )
       console.error('Cannot create a working time that ends in the past')
@@ -152,7 +152,7 @@ const createWorkingTime = async () => {
     workingTimeDetails.value = { startDate: '', endDate: '', startTime: '', endTime: '' }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the creation of the workingtime' },
+      { title: 'An error occurred while the creation of the workingtime' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error :', error)
@@ -169,7 +169,7 @@ const updateWorkingTime = async () => {
 
     if (!isAuthorized) {
       createToast(
-        { title: 'An error occured because you are not authorized' },
+        { title: 'An error occurred because you are not authorized' },
         { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
       )
       console.error('Unauthorized: You do not have permission to update this working time')
@@ -185,7 +185,7 @@ const updateWorkingTime = async () => {
 
     if (new Date(endDateTime) < new Date(startDateTime)) {
       createToast(
-        { title: 'An error occured because the workingtime ends in the past' },
+        { title: 'An error occurred because the workingtime ends in the past' },
         { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
       )
       console.error('Cannot update a working time that ends in the past')
@@ -205,7 +205,7 @@ const updateWorkingTime = async () => {
     alertSuccessMessage.value = 'Working hours have been successfully updated.'
   } catch (error) {
     createToast(
-      { title: 'An error occured while the updating of the workingtime' },
+      { title: 'An error occurred while the updating of the workingtime' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error :', error)
@@ -222,7 +222,7 @@ const deleteWorkingTime = async () => {
 
     if (!isAuthorized) {
       createToast(
-        { title: 'An error occured because you are not authorized' },
+        { title: 'An error occurred because you are not authorized' },
         { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
       )
       console.error('Unauthorized: You do not have permission to delete this working time')
@@ -237,7 +237,7 @@ const deleteWorkingTime = async () => {
     workingTimeDetails.value = { startDate: '', endDate: '', startTime: '', endTime: '' }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the deleting of the workingtime' },
+      { title: 'An error occurred while the deleting of the workingtime' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error :', error)

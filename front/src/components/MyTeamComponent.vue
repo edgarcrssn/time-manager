@@ -163,10 +163,10 @@ const getTeamsofUser = async () => {
     }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the fetching of the users' },
+      { title: 'An error occurred while the fetching of the users' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
-    console.error('An error occured while the fetching of the data')
+    console.error('An error occurred while the fetching of the data')
   }
 }
 onMounted(async () => {
@@ -217,10 +217,10 @@ const addUserTeam = async (userId: number, teamId: number) => {
     closeAddUserTeamModal()
   } catch (error) {
     createToast(
-      { title: 'An error occured while the adding of the user in the team' },
+      { title: 'An error occurred while the adding of the user in the team' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
-    console.error('An error occured while the adding of the user in the team')
+    console.error('An error occurred while the adding of the user in the team')
   }
 }
 
@@ -234,10 +234,10 @@ const deleteUserTeam = async (userId: number, teamId: number) => {
     closeDeleteUserTeamModal()
   } catch (error) {
     createToast(
-      { title: 'An error occured while the deleting of the user in the team' },
+      { title: 'An error occurred while the deleting of the user in the team' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
-    console.error('An error occured while the deleting of the user in the team')
+    console.error('An error occurred while the deleting of the user in the team')
   }
 }
 
@@ -249,10 +249,10 @@ const populateUserList = async () => {
     }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the fetching of the users' },
+      { title: 'An error occurred while the fetching of the users' },
       { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
     )
-    console.error('An error occured while the fetching of the users')
+    console.error('An error occurred while the fetching of the users')
   }
 }
 
@@ -264,10 +264,10 @@ const populateTeamList = async () => {
     }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the fetching of the team' },
+      { title: 'An error occurred while the fetching of the team' },
       { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
     )
-    console.error('An error occured while the fetching of the teams')
+    console.error('An error occurred while the fetching of the teams')
   }
 }
 </script>

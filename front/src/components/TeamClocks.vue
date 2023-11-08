@@ -81,7 +81,7 @@ const clockForAllTeamMembers = async () => {
     console.log(data)
   } catch (error) {
     createToast(
-      { title: "An error occured while the operation to clock'in for your teammates" },
+      { title: "An error occurred while the operation to clock'in for your teammates" },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error(error)

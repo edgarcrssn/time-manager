@@ -175,7 +175,7 @@ const updateOrCreateSchedule = async () => {
       closeScheduleModal()
     } else {
       createToast(
-        { title: 'An error occured while the updating of the schedule' },
+        { title: 'An error occurred while the updating of the schedule' },
         { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
       )
       console.error('error')
@@ -187,14 +187,14 @@ const updateOrCreateSchedule = async () => {
         await createSchedule(dataToSend)
       } else {
         createToast(
-          { title: 'An error occured while the updating of the schedule' },
+          { title: 'An error occurred while the updating of the schedule' },
           { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
         )
         console.error(`Failed to update schedule for user ${schedule.value.id}`, error)
       }
     } else {
       createToast(
-        { title: 'An error occured while the creating or the updating of the schedule' },
+        { title: 'An error occurred while the creating or the updating of the schedule' },
         { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
       )
       console.error('Error with the schedule operation:', error)
@@ -210,14 +210,14 @@ const createSchedule = async (dataToSend: any) => {
       closeScheduleModal()
     } else {
       createToast(
-        { title: 'An error occured while the creating of the schedule' },
+        { title: 'An error occurred while the creating of the schedule' },
         { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
       )
       console.error('error')
     }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the creating of the schedule' },
+      { title: 'An error occurred while the creating of the schedule' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error creating schedule:', error)
@@ -245,7 +245,7 @@ const getScheduleData = async (userId: number) => {
     }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the fetching of the schedule of the user' },
+      { title: 'An error occurred while the fetching of the schedule of the user' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error(`Error fetching schedule for user ${userId}:`, error)
@@ -271,7 +271,7 @@ const createUser = async () => {
       closeUserModal()
     } catch (error) {
       createToast(
-        { title: 'An error occured while the creation of the user' },
+        { title: 'An error occurred while the creation of the user' },
         { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
       )
       console.error(error)
@@ -295,7 +295,7 @@ const getUser = async () => {
         }
       } catch (error) {
         createToast(
-          { title: 'An error occured while the fetching the data of all the users' },
+          { title: 'An error occurred while the fetching the data of all the users' },
           { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
         )
         console.error('Error while fetching all the users data')
@@ -303,7 +303,7 @@ const getUser = async () => {
     }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the fetching the data of all the users' },
+      { title: 'An error occurred while the fetching the data of all the users' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error(error)
@@ -328,7 +328,7 @@ const handleItemAdded = async () => {
     }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the fetching the data of all the users' },
+      { title: 'An error occurred while the fetching the data of all the users' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error while fetching all the users data')

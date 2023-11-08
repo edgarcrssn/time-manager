@@ -47,7 +47,7 @@ const submitLogin = async () => {
     router.push(`/dashboard/${user.id}`)
   } catch (error) {
     createToast(
-      { title: 'An error occured while the login of the user' },
+      { title: 'An error occurred while the login of the user' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Login error:', error)

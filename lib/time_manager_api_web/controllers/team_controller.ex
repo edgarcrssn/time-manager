@@ -129,7 +129,7 @@ defmodule TimeManagerApiWeb.TeamController do
       nil ->
         conn
         |> put_status(:bad_request)
-        |> json(%{error: "A bad request occured"})
+        |> json(%{error: "A bad request occurred"})
       _ ->
         if (current_user.sub != teamOwnerId) do
           conn
@@ -151,7 +151,7 @@ defmodule TimeManagerApiWeb.TeamController do
                 {:error, _changeset} ->
                   conn
                   |> put_status(:internal_server_error)
-                  |> json(%{error: "An error occured while the updating of the team"})
+                  |> json(%{error: "An error occurred while the updating of the team"})
               end
           end
         end
@@ -188,7 +188,7 @@ defmodule TimeManagerApiWeb.TeamController do
             {:error, _} ->
               conn
               |> put_status(:internal_server_error)
-              |> json(%{error: "An error occured while the deleting of the team"})
+              |> json(%{error: "An error occurred while the deleting of the team"})
           end
         }
       end
@@ -269,7 +269,7 @@ defmodule TimeManagerApiWeb.TeamController do
         _ ->
           conn
           |> put_status(:internal_server_error)
-          |> json(%{error: "An error occured while the removing of the user in the team"})
+          |> json(%{error: "An error occurred while the removing of the user in the team"})
       end
     end
   end
