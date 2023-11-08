@@ -5,12 +5,12 @@ export default {
     extend: {
       colors: {
         // Chart Colors
-        customRed: '#831010',
-        customGrey: '#564D4D',
-        customLightGrey: '#665e5e',
+        customMain: '#2c2d2d',
+        customSecondary: '#474646',
         customWhite: '#FFFFFF',
         customBlack: '#000000',
         customBrightRed: '#DB0000',
+        customBlue: '#4a90e2',
 
         // Chart Colors
         'chart-blue': '#4A90E2',

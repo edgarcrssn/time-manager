@@ -64,7 +64,7 @@
       </div>
       <div class="overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left text-white overflow-x-auto shadow-md sm:rounded-lg">
-          <thead class="text-xs uppercase bg-customGrey">
+          <thead class="text-xs uppercase bg-customMain">
             <tr>
               <th scope="col" class="px-6 py-3">
                 Username
@@ -85,7 +85,7 @@
               v-for="(teamUserDataInUser, index) in teamUserData.users"
               :key="teamUserDataInUser.id"
               :class="
-                index % 2 === 0 ? 'bg-customLightGrey border-b border-white' : 'bg-customGrey border-b border-white'
+                index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
               "
             >
               <td class="px-6 py-4 font-medium whitespace-nowrap">

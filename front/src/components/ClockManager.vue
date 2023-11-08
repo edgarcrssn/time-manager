@@ -1,5 +1,5 @@
 <template>
-  <section class="text-center">
+  <section class="text-center bg-white border rounded-3xl p-4">
     <h2>Work Tracking</h2>
     <p v-if="loading">
       Loading...

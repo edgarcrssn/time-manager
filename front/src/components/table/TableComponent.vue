@@ -2,7 +2,7 @@
   <div class="overflow-hidden">
     <div class="overflow-x-auto shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left text-white">
-        <thead class="text-xs uppercase bg-customGrey">
+        <thead class="text-xs uppercase bg-customMain">
           <tr>
             <th v-for="thName in titleProperty" :key="thName" scope="col" class="px-6 py-3">
               {{ thName }}
@@ -15,7 +15,7 @@
             v-if="typeTable == 'user'"
             :key="donnee"
             :class="
-              index % 2 === 0 ? 'bg-customLightGrey border-b border-white' : 'bg-customGrey border-b border-white'
+              index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
             "
           >
             <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
@@ -42,7 +42,7 @@
             v-if="typeTable == 'workingTimes'"
             :key="time.id"
             :class="
-              index % 2 === 0 ? 'bg-customLightGrey border-b border-white' : 'bg-customGrey border-b border-white'
+              index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
             "
           >
             <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">

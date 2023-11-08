@@ -58,7 +58,7 @@ button.main:hover {
 }
 
 button.main {
-  @apply bg-customGrey text-customWhite;
+  @apply bg-customBlue text-customWhite;
 }
 
 button.error {

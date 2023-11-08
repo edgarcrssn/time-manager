@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen flex flex-col">
-    <header class="bg-customBlack text-white p-4 flex items-center justify-between">
+    <header class="bg-customMain text-white p-4 flex items-center justify-between">
       <div class="flex-1 invisible">
         <img src="../assets/user_icon.svg" class="w-8 h-8 opacity-0">
       </div>
@@ -13,7 +13,7 @@
     </header>
 
     <div class="flex flex-row h-full overflow-hidden">
-      <nav class="bg-customGrey p-4 w-[300px] flex-shrink-0 flex-col hidden sm:flex">
+      <nav class="bg-customSecondary p-4 w-[300px] flex-shrink-0 flex-col hidden sm:flex">
         <ul>
           <li class="mb-2">
             <router-link :to="`/dashboard/${storedUserID}`" class="text-customWhite flex items-center">
@@ -57,7 +57,7 @@
       </main>
     </div>
 
-    <div class="bg-customGrey p-4 sm:hidden fixed inset-x-0 bottom-0 flex justify-between text-center">
+    <div class="bg-customMain p-4 sm:hidden fixed inset-x-0 bottom-0 flex justify-between text-center">
       <router-link :to="`/dashboard/${storedUserID}`" class="flex flex-col items-center">
         <img alt="dashboard" src="../assets/chart_icon.svg" class="w-8 h-8">
         <span class="text-xs text-customWhite">Dashboard</span>
