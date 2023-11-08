@@ -40,14 +40,29 @@
     </select>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      <div class="h-[300px] bg-white border rounded-3xl mt-4 p-4">
-        <BarChart :data="barChartData" :options="chartOptions" />
+      <div class="card mt-4 p-4">
+        <h3 class="text-center">
+          Hours worked per day
+        </h3>
+        <div class="h-[300px]">
+          <BarChart :data="barChartData" :options="chartOptions" />
+        </div>
       </div>
-      <div class="h-[300px] bg-white border rounded-3xl mt-4 p-4">
-        <LineChart :data="lineChartData" :options="chartOptions" />
+      <div class="card mt-4 p-4">
+        <h3 class="text-center">
+          Hours worked per day
+        </h3>
+        <div class="h-[300px]">
+          <LineChart :data="lineChartData" :options="chartOptions" />
+        </div>
       </div>
-      <div v-if="viewMode === 'week'" class="h-[300px] bg-white border rounded-3xl mt-10 p-4">
-        <PieChart :data="pieChartData" :options="chartOptions" />
+      <div v-if="viewMode === 'week'" class="card mt-10 p-4">
+        <h3 class="text-center">
+          Hours worked during the week
+        </h3>
+        <div class="h-[300px]">
+          <PieChart :data="pieChartData" :options="chartOptions" />
+        </div>
       </div>
     </div>
   </section>

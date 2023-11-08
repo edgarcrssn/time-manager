@@ -1,5 +1,5 @@
 <template>
-  <section class="text-center bg-white border rounded-3xl p-4 w-full">
+  <section class="text-center card p-4 w-full">
     <h2>Work Tracking</h2>
     <UserClock :user-id="userId" />
   </section>
