@@ -25,13 +25,13 @@
               {{ donnee.email }}
             </td>
             <td class="px-6 py-4">
-              <button type="button" @click="$emit('showSchedule', donnee.id)">
+              <button class="mt-0" type="button" @click="$emit('showSchedule', donnee.id)">
                 <img alt="calendar" src="../../assets/calendar_icon.svg" class="w-5 h-5">
               </button>
-              <button type="button" @click="openUpdateModal(donnee)">
+              <button class="mt-0" type="button" @click="openUpdateModal(donnee)">
                 <img alt="update" src="../../assets/update_icon.svg" class="w-5 h-5">
               </button>
-              <button type="button" @click="deleteUser(donnee.id)">
+              <button class="mt-0" type="button" @click="deleteUser(donnee.id)">
                 <img alt="delete" src="../../assets/delete_icon.svg" class="w-5 h-5">
               </button>
             </td>
