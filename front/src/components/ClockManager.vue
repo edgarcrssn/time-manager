@@ -53,7 +53,7 @@ const getLastClock = async () => {
     }
   } catch (error) {
     createToast(
-      { title: 'An error occured while the fetching' },
+      { title: 'An error occurred while fetching' },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error fetching clock status:', error)
@@ -84,53 +84,19 @@ const clock = async () => {
 
     const lastClock = data.newClock
     clockIn.value = lastClock.status
-
-    if (lastClock.status) {
-      startDateTime.value = new Date(lastClock.time).toLocaleString()
-      createToast(
-        { title: "The clock'in/out operation is a success" },
-        { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
-      )
-    } else if (data.length > 1) {
-      const previousClock = data[data.length - 2]
-      await createWorkingTime(previousClock.time, lastClock.time)
-      startDateTime.value = null
-      createToast(
-        { title: "The clock'in/out operation is a success" },
-        { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
-      )
-    }
     startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
+    createToast(
+      { title: "The clock'in/out operation is a success" },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
   } catch (error) {
     createToast(
-      { title: "An error occured while the clock'in/out operation" },
+      { title: "An error occurred while the clock'in/out operation" },
       { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
     )
     console.error('Error clocking in/out:', error)
   } finally {
     processing.value = false
-  }
-}
-
-const createWorkingTime = async (startTime: string, endTime: string) => {
-  const workingTimesAPI = `${apiUrl}/api/workingtimes/${userId}`
-  try {
-    await fetchData(workingTimesAPI, 'POST', {
-      workingtime: {
-        start: startTime,
-        end: endTime
-      }
-    })
-    createToast(
-      { title: 'The workingtime has been created' },
-      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
-    )
-  } catch (error) {
-    createToast(
-      { title: 'An error occured while the creation of the workingtime' },
-      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
-    )
-    console.error('Error creating working time:', error)
   }
 }
 </script>
