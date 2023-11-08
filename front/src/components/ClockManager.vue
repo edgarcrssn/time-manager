@@ -19,12 +19,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, defineProps } from 'vue'
+import { ref, onMounted, onUnmounted, defineProps, inject } from 'vue'
 import { apiUrl } from '../constants/urls'
 import ClockManagerForTeamManager from './ClockManagerForTeamManager.vue'
 import { fetchData } from '../services/httpService'
 import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
+import { EventBus } from '../event/event-bus'
+
+const eventBus = inject<EventBus>('eventBus')
 
 const { userId } = defineProps({
   userId: {
@@ -84,6 +87,7 @@ const clock = async () => {
 
     const lastClock = data.newClock
     clockIn.value = lastClock.status
+    eventBus?.emitEvent('clockIn')
     startDateTime.value = lastClock.status ? new Date(lastClock.time).toLocaleString() : null
     createToast(
       { title: "The clock'in/out operation is a success" },
@@ -96,6 +100,7 @@ const clock = async () => {
     )
     console.error('Error clocking in/out:', error)
   } finally {
+    eventBus?.emitEvent('clockIn')
     processing.value = false
   }
 }
