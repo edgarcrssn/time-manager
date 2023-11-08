@@ -1,10 +1,13 @@
 <template>
   <div class="h-screen flex flex-col">
     <header class="bg-customBlack text-white p-4 flex items-center justify-between">
-      <h1 class="text-center flex-grow">
-        Dashboard
+      <div class="flex-1 invisible">
+        <img src="../assets/user_icon.svg" class="w-8 h-8 opacity-0">
+      </div>
+      <h1 class="flex-1 text-center">
+        EpicHourly
       </h1>
-      <router-link :to="`/dashboard/profile/${storedUserID}`" class="ml-4">
+      <router-link :to="`/dashboard/profile/${storedUserID}`" class="flex-1 flex justify-end">
         <img alt="profile" src="../assets/user_icon.svg" class="w-8 h-8">
       </router-link>
     </header>
