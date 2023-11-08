@@ -40,13 +40,13 @@
     </select>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      <div class="h-[300px]">
+      <div class="h-[300px] bg-white border rounded-3xl mt-4 p-4">
         <BarChart :data="barChartData" :options="chartOptions" />
       </div>
-      <div>
+      <div class="h-[300px] bg-white border rounded-3xl mt-4 p-4">
         <LineChart :data="lineChartData" :options="chartOptions" />
       </div>
-      <div v-if="viewMode === 'week'" class="mt-10">
+      <div v-if="viewMode === 'week'" class="h-[300px] bg-white border rounded-3xl mt-10 p-4">
         <PieChart :data="pieChartData" :options="chartOptions" />
       </div>
     </div>
