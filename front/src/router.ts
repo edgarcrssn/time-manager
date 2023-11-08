@@ -10,7 +10,6 @@ import DashboardLayout from './layouts/DashboardLayout.vue'
 import UserComponentVue from './components/UserComponent.vue'
 import FoireAuxQuestions from './components/FoireAuxQuestions.vue'
 import MyTeamComponent from './components/MyTeamComponent.vue'
-import CreateTeam from './components/CreateTeam.vue'
 
 const routes = [
   { path: '/', component: Index },
@@ -74,13 +73,8 @@ const routes = [
         component: UserComponentVue
       },
       {
-        path: '/create-team',
-        name: 'create-team',
-        component: CreateTeam
-      },
-      {
-        path: '/my-team',
-        name: 'my-team',
+        path: '/teams',
+        name: 'teams',
         component: MyTeamComponent
       }
     ]

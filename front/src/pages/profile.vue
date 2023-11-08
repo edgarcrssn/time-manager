@@ -4,7 +4,7 @@
     <article class="w-full max-w-md">
       <div><strong>Username:</strong> {{ user.username }}</div>
       <div><strong>Email:</strong> {{ user.email }}</div>
-      <div><strong>Role:</strong> {{ user.role }}</div>
+      <div><strong>Role:</strong> {{ user.role ? getRoleLabel(user.role) : '' }}</div>
       <div v-if="user.team">
         <strong>Team:</strong> {{ user.team.name }}
       </div>
@@ -21,6 +21,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { User } from '../models/Users'
 import { apiUrl } from '../constants/urls'
 import { fetchData } from '../services/httpService'
+import { getRoleLabel } from '../helpers/getRoleLabel'
 
 const route = useRoute()
 const router = useRouter()
