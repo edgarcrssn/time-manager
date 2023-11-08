@@ -16,7 +16,7 @@
               <option :value="0" disabled selected>
                 Select a user
               </option>
-              <option v-for="userElt in userList" :key="userElt.id" :value="userElt.id">
+              <option v-for="userElt in availableUserList" :key="userElt.id" :value="userElt.id">
                 {{ userElt.email }}
               </option>
             </select>
@@ -35,54 +35,10 @@
             </select>
           </div>
           <div class="flex justify-between">
-            <button type="submit" class="main">
+            <button :disabled="!selectedTeam || !selectedUser" type="submit" class="main">
               Confirm
             </button>
             <button type="button" class="error" @click="closeAddUserTeamModal">
-              Close
-            </button>
-          </div>
-        </form>
-      </Modal>
-
-      <Modal
-        :is-open="isDeleteUserModalOpen"
-        title="Delete a user of a team"
-        :is-delete="true"
-        @close="closeDeleteUserTeamModal"
-      >
-        <form ref="userForm" @submit.prevent="deleteUserTeam(selectedUser, selectedTeam)">
-          <div class="mb-4">
-            <select
-              v-model="selectedUser"
-              class="block w-full mt-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 overflow-y-auto"
-            >
-              <option :value="0" disabled selected>
-                Select a user
-              </option>
-              <option v-for="userElt in userList" :key="userElt.id" :value="userElt.id">
-                {{ userElt.email }}
-              </option>
-            </select>
-          </div>
-          <div class="mb-4">
-            <select
-              v-model="selectedTeam"
-              class="block w-full mt-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 overflow-y-auto"
-            >
-              <option :value="0" disabled selected>
-                Select a team
-              </option>
-              <option v-for="teamElt in teamList" :key="teamElt.id" :value="teamElt.id">
-                {{ teamElt.name }}
-              </option>
-            </select>
-          </div>
-          <div class="flex justify-between">
-            <button type="submit" class="main">
-              Confirm
-            </button>
-            <button type="button" class="error" @click="closeDeleteUserTeamModal">
               Close
             </button>
           </div>
@@ -92,18 +48,20 @@
     <h2 class="text-center">
       My Team(s)
     </h2>
-    <div :key="refreshKey" class="flex justify-between items-center">
+    <div :key="refreshKey" class="flex justify-between items-center mb-3">
       <button v-if="isManager" type="button" class="main" @click="openAddUserTeamModal">
         Add a user in a team
       </button>
-      <button v-if="isManager" type="button" class="error" @click="openDeleteUserTeamModal">
-        Delete a user of a team
-      </button>
     </div>
-    <section v-for="teamUserData in teamsUsersData" :key="teamUserData.team.id">
-      <h3 class="text-center">
-        {{ teamUserData.team.name }}
-      </h3>
+    <section v-for="teamUserData in teamsUsersData" :key="teamUserData.team.id" class="[&:not(:last-of-type)]:mb-6">
+      <div class="flex items-center justify-center mb-3 gap-2">
+        <h3 class="text-center mb-0">
+          {{ teamUserData.team.name }}
+        </h3>
+        <button type="button" class="main mt-0" @click="deleteTeam(teamUserData.team.id)">
+          <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
+        </button>
+      </div>
       <div class="overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left text-white overflow-x-auto shadow-md sm:rounded-lg">
           <thead class="text-xs uppercase bg-customGrey">
@@ -116,6 +74,9 @@
               </th>
               <th scope="col" class="px-6 py-3">
                 Role
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Action
               </th>
             </tr>
           </thead>
@@ -136,6 +97,19 @@
               <td class="px-6 py-4">
                 {{ teamUserDataInUser.role }}
               </td>
+              <td class="px-6 py-4">
+                <button
+                  v-if="
+                    { ...teamUserDataInUser }.id !== +(userId || 0) ||
+                      { ...teamUserDataInUser }.role !== 'general_manager'
+                  "
+                  type="button"
+                  class="mt-0"
+                  @click="deleteUserFromTeam({ ...teamUserDataInUser }.id, teamUserData.team.id)"
+                >
+                  <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -145,7 +119,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { apiUrl } from '../constants/urls'
 import { User } from '../models/Users'
 import Modal from './AddUserTeamPopUp.vue'
@@ -165,17 +139,19 @@ interface TeamsUsersInterface {
   users: User[]
 }
 
-const isDeleteUserModalOpen = ref(false)
 const isAddUserModalOpen = ref(false)
 const teamsUsersData = ref<TeamsUsersInterface[]>([])
 const isManager = ref(false)
 const userId = sessionStorage.getItem('userID')
 const userList = ref<User[]>([])
+const availableUserList = ref<User[]>([])
+const alreadyAddedUsersIds = ref<number[]>([])
 const teamList = ref<TeamInterface[]>([])
 const selectedTeam = ref<number>(0)
 const selectedUser = ref<number>(0)
 const refreshKey = ref<number>(0)
-const getTeamsofUser = async () => {
+
+const getTeamsOfUser = async () => {
   try {
     const response = await fetchData(`${apiUrl}/api/teams/${userId}/team`, 'GET')
     if (response) {
@@ -190,7 +166,7 @@ const getTeamsofUser = async () => {
   }
 }
 onMounted(async () => {
-  getTeamsofUser()
+  getTeamsOfUser()
   populateTeamList()
   populateUserList()
   checkIsManager()
@@ -213,18 +189,7 @@ const closeAddUserTeamModal = () => {
   isAddUserModalOpen.value = false
   selectedTeam.value = 0
   selectedUser.value = 0
-  getTeamsofUser()
-}
-
-const openDeleteUserTeamModal = () => {
-  isDeleteUserModalOpen.value = true
-}
-
-const closeDeleteUserTeamModal = () => {
-  isDeleteUserModalOpen.value = false
-  selectedTeam.value = 0
-  selectedUser.value = 0
-  getTeamsofUser()
+  getTeamsOfUser()
 }
 
 const addUserTeam = async (userId: number, teamId: number) => {
@@ -244,28 +209,12 @@ const addUserTeam = async (userId: number, teamId: number) => {
   }
 }
 
-const deleteUserTeam = async (userId: number, teamId: number) => {
-  try {
-    await fetchData(`${apiUrl}/api/teams/${userId}/${teamId}`, 'DELETE')
-    createToast(
-      { title: 'The user has been delete of the team with success' },
-      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
-    )
-    closeDeleteUserTeamModal()
-  } catch (error) {
-    createToast(
-      { title: 'An error occurred while the deleting of the user in the team' },
-      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
-    )
-    console.error('An error occurred while the deleting of the user in the team')
-  }
-}
-
 const populateUserList = async () => {
   try {
-    const response = await fetchData(`${apiUrl}/api/users/`)
-    if (response) {
-      userList.value = response
+    const users = await fetchData(`${apiUrl}/api/users`)
+    if (users) {
+      userList.value = users
+      availableUserList.value = users.filter((user: User) => user.id !== +(userId || 0))
     }
   } catch (error) {
     createToast(
@@ -278,9 +227,9 @@ const populateUserList = async () => {
 
 const populateTeamList = async () => {
   try {
-    const response = await fetchData(`${apiUrl}/api/teams/`)
-    if (response) {
-      teamList.value = response
+    const data = await fetchData(`${apiUrl}/api/teams/owned/${userId}`)
+    if (data && data?.teams) {
+      teamList.value = data.teams
     }
   } catch (error) {
     createToast(
@@ -290,6 +239,69 @@ const populateTeamList = async () => {
     console.error('An error occurred while the fetching of the teams')
   }
 }
+
+const deleteUserFromTeam = async (userId: number, teamId: number) => {
+  try {
+    await fetchData(`${apiUrl}/api/teams/${userId}/${teamId}`, 'DELETE')
+    getTeamsOfUser()
+    createToast(
+      { title: 'The user has successfully been deleted from the team' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
+  } catch (error) {
+    createToast(
+      { title: 'An error occurred while deleting the user from the team' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
+    console.error('An error occurred while deleting the user from the team')
+  }
+}
+
+const deleteTeam = async (teamId: number) => {
+  try {
+    await fetchData(`${apiUrl}/api/teams/${teamId}`, 'DELETE')
+    teamList.value = teamList.value.filter((team) => team.id !== teamId)
+    teamsUsersData.value = teamsUsersData.value.filter((teamUsers) => teamUsers.team.id !== teamId)
+    createToast(
+      { title: 'The team has successfully been deleted' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
+  } catch (error) {
+    createToast(
+      { title: 'An error occurred while deleting the team' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
+    console.error(error)
+  }
+}
+
+const getAlreadyAddedUsers = async (teamId: number) => {
+  try {
+    const data: { users: User[] } = await fetchData(`${apiUrl}/api/teams/${teamId}/users`)
+    if (data && data?.users) {
+      const usersIds = data.users.map((user) => user.id)
+      alreadyAddedUsersIds.value = usersIds
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+watch(selectedTeam, (newSelectedTeam) => {
+  if (newSelectedTeam === 0) {
+    alreadyAddedUsersIds.value = []
+  } else {
+    getAlreadyAddedUsers(newSelectedTeam)
+  }
+})
+
+watch(alreadyAddedUsersIds, (newAlreadyAddedUsersIds) => {
+  if (newAlreadyAddedUsersIds.includes(selectedUser.value)) {
+    selectedUser.value = 0
+  }
+
+  availableUserList.value = userList.value.filter((user) => !newAlreadyAddedUsersIds.includes(user.id))
+})
 </script>
 
 <style scoped></style>
