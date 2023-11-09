@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, onMounted, ref } from 'vue'
+import { onUnmounted, onMounted, ref, Ref } from 'vue'
 import { apiUrl } from '../constants/urls'
 import { fetchData } from '../services/httpService'
 import { Notification } from '../models/Notification'
@@ -60,16 +60,15 @@ import 'mosha-vue-toastify/dist/style.css'
 import { formatStringToCreateDate } from '../helpers/dateUtils'
 
 const isOpen = ref<boolean>(false)
-const refDropdown = ref(null)
+const refDropdown: Ref<HTMLElement | null> = ref(null)
 const notificationList = ref<Notification[]>([])
 const userId = sessionStorage.getItem('userID')
 
 const handleOutsideClick = (event: MouseEvent) => {
-  if (!refDropdown.value.contains(event.target)) {
+  if (refDropdown.value && refDropdown.value.contains(event.target as Node)) {
     isOpen.value = false
   }
 }
-
 const toggleDropdown = (event: MouseEvent) => {
   event.stopPropagation()
   isOpen.value = !isOpen.value
