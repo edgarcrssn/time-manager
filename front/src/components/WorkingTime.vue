@@ -112,7 +112,8 @@ const createWorkingTime = async () => {
     const { currentUser, targetUser } = await getUserInfo()
     const isAuthorized =
       (currentUser.role === 'employee' && currentUser.id === targetUser.id) ||
-      (currentUser.role === 'manager' && currentUser.team.id === targetUser.team.id)
+      (currentUser.role === 'manager' && currentUser.team.id === targetUser.team.id) ||
+      currentUser.role === 'general_manager'
 
     if (!isAuthorized) {
       createToast(
@@ -150,6 +151,11 @@ const createWorkingTime = async () => {
     alertMessage.value = 'WorkingTime created'
     alertSuccessMessage.value = 'Working hours have been successfully created.'
     workingTimeDetails.value = { startDate: '', endDate: '', startTime: '', endTime: '' }
+
+    createToast(
+      { title: 'The working time has been created with success.' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
   } catch (error) {
     createToast(
       { title: 'An error occurred while the creation of the workingtime' },
