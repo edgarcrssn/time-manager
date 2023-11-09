@@ -95,13 +95,13 @@
             </router-link>
           </li>
           <li v-if="isManagerOrGeneralManager" class="mb-2">
-            <router-link to="/teams" class="text-customWhite flex items-center">
+            <router-link to="/dashboard/teams" class="text-customWhite flex items-center">
               <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
               Teams
             </router-link>
           </li>
           <li v-if="isManagerOrGeneralManager" class="mb-2">
-            <router-link to="/view-users" class="text-customWhite flex items-center">
+            <router-link to="/dashboard/view-users" class="text-customWhite flex items-center">
               <img alt="users" src="../assets/users_icon.svg" class="w-8 h-8 mr-2">
               View Users
             </router-link>
@@ -127,11 +127,11 @@
         <img alt="workingtime" src="../assets/wokingtime_icon.svg" class="w-8 h-8 mr-2">
         <span class="text-xs text-customWhite">Working Time</span>
       </router-link>
-      <router-link v-if="isManagerOrGeneralManager" to="/teams" class="flex flex-col items-center">
+      <router-link v-if="isManagerOrGeneralManager" to="/dashboard/teams" class="flex flex-col items-center">
         <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
         <span class="text-xs text-customWhite">Teams</span>
       </router-link>
-      <router-link v-if="isManagerOrGeneralManager" to="/view-users" class="flex flex-col items-center">
+      <router-link v-if="isManagerOrGeneralManager" to="/dashboard/view-users" class="flex flex-col items-center">
         <img alt="users" src="../assets/users_icon.svg" class="w-8 h-8 mr-2">
         <span class="text-xs text-customWhite">View Users</span>
       </router-link>
