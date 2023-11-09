@@ -301,4 +301,33 @@ defmodule TimeManagerApiWeb.TeamController do
     |> put_status(:ok)
     |> json(teams_with_users)
   end
+
+  def grantOwnerRole(conn, %{"teamId" => teamId, "userId" => userId}) do
+    teamOwnerId = TimeManagerApi.Repo.one(from(
+      ut in TimeManagerApi.UserTeam,
+      where: ut.is_owner == true and ut.team_id == ^teamId,
+      select: ut.user_id
+    ))
+
+    current_user = conn.assigns.current_user
+
+    if (current_user.sub != teamOwnerId) do
+      conn
+      |> put_status(:forbidden)
+      |> json(%{message: "Forbidden"})
+    else
+      TimeManagerApi.Repo.update_all(
+        from(ut in TimeManagerApi.UserTeam, where: ut.user_id == ^current_user.sub and ut.team_id == ^teamId),
+        set: [is_owner: false]
+      )
+      TimeManagerApi.Repo.update_all(
+        from(ut in TimeManagerApi.UserTeam, where: ut.user_id == ^userId and ut.team_id == ^teamId),
+        set: [is_owner: true]
+      )
+
+      conn
+      |> put_status(:ok)
+      |> json(%{message: "Ownership role granted"})
+    end
+  end
 end

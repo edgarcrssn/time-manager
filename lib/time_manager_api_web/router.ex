@@ -101,6 +101,7 @@ defmodule TimeManagerApiWeb.Router do
           delete "/:userId/:teamId", TeamController, :deleteUserTeam, [pipe_through [:authorize_manager_only]]
         end
         get "/:userId/team", TeamController, :getUserTeam
+        patch "/:teamId/grant-owner/:userId", TeamController, :grantOwnerRole
       end
 
       scope "/schedules" do

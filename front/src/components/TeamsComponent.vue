@@ -64,7 +64,7 @@
       <h3 class="text-center">
         My team{{ teamsUsersData.length > 1 ? 's' : '' }}
       </h3>
-      <div :key="refreshKey" class="flex justify-between items-center mb-3">
+      <div class="flex justify-between items-center mb-3">
         <button v-if="isManager" type="button" class="main" @click="openAddUserTeamModal">
           Add a user in a team
         </button>
@@ -124,17 +124,30 @@
                   />
                 </td>
                 <td class="px-6 py-4">
-                  <button
-                    v-if="
-                      { ...teamUserDataInUser }.id !== +(userId || 0) ||
-                        { ...teamUserDataInUser }.role !== 'general_manager'
-                    "
-                    type="button"
-                    class="mt-0"
-                    @click="deleteUserFromTeam({ ...teamUserDataInUser }.id, teamUserData.team.id)"
-                  >
-                    <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
-                  </button>
+                  <div class="flex align-center gap-1">
+                    <button
+                      v-if="
+                        { ...teamUserDataInUser }.id !== +(userId || 0) ||
+                          { ...teamUserDataInUser }.role !== 'general_manager'
+                      "
+                      type="button"
+                      class="mt-0"
+                      @click="grantOwnerRoleForUserForTeam({ ...teamUserDataInUser }.id, teamUserData.team.id)"
+                    >
+                      Grant
+                    </button>
+                    <button
+                      v-if="
+                        { ...teamUserDataInUser }.id !== +(userId || 0) ||
+                          { ...teamUserDataInUser }.role !== 'general_manager'
+                      "
+                      type="button"
+                      class="mt-0"
+                      @click="deleteUserFromTeam({ ...teamUserDataInUser }.id, teamUserData.team.id)"
+                    >
+                      <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -175,7 +188,6 @@ const alreadyAddedUsersIds = ref<number[]>([])
 const teamList = ref<Team[]>([])
 const selectedTeam = ref<number>(0)
 const selectedUser = ref<number>(0)
-const refreshKey = ref<number>(0)
 
 const refresh = ref(1)
 const refreshUserClocks = () => {
@@ -314,6 +326,23 @@ const getAlreadyAddedUsers = async (teamId: number) => {
       alreadyAddedUsersIds.value = usersIds
     }
   } catch (error) {
+    console.error(error)
+  }
+}
+
+const grantOwnerRoleForUserForTeam = async (userId: number, teamId: number) => {
+  try {
+    await fetchData(`${apiUrl}/api/teams/${teamId}/grant-owner/${userId}`, 'PATCH')
+    getTeamsOfUser()
+    createToast(
+      { title: 'The ownership has successfully been granted' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
+  } catch (error) {
+    createToast(
+      { title: 'An error occurred while granting the ownership' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
     console.error(error)
   }
 }
