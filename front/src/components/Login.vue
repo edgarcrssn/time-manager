@@ -1,5 +1,5 @@
 <template>
-  <section class="p-2 flex flex-col items-center justify-center text-center card w-[500px]">
+  <section class="p-4 flex flex-col items-center justify-center text-center card w-[500px]">
     <h2>Login</h2>
     <form class="w-full" @submit.prevent="submitLogin">
       <div>
