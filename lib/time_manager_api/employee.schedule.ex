@@ -2,7 +2,7 @@ defmodule TimeManagerApi.EmployeeSchedule do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:id, :monday, :tuesday, :wednesday, :thursday, :saturday, :sunday, :start_time, :end_time]}
+  @derive {Jason.Encoder, only: [:id, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday, :start_time, :end_time]}
   schema "employee_schedule" do
     belongs_to :user, TimeManagerApi.User
 

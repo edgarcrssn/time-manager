@@ -28,7 +28,6 @@ defmodule TimeManagerApiWeb.Router do
     get "/", HomeController, :index
 
     post "/login", AuthController, :login
-    post "/register", AuthController, :register
     post "/logout", AuthController, :logout
 
     scope "/api" do
