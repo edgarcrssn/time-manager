@@ -1,8 +1,8 @@
 <template>
   <div class="h-screen flex flex-col">
     <header class="bg-customMain text-white p-4 flex items-center justify-between">
-      <div class="flex-1 invisible">
-        <img src="../assets/user_icon.svg" class="w-8 h-8 opacity-0">
+      <div class="flex-1 sm:invisible" @click="logout">
+        <img src="../assets/logout.svg" class="w-8 h-8">
       </div>
       <h1 class="flex-1 text-center">
         EpicHourly
