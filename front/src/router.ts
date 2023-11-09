@@ -28,7 +28,7 @@ const routes = [
         component: Dashboard
       },
       {
-        path: 'chartManager/:userId',
+        path: 'chart-manager/:userId',
         name: 'ChartManager',
         component: ChartManager,
         props: true
@@ -50,30 +50,30 @@ const routes = [
         component: WorkingTimes
       },
       {
-        path: '/workingTime/:userId',
+        path: 'working-time/:userId',
         name: 'CreateWorkingTime',
         component: WorkingTime,
         props: true
       },
       {
-        path: '/workingTime/:userId/:workingTimeId',
+        path: 'working-time/:userId/:workingTimeId',
         name: 'EditWorkingTime',
         component: WorkingTime,
         props: true
       },
       {
-        path: '/workingTime/:userId/:workingTimeId',
+        path: 'working-time/:userId/:workingTimeId',
         name: 'DeleteWorkingTime',
         component: WorkingTime,
         props: true
       },
       {
-        path: '/view-users',
+        path: 'view-users',
         name: 'View-users',
         component: UserComponentVue
       },
       {
-        path: '/teams',
+        path: 'teams',
         name: 'teams',
         component: TeamsComponent
       }
