@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap min-h-screen items-stretch">
-    <div class="flex justify-center items-center w-full lg:w-1/2">
+    <div class="flex justify-center items-center w-full lg:w-1/2 p-4">
       <Login />
     </div>
 
@@ -11,13 +11,13 @@
         class="absolute inset-0 h-full w-full object-cover blur-sm"
       >
       <div class="relative z-10 text-center flex flex-col justify-center items-center h-full text-white p-4">
-        <h1 class="text-8xl font-bold mb-4">
+        <h1 class="text-6xl md:text-8xl font-bold mb-4">
           Welcome!
         </h1>
-        <p class="mb-1 text-3xl">
+        <p class="mb-1 text-2xl md:text-3xl">
           Welcome to EpicHourly, the best time manager
         </p>
-        <p class="mb-1 text-3xl">
+        <p class="mb-1 text-2xl md:text-3xl">
           New here? Visit our FAQ.
         </p>
         <router-link to="/faq">
