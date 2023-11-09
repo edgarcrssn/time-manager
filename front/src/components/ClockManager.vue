@@ -1,6 +1,6 @@
 <template>
   <section class="text-center card p-4 w-full">
-    <h2>Work Tracking</h2>
+    <h3>Work Tracking</h3>
     <UserClock :user-id="userId" />
   </section>
 </template>

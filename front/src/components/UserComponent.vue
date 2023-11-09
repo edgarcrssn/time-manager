@@ -54,6 +54,9 @@
             <label for="thursday" class="mr-2">
               <input id="thursday" v-model="schedule.thursday" type="checkbox"> Thursday
             </label>
+            <label for="friday" class="mr-2">
+              <input id="friday" v-model="schedule.friday" type="checkbox"> Friday
+            </label>
             <label for="saturday" class="mr-2">
               <input id="saturday" v-model="schedule.saturday" type="checkbox"> Saturday
             </label>
@@ -145,8 +148,8 @@ const schedule = ref<{
   monday: boolean
   tuesday: boolean
   wednesday: boolean
-  friday?: boolean
   thursday: boolean
+  friday: boolean
   saturday: boolean
   sunday: boolean
   start_time: string
@@ -157,6 +160,7 @@ const schedule = ref<{
   tuesday: false,
   wednesday: false,
   thursday: false,
+  friday: false,
   saturday: false,
   sunday: false,
   start_time: '',
