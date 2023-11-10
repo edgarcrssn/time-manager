@@ -49,7 +49,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:4000/api/users/:userID",
+							"raw": "http://localhost:4000/api/users/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -58,13 +58,7 @@
 							"path": [
 								"api",
 								"users",
-								":userID"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": ""
-								}
+								"1"
 							]
 						}
 					},
@@ -152,9 +146,15 @@
 					"name": "get all user of a team",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "Z6XjZp9cu5iCrjQ9+KPYOA==",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:4000/api/users/team/1",
+							"raw": "http://localhost:4000/api/users/team/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -164,7 +164,7 @@
 								"api",
 								"users",
 								"team",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -195,170 +195,171 @@
 			]
 		},
 		{
-			"name": "Workingtimes operations",
-			"item": [
-				{
-					"name": "Get all working time",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/workingtimes/:userID?start=XXX&end=YYY",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"workingtimes",
-								":userID"
-							],
-							"query": [
-								{
-									"key": "start",
-									"value": "XXX"
-								},
-								{
-									"key": "end",
-									"value": "YYY"
-								}
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get one working time",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/workingtimes/:userID/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"workingtimes",
-								":userID",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": ""
-								},
-								{
-									"key": "id",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post working time",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/workingtimes/:userID",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"workingtimes",
-								":userID"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Put working time",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/workingtimes/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"workingtimes",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete working time",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:4000/api/workingtimes/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "4000",
-							"path": [
-								"api",
-								"workingtimes",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Clock operations",
 			"item": [
+				{
+					"name": "Workingtimes operations",
+					"item": [
+						{
+							"name": "Get all working time",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/workingtimes/:userID?start=XXX&end=YYY",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"workingtimes",
+										":userID"
+									],
+									"query": [
+										{
+											"key": "start",
+											"value": "XXX"
+										},
+										{
+											"key": "end",
+											"value": "YYY"
+										}
+									],
+									"variable": [
+										{
+											"key": "userID",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one working time",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-csrf-token",
+										"value": "Z6XjZp9cu5iCrjQ9+KPYOA==",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:4000/api/workingtimes/5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"workingtimes",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post working time",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/workingtimes/:userID",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"workingtimes",
+										":userID"
+									],
+									"variable": [
+										{
+											"key": "userID",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put working time",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/workingtimes/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"workingtimes",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete working time",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-csrf-token",
+										"value": "MNSW4YlSzVS0kUCBt1XBGw==",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:4000/api/workingtimes/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"workingtimes",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "Get clocking",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "LezgKCVB/quRW+7M87zlXw==",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:4000/api/clocks/:userID",
+							"raw": "http://localhost:4000/api/clocks/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -367,13 +368,7 @@
 							"path": [
 								"api",
 								"clocks",
-								":userID"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": ""
-								}
+								"6"
 							]
 						}
 					},
@@ -383,9 +378,15 @@
 					"name": "Get last clock",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:4000/api/clocks/:userID/last",
+							"raw": "http://localhost:4000/api/clocks/1/last",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -394,14 +395,8 @@
 							"path": [
 								"api",
 								"clocks",
-								":userID",
+								"1",
 								"last"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": ""
-								}
 							]
 						}
 					},
@@ -411,9 +406,24 @@
 					"name": "Post clocking",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "pXKfzYx09vXpES/HDdtwpQ==",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clock\": {\n        \"time\": \"2029-11-07T15:20:24.661Z\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:4000/api/clocks/:userID",
+							"raw": "http://localhost:4000/api/clocks/8",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -422,13 +432,7 @@
 							"path": [
 								"api",
 								"clocks",
-								":userID"
-							],
-							"variable": [
-								{
-									"key": "userID",
-									"value": ""
-								}
+								"8"
 							]
 						}
 					},
@@ -522,9 +526,15 @@
 					"name": "get team users by id",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "CkxZmm18LmP+OQEBLHWXVA==",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:4000/api/teams/:teamId/users",
+							"raw": "http://localhost:4000/api/teams/3/users",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -533,12 +543,40 @@
 							"path": [
 								"api",
 								"teams",
-								":teamId",
+								"3",
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get teams i'm member of",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "CkxZmm18LmP+OQEBLHWXVA==",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:4000/api/teams/member/:userID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"teams",
+								"member",
+								":userID"
 							],
 							"variable": [
 								{
-									"key": "teamId",
+									"key": "userID",
 									"value": ""
 								}
 							]
@@ -606,8 +644,14 @@
 				{
 					"name": "update a team",
 					"request": {
-						"method": "PUT",
-						"header": [],
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "MNSW4YlSzVS0kUCBt1XBGw==",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"team\":{\r\n        \"name\": \"test postman modifie\"\r\n    }\r\n}",
@@ -618,7 +662,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/api/teams/3",
+							"raw": "http://localhost:4000/api/teams/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -627,7 +671,36 @@
 							"path": [
 								"api",
 								"teams",
-								"3"
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "grant ownership",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "CkxZmm18LmP+OQEBLHWXVA==",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:4000/api/teams/4/grant-owner/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"teams",
+								"4",
+								"grant-owner",
+								"1"
 							]
 						}
 					},
@@ -637,7 +710,13 @@
 					"name": "delete a team",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "pXKfzYx09vXpES/HDdtwpQ==",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "http://localhost:4000/api/teams/3",
 							"protocol": "http",
@@ -682,7 +761,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:4000/api/teams/3/6",
+							"raw": "http://localhost:4000/api/teams/:userId/:teamId",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -691,14 +770,80 @@
 							"path": [
 								"api",
 								"teams",
-								"3",
-								"6"
+								":userId",
+								":teamId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "teamId",
+									"value": ""
+								}
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"general_manager\",\n    \"password\": \"azerty\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"test\",\n    \"password\": \"test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
