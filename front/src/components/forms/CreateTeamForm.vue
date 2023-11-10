@@ -1,9 +1,9 @@
 <template>
   <div class="mb-4 text-center flex flex-col items-center">
     <form class="w-full flex flex-col items-center" @submit.prevent="createTeam">
-      <label for="input" placeholder="Name" class="block text-sm font-medium text-gray-600">Enter the name of the new team</label>
       <input
         v-model="teamName"
+        placeholder="Team name"
         type="text"
         class="mt-1 p-2 w-1/4 border rounded-md focus:ring focus:ring-indigo-200 focus:border-indigo-500"
       >
@@ -16,8 +16,8 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { apiUrl } from '../constants/urls'
-import { fetchData } from '../services/httpService'
+import { apiUrl } from '../../constants/urls'
+import { fetchData } from '../../services/httpService'
 import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 

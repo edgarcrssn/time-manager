@@ -9,7 +9,7 @@ import WorkingTimes from './pages/working-times.vue'
 import DashboardLayout from './layouts/DashboardLayout.vue'
 import UserComponentVue from './components/UserComponent.vue'
 import FoireAuxQuestions from './components/FoireAuxQuestions.vue'
-import TeamsComponent from './components/TeamsComponent.vue'
+import Teams from './pages/teams.vue'
 
 const routes = [
   { path: '/', component: Index },
@@ -75,7 +75,7 @@ const routes = [
       {
         path: 'teams',
         name: 'teams',
-        component: TeamsComponent
+        component: Teams
       }
     ]
   }

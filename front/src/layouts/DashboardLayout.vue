@@ -94,7 +94,7 @@
               Working Time
             </router-link>
           </li>
-          <li v-if="isManagerOrGeneralManager" class="mb-2">
+          <li class="mb-2">
             <router-link to="/dashboard/teams" class="text-customWhite flex items-center">
               <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
               Teams
@@ -127,7 +127,7 @@
         <img alt="workingtime" src="../assets/wokingtime_icon.svg" class="w-8 h-8 mr-2">
         <span class="text-xs text-customWhite">Working Time</span>
       </router-link>
-      <router-link v-if="isManagerOrGeneralManager" to="/dashboard/teams" class="flex flex-col items-center">
+      <router-link to="/dashboard/teams" class="flex flex-col items-center">
         <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
         <span class="text-xs text-customWhite">Teams</span>
       </router-link>

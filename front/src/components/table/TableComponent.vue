@@ -92,7 +92,7 @@
 import { formatDate } from '../../helpers/dateUtils'
 import { apiUrl } from '../../constants/urls'
 import { fetchData } from '../../services/httpService'
-import Modal from '../PopUp.vue'
+import Modal from '../Modal.vue'
 import { ref } from 'vue'
 import type { User } from '../../models/Users'
 
