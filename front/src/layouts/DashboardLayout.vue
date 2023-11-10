@@ -17,31 +17,33 @@
 
     <div class="flex flex-row h-full overflow-hidden">
       <nav class="custom-gradient p-4 w-[300px] flex-shrink-0 flex-col hidden sm:flex">
-        <ul>
-          <li class="mb-2">
-            <router-link :to="`/dashboard/${storedUserID}`" class="text-customWhite flex items-center">
-              <img alt="dashboard" src="../assets/chart_icon.svg" class="w-8 h-8 mr-2">
-              My Dashboard
-            </router-link>
-          </li>
-          <li class="mb-2">
-            <router-link :to="`/dashboard/working-times/${storedUserID}`" class="text-customWhite flex items-center">
-              <img alt="workingtime" src="../assets/wokingtime_icon.svg" class="w-8 h-8 mr-2">
-              Working Time
-            </router-link>
-          </li>
-          <li class="mb-2">
-            <router-link to="/dashboard/teams" class="text-customWhite flex items-center">
-              <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
-              Teams
-            </router-link>
-          </li>
-          <li v-if="isManagerOrGeneralManager" class="mb-2">
-            <router-link to="/dashboard/view-users" class="text-customWhite flex items-center">
-              <img alt="users" src="../assets/users_icon.svg" class="w-8 h-8 mr-2">
-              View Users
-            </router-link>
-          </li>
+        <ul class="h-full flex flex-col justify-between">
+          <div>
+            <li class="mb-2">
+              <router-link :to="`/dashboard/${storedUserID}`" class="text-customWhite flex items-center">
+                <img alt="dashboard" src="../assets/chart_icon.svg" class="w-8 h-8 mr-2">
+                My Dashboard
+              </router-link>
+            </li>
+            <li class="mb-2">
+              <router-link :to="`/dashboard/working-times/${storedUserID}`" class="text-customWhite flex items-center">
+                <img alt="workingtime" src="../assets/wokingtime_icon.svg" class="w-8 h-8 mr-2">
+                Working Time
+              </router-link>
+            </li>
+            <li class="mb-2">
+              <router-link to="/dashboard/teams" class="text-customWhite flex items-center">
+                <img alt="team" src="../assets/team_icon.svg" class="w-8 h-8 mr-2">
+                Teams
+              </router-link>
+            </li>
+            <li v-if="isManagerOrGeneralManager" class="mb-2">
+              <router-link to="/dashboard/view-users" class="text-customWhite flex items-center">
+                <img alt="users" src="../assets/users_icon.svg" class="w-8 h-8 mr-2">
+                View Users
+              </router-link>
+            </li>
+          </div>
 
           <li class="flex text-white items-center mt-10 cursor-pointer" @click="logout">
             <img alt="logout" src="../assets/logout.svg" class="w-8 h-8 mr-2">
