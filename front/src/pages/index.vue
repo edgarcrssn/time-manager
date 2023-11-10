@@ -4,7 +4,7 @@
       <img
         alt="logo"
         src="../assets/images/earth.png"
-        class="absolute -left-[120px] -top-[50px] w-1/2 max-h-[500px] max-w-[700px] z-50"
+        class="absolute -left-[120px] -top-[50px] max-h-[250px] w-auto z-50"
       >
       <div class="w-1/2">
         <h1 class="text-6xl md:text-8xl font-bold text-customPurple mb-4">
