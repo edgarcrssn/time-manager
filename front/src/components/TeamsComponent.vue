@@ -103,6 +103,7 @@
               <tr
                 v-for="(teamUserDataInUser, index) in teamUserData.users"
                 :key="teamUserDataInUser.id"
+                class="transition duration-200 ease-in-out hover:opacity-[80%]"
                 :class="
                   index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
                 "

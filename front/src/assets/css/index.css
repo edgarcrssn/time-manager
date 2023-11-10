@@ -62,3 +62,11 @@ button.error {
 .card {
   @apply bg-white border rounded-3xl shadow-sm hover:shadow-lg transition duration-200 ease-in-out;
 }
+
+.custom-gradient {
+  background-image: linear-gradient(to bottom, #9039d4, #1d2c92);
+}
+
+.custom-gradient-mobile {
+  background-image: linear-gradient(to left, #9039d4, #1d2c92);
+}

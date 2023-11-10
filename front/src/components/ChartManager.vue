@@ -39,8 +39,8 @@
       </option>
     </select>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="card mt-4 p-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4">
+      <div class="card mt-4 p-4 hover:scale-[102%]">
         <h3 class="text-center">
           Hours worked per day
         </h3>
@@ -48,7 +48,7 @@
           <BarChart :data="barChartData" :options="chartOptions" />
         </div>
       </div>
-      <div class="card mt-4 p-4">
+      <div class="card mt-4 p-4 hover:scale-[102%]">
         <h3 class="text-center">
           Hours worked per day
         </h3>
@@ -56,7 +56,7 @@
           <LineChart :data="lineChartData" :options="chartOptions" />
         </div>
       </div>
-      <div v-if="viewMode === 'week'" class="card mt-10 p-4">
+      <div v-if="viewMode === 'week'" class="card p-4 mt-4 hover:scale-[102%]">
         <h3 class="text-center">
           Hours worked during the week
         </h3>
@@ -153,7 +153,7 @@ const fetchDayData = async (date: Date) => {
       {
         data: [aggregatedHours[date.toISOString().split('T')[0]] || 0],
         label: 'Hours Worked',
-        backgroundColor: '#4A90E2'
+        backgroundColor: '#583c9b'
       }
     ]
   }
@@ -164,7 +164,7 @@ const fetchDayData = async (date: Date) => {
       {
         data: [aggregatedHours[date.toISOString().split('T')[0]] || 0],
         label: 'Hours Worked',
-        backgroundColor: '#4A90E2'
+        backgroundColor: '#583c9b'
       }
     ]
   }
@@ -211,12 +211,12 @@ const fetchWeekData = async (date: Date) => {
 
   barChartData.value = {
     labels: labels,
-    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#4A90E2' }]
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#583c9b' }]
   }
 
   lineChartData.value = {
     labels: labels,
-    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#4A90E2' }]
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#583c9b' }]
   }
 
   pieChartData.value = {
@@ -224,7 +224,7 @@ const fetchWeekData = async (date: Date) => {
     datasets: [
       {
         data: hoursWorked,
-        backgroundColor: ['#E94E77', '#F9A825', '#F6E05E', '#4CAF50', '#4A90E2', '#667EEA', '#9D48B9']
+        backgroundColor: ['#E94E77', '#F9A825', '#F6E05E', '#4CAF50', '#4A90E2', '#667EEA', '#583c9b']
       }
     ]
   }
@@ -267,12 +267,12 @@ const fetchMonthData = async (date: Date) => {
 
   barChartData.value = {
     labels: labels,
-    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#4A90E2' }]
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#583c9b' }]
   }
 
   lineChartData.value = {
     labels: labels,
-    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#4A90E2' }]
+    datasets: [{ data: hoursWorked, label: 'Hours Worked', backgroundColor: '#583c9b' }]
   }
 }
 
