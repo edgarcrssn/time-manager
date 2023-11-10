@@ -42,6 +42,7 @@ jobs:
         - ENV_COMMAND+=" && echo 'export PGPORT=$PGPORT' >> .env"
         - ENV_COMMAND+=" && echo 'export PGHOST=$PGHOST' >> .env"
         - ENV_COMMAND+=" && echo 'export SECRET_KEY=$SECRET_KEY' >> .env"
+        - ENV_COMMAND+=" && echo 'export SENDGRID_API_KEY=$SENDGRID_API_KEY' >> .env"
         - ENV_COMMAND+=" && echo 'export VITE_FRONT_URL=$VITE_FRONT_URL' >> .env"
         - ENV_COMMAND+=" && echo 'export VITE_API_URL=$VITE_API_URL' >> .env"
         - $SSH_COMMAND "cd /home/$GCP_USER/app && $ENV_COMMAND"
