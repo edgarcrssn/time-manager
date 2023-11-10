@@ -24,7 +24,9 @@ user1 =
     username: "user1",
     email: "user1@example.com",
     role: :manager,
-    password_hash: SeedHelper.hash_password("azerty")
+    password_hash: SeedHelper.hash_password("azerty"),
+    firstname: "Albert",
+    lastname: "Einstein"
   })
 
 user2 =
@@ -32,7 +34,9 @@ user2 =
     username: "user2",
     email: "user2@example.com",
     role: :employee,
-    password_hash: SeedHelper.hash_password("azerty")
+    password_hash: SeedHelper.hash_password("azerty"),
+    firstname: "Philippe",
+    lastname: "Poutou"
   })
 
 user3 =
@@ -40,7 +44,9 @@ user3 =
     username: "user3",
     email: "user3@example.com",
     role: :employee,
-    password_hash: SeedHelper.hash_password("azerty")
+    password_hash: SeedHelper.hash_password("azerty"),
+    firstname: "Laure",
+    lastname: "Manaudou"
   })
 
 user4 =
@@ -48,7 +54,9 @@ user4 =
     username: "user4",
     email: "user4@example.com",
     role: :manager,
-    password_hash: SeedHelper.hash_password("azerty")
+    password_hash: SeedHelper.hash_password("azerty"),
+    firstname: "Edgar",
+    lastname: "Cresson"
   })
 
 user5 =
@@ -56,7 +64,9 @@ user5 =
     username: "user5",
     email: "user5@example.com",
     role: :employee,
-    password_hash: SeedHelper.hash_password("azerty")
+    password_hash: SeedHelper.hash_password("azerty"),
+    firstname: "LeBron",
+    lastname: "James"
   })
 
 user6 =
@@ -64,7 +74,9 @@ user6 =
     username: "user6",
     email: "user6@example.com",
     role: :employee,
-    password_hash: SeedHelper.hash_password("azerty")
+    password_hash: SeedHelper.hash_password("azerty"),
+    firstname: "Ousmane",
+    lastname: "Dembele"
   })
 
 user7 =
@@ -72,7 +84,9 @@ user7 =
     username: "user7",
     email: "user7@example.com",
     role: :employee,
-    password_hash: SeedHelper.hash_password("azerty")
+    password_hash: SeedHelper.hash_password("azerty"),
+    firstname: "François",
+    lastname: "Hollande"
   })
 
 general_manager =
@@ -80,7 +94,9 @@ general_manager =
     username: "general_manager",
     email: "gm@example.com",
     role: :general_manager,
-    password_hash: SeedHelper.hash_password("azerty")
+    password_hash: SeedHelper.hash_password("azerty"),
+    firstname: "Patrick",
+    lastname: "Fiori"
   })
 
 team1 = TimeManagerApi.Repo.insert!(%TimeManagerApi.Team{name: "Team1"})
