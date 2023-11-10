@@ -3,8 +3,8 @@
     <h2>Working times</h2>
     <article class="w-full">
       <TableComponent
-        :data="workingTimes"
-        :title-property="['ID', 'Start Time', 'End Time', 'User ID']"
+        :data="workingTimes.reverse()"
+        :title-property="['Start Time', 'End Time']"
         table-name="Working Times Table"
         type-table="workingTimes"
       />

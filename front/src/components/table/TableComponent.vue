@@ -45,17 +45,11 @@
               index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
             "
           >
-            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-              {{ time.id }}
-            </th>
             <td class="px-6 py-4">
               {{ formatDate(time.start) }}
             </td>
             <td class="px-6 py-4">
               {{ formatDate(time.end) }}
-            </td>
-            <td class="px-6 py-4">
-              {{ time.user_id }}
             </td>
           </tr>
         </tbody>
