@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div v-if="tiny" class="flex flex-row items-center gap-2">
+    <button :disabled="loading || processing" class="main m-0 block w-full" @click="clock">
+      {{ clockIn ? '🧠 ' + timeSinceLastClockIn : '😴 Rest' }}
+    </button>
+  </div>
+  <div v-else class="flex flex-col items-center gap-1">
     <p v-if="loading">
       Loading...
     </p>
@@ -9,7 +14,7 @@
     <p v-else>
       {{ clockIn ? '🧠 Since: ' + timeSinceLastClockIn : '😴 Rest' }}
     </p>
-    <button :disabled="loading || processing" class="main" @click="clock">
+    <button :disabled="loading || processing" class="main m-0" @click="clock">
       {{ loading ? 'Loading...' : processing ? 'Processing...' : clockIn ? 'Clock Out' : 'Clock In' }}
     </button>
   </div>
@@ -23,10 +28,15 @@ import { createToast } from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 import { getTimeElapsedSinceDate } from '../helpers/dateUtils'
 
-const { userId, onClock } = defineProps({
+const { userId, tiny, onClock } = defineProps({
   userId: {
     type: Number,
     required: true
+  },
+  tiny: {
+    type: Boolean,
+    required: false,
+    default: false
   },
   onClock: {
     type: Function,

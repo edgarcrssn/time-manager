@@ -3,87 +3,6 @@ defmodule TimeManagerApiWeb.TeamController do
   import Ecto.Query
   import Plug.Conn
 
-  def getAllTeams(conn, _param) do
-    query =
-      from(
-        t in TimeManagerApi.Team
-      )
-      teams = TimeManagerApi.Repo.all(query)
-      json(conn, teams)
-  end
-
-  def getById(conn, %{"teamId" => team_id}) do
-    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, team_id)
-
-    case team do
-      %TimeManagerApi.Team{} = team ->
-        json(conn,team)
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> json(%{error: "Team with id #{team_id} doesn't exist"})
-    end
-  end
-
-  def getTeamUsersById(conn, %{"teamId" => team_id}) do
-    team_id = String.to_integer(team_id)
-
-    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, team_id)
-
-    case team do
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> json(%{"message" => "Team Not Found"})
-
-      _ ->
-        users_in_team = TimeManagerApi.Repo.all(
-          from u in TimeManagerApi.User,
-          join: ut in TimeManagerApi.UserTeam,
-          on: u.id == ut.user_id,
-          where: ut.team_id == ^team_id,
-          select: u
-        )
-
-        users = Enum.map(users_in_team, fn user ->
-          %{id: user.id, username: user.username, email: user.email, role: user.role}
-        end)
-
-        conn
-        |> put_status(:ok)
-        |> json(%{users: users})
-    end
-  end
-
-  def getMyOwnedTeams(conn, %{"userId" => user_id}) do
-    user = TimeManagerApi.Repo.get(TimeManagerApi.User, user_id)
-
-    case user do
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> json(%{error: "User Not Found"})
-
-      %TimeManagerApi.User{role: role} when role in [:manager, :general_manager] ->
-        owned_teams = TimeManagerApi.Repo.all(
-          from t in TimeManagerApi.Team,
-          join: ut in TimeManagerApi.UserTeam,
-          on: ut.team_id == t.id,
-          where: ut.user_id == ^user_id and ut.is_owner == true,
-          select: t
-        )
-
-        conn
-        |> put_status(:ok)
-        |> json(%{teams: owned_teams})
-
-      _ ->
-        conn
-        |> put_status(:unauthorized)
-        |> json(%{error: "Unauthorized"})
-    end
-  end
-
   def create(conn, %{"team" => team_params, "user_id" => user_id}) do
     case TimeManagerApi.Repo.get(TimeManagerApi.User, String.to_integer(user_id)) do
       nil ->
@@ -195,7 +114,117 @@ defmodule TimeManagerApiWeb.TeamController do
     end
   end
 
-  def addUserTeam(conn, %{"userId" => userId, "teamId" => teamId}) do
+  def getAllTeams(conn, _param) do
+    query =
+      from(
+        t in TimeManagerApi.Team
+      )
+      teams = TimeManagerApi.Repo.all(query)
+      json(conn, teams)
+  end
+
+  def getTeamById(conn, %{"teamId" => team_id}) do
+    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, team_id)
+
+    case team do
+      %TimeManagerApi.Team{} = team ->
+        json(conn,team)
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "Team with id #{team_id} doesn't exist"})
+    end
+  end
+
+  def getTeamsImMemberOf(conn, %{"userId" => user_id}) do
+    user = TimeManagerApi.Repo.get(TimeManagerApi.User, user_id)
+
+    case user do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "User Not Found"})
+
+      %TimeManagerApi.User{role: role} when role in [:manager, :general_manager] ->
+        teams_im_member_of = TimeManagerApi.Repo.all(
+          from t in TimeManagerApi.Team,
+          join: ut in TimeManagerApi.UserTeam,
+          on: ut.team_id == t.id,
+          where: ut.user_id == ^user_id,
+          select: t
+        )
+
+        conn
+        |> put_status(:ok)
+        |> json(%{teams: teams_im_member_of})
+
+      _ ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: "Unauthorized"})
+    end
+  end
+
+  def getMyOwnedTeams(conn, %{"userId" => user_id}) do
+    user = TimeManagerApi.Repo.get(TimeManagerApi.User, user_id)
+
+    case user do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "User Not Found"})
+
+      %TimeManagerApi.User{role: role} when role in [:manager, :general_manager] ->
+        owned_teams = TimeManagerApi.Repo.all(
+          from t in TimeManagerApi.Team,
+          join: ut in TimeManagerApi.UserTeam,
+          on: ut.team_id == t.id,
+          where: ut.user_id == ^user_id and ut.is_owner == true,
+          select: t
+        )
+
+        conn
+        |> put_status(:ok)
+        |> json(%{teams: owned_teams})
+
+      _ ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: "Unauthorized"})
+    end
+  end
+
+  def getTeamUsersById(conn, %{"teamId" => team_id}) do
+    team_id = String.to_integer(team_id)
+
+    team = TimeManagerApi.Repo.get(TimeManagerApi.Team, team_id)
+
+    case team do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{"message" => "Team Not Found"})
+
+      _ ->
+        users_in_team = TimeManagerApi.Repo.all(
+          from u in TimeManagerApi.User,
+          join: ut in TimeManagerApi.UserTeam,
+          on: u.id == ut.user_id,
+          where: ut.team_id == ^team_id,
+          select: %{user: u, is_owner: ut.is_owner}
+        )
+
+        users = Enum.map(users_in_team, fn ut ->
+          %{id: ut.user.id, username: ut.user.username, email: ut.user.email, role: ut.user.role, is_owner: ut.is_owner}
+        end)
+
+        conn
+        |> put_status(:ok)
+        |> json(%{users: users})
+    end
+  end
+
+  def addUserIntoTeam(conn, %{"userId" => userId, "teamId" => teamId}) do
     user = TimeManagerApi.Repo.get(TimeManagerApi.User, String.to_integer(userId))
 
     teamOwnerId = TimeManagerApi.Repo.one(from(
@@ -241,8 +270,8 @@ defmodule TimeManagerApiWeb.TeamController do
     end
   end
 
-  def deleteUserTeam(conn, %{"userId" => userId, "teamId" => teamId}) do
-    query = from(t in TimeManagerApi.UserTeam, where: t.user_id == ^userId and t.team_id == ^teamId)
+  def deleteUserFromTeam(conn, %{"userId" => userId, "teamId" => teamId}) do
+    query = from(ut in TimeManagerApi.UserTeam, where: ut.user_id == ^userId and ut.team_id == ^teamId)
 
     teamOwnerId = TimeManagerApi.Repo.one(from(
       ut in TimeManagerApi.UserTeam,
@@ -252,7 +281,7 @@ defmodule TimeManagerApiWeb.TeamController do
 
     current_user = conn.assigns.current_user
 
-    if (current_user.sub != teamOwnerId) do
+    if (current_user.sub != teamOwnerId && current_user.sub != String.to_integer(userId)) do
       conn
         |> put_status(:forbidden)
         |> json(%{message: "Forbidden"})
@@ -274,31 +303,32 @@ defmodule TimeManagerApiWeb.TeamController do
     end
   end
 
-  def getUserTeam(conn,%{"userId" => userId}) do
-    user_teams_query =
-      from(
-        ut in TimeManagerApi.UserTeam,
-        join: t in TimeManagerApi.Team, on: ut.team_id == t.id,
-        where: ut.user_id == ^userId,
-        select: {t, ut.is_owner}
+  def grantOwnerRole(conn, %{"teamId" => teamId, "userId" => userId}) do
+    teamOwnerId = TimeManagerApi.Repo.one(from(
+      ut in TimeManagerApi.UserTeam,
+      where: ut.is_owner == true and ut.team_id == ^teamId,
+      select: ut.user_id
+    ))
+
+    current_user = conn.assigns.current_user
+
+    if (current_user.sub != teamOwnerId) do
+      conn
+      |> put_status(:forbidden)
+      |> json(%{message: "Forbidden"})
+    else
+      TimeManagerApi.Repo.update_all(
+        from(ut in TimeManagerApi.UserTeam, where: ut.user_id == ^current_user.sub and ut.team_id == ^teamId),
+        set: [is_owner: false]
+      )
+      TimeManagerApi.Repo.update_all(
+        from(ut in TimeManagerApi.UserTeam, where: ut.user_id == ^userId and ut.team_id == ^teamId),
+        set: [is_owner: true]
       )
 
-      teams_and_owners = TimeManagerApi.Repo.all(user_teams_query)
-
-      teams_with_users =
-        Enum.map(teams_and_owners, fn {team, is_owner} ->
-          users_query =
-            from(
-              ut in TimeManagerApi.UserTeam,
-              join: u in TimeManagerApi.User, on: ut.user_id == u.id,
-              where: ut.team_id == ^team.id,
-              select: u
-            )
-          users = TimeManagerApi.Repo.all(users_query)
-          %{team: team, is_owner: is_owner, users: users}
-        end)
-    conn
-    |> put_status(:ok)
-    |> json(teams_with_users)
+      conn
+      |> put_status(:ok)
+      |> json(%{message: "Ownership role granted"})
+    end
   end
 end

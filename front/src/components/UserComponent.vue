@@ -5,7 +5,7 @@
       Add User
     </button>
 
-    <Modal :is-open="isUserModalOpen" title="Créer un utilisateur" @close="closeUserModal">
+    <Modal :is-open="isUserModalOpen" title="Create a user" @close="closeUserModal">
       <form ref="userForm" @submit.prevent="createUser">
         <div class="mb-4">
           <label for="username" class="block text-sm font-medium text-gray-600">Username</label>
@@ -37,7 +37,7 @@
       </form>
     </Modal>
 
-    <Modal :is-open="isScheduleModalOpen" title="Horaires de l'utilisateur" @close="closeScheduleModal">
+    <Modal :is-open="isScheduleModalOpen" title="User schedules" @close="closeScheduleModal">
       <form ref="scheduleForm" @submit.prevent="updateOrCreateSchedule">
         <div class="mb-4">
           <label class="block text-sm font-medium text-gray-600">Working days</label>
@@ -102,7 +102,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import TableComponent from './table/TableComponent.vue'
-import Modal from './PopUp.vue'
+import Modal from './Modal.vue'
 import { User } from '../models/Users'
 import { apiUrl } from '../constants/urls'
 import { fetchData } from '../services/httpService'

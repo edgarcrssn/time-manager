@@ -80,27 +80,29 @@ defmodule TimeManagerApiWeb.Router do
 
       scope "/teams" do
         get "", TeamController, :getAllTeams
-        get "/:teamId", TeamController, :getById
+        get "/:teamId", TeamController, :getTeamById
         get "/:teamId/users", TeamController, :getTeamUsersById
         scope "/" do
-          get "/owned/:userId", TeamController, :getMyOwnedTeams, [pipe_through [:authorize_user_himself_only]]
+          pipe_through [:authorize_user_himself_only]
+          get "/member/:userId", TeamController, :getTeamsImMemberOf
+          get "/owned/:userId", TeamController, :getMyOwnedTeams
         end
         scope "/" do
           post "", TeamController, :create, [pipe_through [:authorize_manager_only]]
         end
         scope "/" do
-          put "/:teamId", TeamController, :update, [pipe_through [:authorize_manager_only]]
+          patch "/:teamId", TeamController, :update, [pipe_through [:authorize_manager_only]]
         end
         scope "/" do
           delete "/:teamId", TeamController, :delete, [pipe_through [:authorize_manager_only]]
         end
         scope "/" do
-          post "/:userId/:teamId", TeamController, :addUserTeam, [pipe_through [:authorize_manager_only]]
+          post "/:userId/:teamId", TeamController, :addUserIntoTeam, [pipe_through [:authorize_manager_only]]
         end
         scope "/" do
-          delete "/:userId/:teamId", TeamController, :deleteUserTeam, [pipe_through [:authorize_manager_only]]
+          delete "/:userId/:teamId", TeamController, :deleteUserFromTeam, [pipe_through [:authorize_manager_or_user_himself]]
         end
-        get "/:userId/team", TeamController, :getUserTeam
+        patch "/:teamId/grant-owner/:userId", TeamController, :grantOwnerRole
       end
 
       scope "/schedules" do
