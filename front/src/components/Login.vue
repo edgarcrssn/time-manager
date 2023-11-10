@@ -1,18 +1,21 @@
 <template>
-  <section class="p-4 flex flex-col items-center justify-center text-center card w-[500px]">
+  <section class="p-4 flex flex-col items-center justify-center text-center w-[500px]">
     <h2>Login</h2>
     <form class="w-full" @submit.prevent="submitLogin">
       <div>
-        <label for="username">Username:</label>
-        <input id="username" v-model="credentials.username" type="text" required>
+        <input id="username" v-model="credentials.username" placeholder="Username" type="text" required>
       </div>
       <div>
-        <label for="password">Password:</label>
-        <input id="password" v-model="credentials.password" type="password" required>
+        <input id="password" v-model="credentials.password" placeholder="Password" type="password" required>
       </div>
       <button type="submit" class="main">
         Login
       </button>
+      <router-link to="/faq">
+        <button class="main">
+          Read FAQ
+        </button>
+      </router-link>
     </form>
   </section>
 </template>

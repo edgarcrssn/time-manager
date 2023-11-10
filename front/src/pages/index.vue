@@ -1,31 +1,27 @@
 <template>
-  <div class="flex flex-wrap min-h-screen items-stretch">
-    <div class="flex justify-center items-center w-full lg:w-1/2 p-4">
-      <Login />
+  <div class="flex flex-wrap min-h-screen items-stretch relative overflow-hidden">
+    <div class="flex flex-col justify-center items-center w-full lg:w-[55%] p-4">
+      <img
+        alt="logo"
+        src="../assets/images/earth.png"
+        class="absolute -left-[150px] -top-[70px] w-1/2 max-h-[500px] max-w-[700px] z-50"
+      >
+      <div class="w-1/2">
+        <h1 class="text-6xl md:text-8xl font-bold text-customBlue mb-4">
+          Epic Hourly
+        </h1>
+        <p>The easy-to-use time manager for your business</p>
+        <Login />
+      </div>
     </div>
 
-    <div class="relative w-full lg:w-1/2">
+    <div class="w-full lg:w-[45%]">
       <img
-        alt="background"
-        src="../assets/images/analytics.jpg"
-        class="absolute inset-0 h-full w-full object-cover blur-sm"
+        alt="logo"
+        src="../assets/images/logo.png"
+        class="absolute lg:top-1/2 lg:left-2/3 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 h-1/2 object-cover z-50"
       >
-      <div class="relative z-10 text-center flex flex-col justify-center items-center h-full text-white p-4">
-        <h1 class="text-6xl md:text-8xl font-bold mb-4">
-          Welcome!
-        </h1>
-        <p class="mb-1 text-2xl md:text-3xl">
-          Welcome to EpicHourly, the best time manager
-        </p>
-        <p class="mb-1 text-2xl md:text-3xl">
-          New here? Visit our FAQ.
-        </p>
-        <router-link to="/faq">
-          <button class="main">
-            Read FAQ
-          </button>
-        </router-link>
-      </div>
+      <img alt="background" src="../assets/images/background.jpg" class="h-full w-full object-cover">
     </div>
   </div>
 </template>
