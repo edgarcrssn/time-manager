@@ -1,0 +1,339 @@
+<template>
+  <div>
+    <section>
+      <Modal
+        :is-open="isAddUserModalOpen"
+        title="Add a user in a team"
+        :is-delete="false"
+        @close="closeAddUserTeamModal"
+      >
+        <form ref="userForm" @submit.prevent="addUserTeam(selectedUser, selectedTeam)">
+          <div class="mb-4">
+            <select
+              v-model="selectedUser"
+              class="block w-full mt-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 overflow-y-auto"
+            >
+              <option :value="0" disabled selected>
+                Select a user
+              </option>
+              <option v-for="userElt in availableUserList" :key="userElt.id" :value="userElt.id">
+                {{ userElt.email }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <select
+              v-model="selectedTeam"
+              class="block w-full mt-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 overflow-y-auto"
+            >
+              <option :value="0" disabled selected>
+                Select a team
+              </option>
+              <option v-for="teamElt in teamList" :key="teamElt.id" :value="teamElt.id">
+                {{ teamElt.name }}
+              </option>
+            </select>
+          </div>
+          <div class="flex justify-between">
+            <button :disabled="!selectedTeam || !selectedUser" type="submit" class="main">
+              Confirm
+            </button>
+            <button type="button" class="error" @click="closeAddUserTeamModal">
+              Close
+            </button>
+          </div>
+        </form>
+      </Modal>
+    </section>
+
+    <section class="card p-4 mb-6">
+      <h3 class="text-center">
+        Create a team
+      </h3>
+      <CreateTeam
+        :on-create="
+          () => {
+            getTeamsOfUser()
+            populateTeamList()
+          }
+        "
+      />
+    </section>
+
+    <section v-if="teamsUsersData.length" class="card p-4">
+      <h3 class="text-center">
+        My team{{ teamsUsersData.length > 1 ? 's' : '' }}
+      </h3>
+      <div :key="refreshKey" class="flex justify-between items-center mb-3">
+        <button v-if="isManager" type="button" class="main" @click="openAddUserTeamModal">
+          Add a user in a team
+        </button>
+      </div>
+      <section v-for="teamUserData in teamsUsersData" :key="teamUserData.team.id" class="[&:not(:last-of-type)]:mb-6">
+        <div class="flex items-center justify-between mb-3 gap-2">
+          <h4 class="text-center mb-0">
+            {{ teamUserData.team.name }}
+          </h4>
+          <button type="button" class="error mt-0" @click="deleteTeam(teamUserData.team.id)">
+            <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
+          </button>
+        </div>
+        <div class="overflow-x-auto shadow-md sm:rounded-lg">
+          <table class="w-full text-sm text-left text-white overflow-x-auto shadow-md sm:rounded-lg">
+            <thead class="text-xs uppercase bg-customMain">
+              <tr>
+                <th scope="col" class="px-6 py-3">
+                  Username
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Email
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Role
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Clock
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(teamUserDataInUser, index) in teamUserData.users"
+                :key="teamUserDataInUser.id"
+                class="transition duration-200 ease-in-out hover:opacity-[80%]"
+                :class="
+                  index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
+                "
+              >
+                <td class="px-6 py-4 font-medium whitespace-nowrap">
+                  {{ teamUserDataInUser.username }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ teamUserDataInUser.email }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ getRoleLabel(teamUserDataInUser.role) }}
+                </td>
+                <td class="px-6 py-4">
+                  <UserClock
+                    :key="`userClock-${teamUserDataInUser.id}-${refresh}`"
+                    :user-id="teamUserDataInUser.id"
+                    :on-clock="refreshUserClocks"
+                  />
+                </td>
+                <td class="px-6 py-4">
+                  <button
+                    v-if="
+                      { ...teamUserDataInUser }.id !== +(userId || 0) ||
+                        { ...teamUserDataInUser }.role !== 'general_manager'
+                    "
+                    type="button"
+                    class="mt-0"
+                    @click="deleteUserFromTeam({ ...teamUserDataInUser }.id, teamUserData.team.id)"
+                  >
+                    <img alt="delete" src="../assets/delete_icon.svg" class="w-5 h-5">
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { onMounted, ref, watch } from 'vue'
+import { apiUrl } from '../constants/urls'
+import { User } from '../models/Users'
+import Modal from './AddUserTeamPopUp.vue'
+import { fetchData } from '../services/httpService'
+import { createToast } from 'mosha-vue-toastify'
+import 'mosha-vue-toastify/dist/style.css'
+import CreateTeam from './CreateTeam.vue'
+import UserClock from './UserClock.vue'
+import { Team } from '../models/Teams'
+import { getRoleLabel } from '../helpers/getRoleLabel'
+
+interface TeamsUsersInterface {
+  // eslint-disable-next-line camelcase
+  is_owner: boolean
+  team: Team
+  users: User[]
+}
+
+const isAddUserModalOpen = ref(false)
+const teamsUsersData = ref<TeamsUsersInterface[]>([])
+const isManager = ref(false)
+const userId = sessionStorage.getItem('userID')
+const userList = ref<User[]>([])
+const availableUserList = ref<User[]>([])
+const alreadyAddedUsersIds = ref<number[]>([])
+const teamList = ref<Team[]>([])
+const selectedTeam = ref<number>(0)
+const selectedUser = ref<number>(0)
+const refreshKey = ref<number>(0)
+
+const refresh = ref(1)
+const refreshUserClocks = () => {
+  refresh.value = refresh.value + 1
+}
+
+const getTeamsOfUser = async () => {
+  try {
+    const response = await fetchData(`${apiUrl}/api/teams/${userId}/team`, 'GET')
+    if (response) {
+      teamsUsersData.value = response
+    }
+  } catch (error) {
+    createToast(
+      { title: 'An error occurred while the fetching of the users' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
+    console.error('An error occurred while the fetching of the data')
+  }
+}
+onMounted(async () => {
+  getTeamsOfUser()
+  populateTeamList()
+  populateUserList()
+  checkIsManager()
+})
+
+const checkIsManager = () => {
+  const userRole = sessionStorage.getItem('userRole')
+  if (userRole === 'manager' || userRole === 'general_manager') {
+    isManager.value = true
+  } else {
+    isManager.value = false
+  }
+}
+
+const openAddUserTeamModal = () => {
+  isAddUserModalOpen.value = true
+}
+
+const closeAddUserTeamModal = () => {
+  isAddUserModalOpen.value = false
+  selectedTeam.value = 0
+  selectedUser.value = 0
+  getTeamsOfUser()
+}
+
+const addUserTeam = async (userId: number, teamId: number) => {
+  try {
+    await fetchData(`${apiUrl}/api/teams/${userId}/${teamId}`, 'POST')
+    createToast(
+      { title: 'The user has been add in the team with success' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
+    closeAddUserTeamModal()
+  } catch (error) {
+    createToast(
+      { title: 'An error occurred while the adding of the user in the team' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
+    console.error('An error occurred while the adding of the user in the team')
+  }
+}
+
+const populateUserList = async () => {
+  try {
+    const users = await fetchData(`${apiUrl}/api/users`)
+    if (users) {
+      userList.value = users
+      availableUserList.value = users.filter((user: User) => user.id !== +(userId || 0))
+    }
+  } catch (error) {
+    createToast(
+      { title: 'An error occurred while the fetching of the users' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
+    console.error('An error occurred while the fetching of the users')
+  }
+}
+
+const populateTeamList = async () => {
+  try {
+    const data = await fetchData(`${apiUrl}/api/teams/owned/${userId}`)
+    if (data && data?.teams) {
+      teamList.value = data.teams
+    }
+  } catch (error) {
+    createToast(
+      { title: 'An error occurred while the fetching of the team' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
+    console.error('An error occurred while the fetching of the teams')
+  }
+}
+
+const deleteUserFromTeam = async (userId: number, teamId: number) => {
+  try {
+    await fetchData(`${apiUrl}/api/teams/${userId}/${teamId}`, 'DELETE')
+    getTeamsOfUser()
+    createToast(
+      { title: 'The user has successfully been deleted from the team' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
+  } catch (error) {
+    createToast(
+      { title: 'An error occurred while deleting the user from the team' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
+    console.error('An error occurred while deleting the user from the team')
+  }
+}
+
+const deleteTeam = async (teamId: number) => {
+  try {
+    await fetchData(`${apiUrl}/api/teams/${teamId}`, 'DELETE')
+    teamList.value = teamList.value.filter((team) => team.id !== teamId)
+    teamsUsersData.value = teamsUsersData.value.filter((teamUsers) => teamUsers.team.id !== teamId)
+    createToast(
+      { title: 'The team has successfully been deleted' },
+      { transition: 'zoom', timeout: 8000, type: 'success', position: 'bottom-right' }
+    )
+  } catch (error) {
+    createToast(
+      { title: 'An error occurred while deleting the team' },
+      { transition: 'zoom', timeout: 8000, type: 'danger', position: 'bottom-right' }
+    )
+    console.error(error)
+  }
+}
+
+const getAlreadyAddedUsers = async (teamId: number) => {
+  try {
+    const data: { users: User[] } = await fetchData(`${apiUrl}/api/teams/${teamId}/users`)
+    if (data && data?.users) {
+      const usersIds = data.users.map((user) => user.id)
+      alreadyAddedUsersIds.value = usersIds
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+watch(selectedTeam, (newSelectedTeam) => {
+  if (newSelectedTeam === 0) {
+    alreadyAddedUsersIds.value = []
+  } else {
+    getAlreadyAddedUsers(newSelectedTeam)
+  }
+})
+
+watch(alreadyAddedUsersIds, (newAlreadyAddedUsersIds) => {
+  if (newAlreadyAddedUsersIds.includes(selectedUser.value)) {
+    selectedUser.value = 0
+  }
+
+  availableUserList.value = userList.value.filter((user) => !newAlreadyAddedUsersIds.includes(user.id))
+})
+</script>
+
+<style scoped></style>
