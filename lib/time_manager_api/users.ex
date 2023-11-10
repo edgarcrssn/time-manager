@@ -13,9 +13,14 @@ defmodule TimeManagerApi.User do
              :night_hourly_rate,
              :additional_hourly_rate,
              :additional_hours,
-             :night_hours
+             :night_hours,
+             :gross_hourly_rate,
+             :gross_night_hourly_rate,
+             :gross_additional_hourly_rate
            ]}
   schema "users" do
+    field :firstname, :string
+    field :lastname, :string
     field :username, :string
     field :email, :string
     field :role, Ecto.Enum, values: [:employee, :manager, :general_manager], default: :employee
@@ -26,6 +31,9 @@ defmodule TimeManagerApi.User do
     field :additional_hours, :float, default: 0.0
     field :night_hours, :float, default: 0.0
     field :paid_leave_balance, :float, default: 0.0
+    field :gross_hourly_rate, :float
+    field :gross_night_hourly_rate, :float
+    field :gross_additional_hourly_rate, :float
     belongs_to :team, TimeManagerApi.Team, foreign_key: :team_id, type: :integer
 
     has_one :clock, TimeManagerApi.Clock
@@ -36,6 +44,8 @@ defmodule TimeManagerApi.User do
   def changeset(user, params \\ %{}) do
     user
     |> cast(params, [
+      :firstname,
+      :lastname,
       :username,
       :email,
       :role,
@@ -44,7 +54,10 @@ defmodule TimeManagerApi.User do
       :night_hourly_rate,
       :additional_hours,
       :night_hours,
-      :paid_leave_balance
+      :paid_leave_balance,
+      :gross_hourly_rate,
+      :gross_night_hourly_rate,
+      :gross_additional_hourly_rate
     ])
     |> validate_required([:username, :email, :role])
     |> validate_format(:email, ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i)
@@ -52,6 +65,9 @@ defmodule TimeManagerApi.User do
     |> hash_password()
     |> set_hourly_rate_based_on_role()
     |> set_additional_rates()
+    |> set_hourly_rate_based_on_role()
+    |> set_additional_rates()
+    |> set_gross_rates()
   end
 
   defp hash_password(changeset) do
@@ -99,5 +115,22 @@ defmodule TimeManagerApi.User do
     changeset
     |> put_change(:night_hourly_rate, new_values.night_hourly_rate)
     |> put_change(:additional_hourly_rate, new_values.additional_hourly_rate)
+  end
+
+  defp set_gross_rates(changeset) do
+    hourly_rate = get_field(changeset, :hourly_rate)
+
+    gross_hourly_rate = calculate_gross_rate(hourly_rate)
+    gross_night_hourly_rate = calculate_gross_rate(hourly_rate * 1.5)
+    gross_additional_hourly_rate = calculate_gross_rate(hourly_rate * 2)
+
+    changeset
+    |> put_change(:gross_hourly_rate, gross_hourly_rate)
+    |> put_change(:gross_night_hourly_rate, gross_night_hourly_rate)
+    |> put_change(:gross_additional_hourly_rate, gross_additional_hourly_rate)
+  end
+
+  defp calculate_gross_rate(net_rate) do
+    net_rate * 1.22
   end
 end

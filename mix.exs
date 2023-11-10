@@ -50,8 +50,12 @@ defmodule TimeManagerApi.MixProject do
       {:cors_plug, "~> 2.0"},
       {:joken, "~> 2.0"},
       {:argon2_elixir, "~> 2.0"},
+      {:timex, "~> 3.0"},
       {:quantum, ">= 2.2.1"},
-      {:timex, "~> 3.0"}
+      {:bamboo, "~> 2.2"},
+      {:bamboo_smtp, "~> 4.1"},
+      {:sendgrid, "~> 2.0"},
+      {:pdf_generator, "~> 0.6"}
     ]
   end
 

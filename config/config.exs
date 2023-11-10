@@ -31,7 +31,16 @@ config :time_manager_api, TimeManagerApiWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :time_manager_api, TimeManagerApi.Mailer, adapter: Swoosh.Adapters.Local
+
+config :time_manager_api, TimeManagerApi.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: "smtp.sendgrid.net",
+  port: 587,
+  username: "apikey",
+  password: System.get_env("SENDGRID_API_KEY"),
+  tls: :if_available,
+  ssl: false,
+  retries: 1
 
 # Configure esbuild (the version is required)
 config :esbuild,
@@ -57,7 +66,8 @@ config :tailwind,
 
 config :time_manager_api, TimeManagerApi.Scheduler,
   jobs: [
-    {"0 0 * * *", fn -> TimeManagerApi.SchedulerJobs.increment_paid_leave_balance() end}
+    {"0 0 * * *", fn -> TimeManagerApi.SchedulerJobs.increment_paid_leave_balance() end},
+    {"0 0 28 * *", {TimeManagerApi.SchedulerJobs, :send_email_to_all_users, []}}
   ]
 
 # Configures Elixir's Logger
