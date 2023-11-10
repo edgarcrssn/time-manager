@@ -2,38 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 /* || General Style */
 
-@font-face {
-  font-family: 'Luciole';
-  src: url('~@/assets/fonts/Luciole-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Luciole';
-  src: url('~@/assets/fonts/Regular-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'LucioleItalic';
-  src: url('~@/assets/fonts/Luciole-Italic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Luciole';
-  src: url('~@/assets/fonts/Luciole-BoldItalic.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-}
-
 body {
-  font-family: 'Luciole', sans-serif;
+  font-family: 'Poppins';
+  @apply bg-customGrey;
 }
 
 /* || Titles */
@@ -58,7 +52,7 @@ button.main:hover {
 }
 
 button.main {
-  @apply bg-customBlue text-customWhite;
+  @apply bg-customPurple text-customWhite;
 }
 
 button.error {
@@ -66,5 +60,13 @@ button.error {
 }
 
 .card {
-  @apply bg-white border rounded-3xl;
+  @apply bg-white border rounded-3xl shadow-sm hover:shadow-lg transition duration-200 ease-in-out;
+}
+
+.custom-gradient {
+  background-image: linear-gradient(to bottom, #9039d4, #1d2c92);
+}
+
+.custom-gradient-mobile {
+  background-image: linear-gradient(to left, #9039d4, #1d2c92);
 }

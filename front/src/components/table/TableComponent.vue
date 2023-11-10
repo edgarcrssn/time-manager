@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-hidden">
-    <div class="overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="overflow-x-auto md:overflow-hidden shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left text-white">
         <thead class="text-xs uppercase bg-customMain">
           <tr>
@@ -14,6 +14,7 @@
             v-for="(donnee, index) in data"
             v-if="typeTable == 'user'"
             :key="donnee"
+            class="transition duration-200 ease-in-out hover:opacity-[80%]"
             :class="
               index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
             "
@@ -41,6 +42,7 @@
             v-for="(time, index) in data"
             v-if="typeTable == 'workingTimes'"
             :key="time.id"
+            class="transition duration-200 ease-in-out hover:opacity-[80%]"
             :class="
               index % 2 === 0 ? 'bg-customSecondary border-b border-white' : 'bg-customMain border-b border-white'
             "

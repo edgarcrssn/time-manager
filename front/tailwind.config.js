@@ -10,7 +10,11 @@ export default {
         customWhite: '#FFFFFF',
         customBlack: '#000000',
         customBrightRed: '#DB0000',
-        customBlue: '#4a90e2',
+        customPurple: '#583c9b',
+        customYellow: '#f0b63a',
+        customGrey: '#f3f4f6',
+        customPurple1: '#9039D4',
+        customPurple2: '#1d2C92',
 
         // Chart Colors
         'chart-blue': '#4A90E2',

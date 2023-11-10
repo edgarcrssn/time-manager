@@ -16,7 +16,7 @@
     </header>
 
     <div class="flex flex-row h-full overflow-hidden">
-      <nav class="bg-customSecondary p-4 w-[300px] flex-shrink-0 flex-col hidden sm:flex">
+      <nav class="custom-gradient p-4 w-[300px] flex-shrink-0 flex-col hidden sm:flex">
         <ul>
           <li class="mb-2">
             <router-link :to="`/dashboard/${storedUserID}`" class="text-customWhite flex items-center">
@@ -42,11 +42,12 @@
               View Users
             </router-link>
           </li>
-        </ul>
 
-        <button class="error text-white px-4 py-2 mt-4 self-end" @click="logout">
-          Logout
-        </button>
+          <li class="flex text-white items-center mt-10 cursor-pointer" @click="logout">
+            <img alt="logout" src="../assets/logout.svg" class="w-8 h-8 mr-2">
+            Logout
+          </li>
+        </ul>
       </nav>
 
       <main class="flex-grow p-4 overflow-auto pb-20">
@@ -54,7 +55,7 @@
       </main>
     </div>
 
-    <div class="bg-customMain p-4 sm:hidden fixed inset-x-0 bottom-0 flex justify-between text-center">
+    <div class="custom-gradient-mobile p-4 sm:hidden fixed inset-x-0 bottom-0 flex justify-between text-center">
       <router-link :to="`/dashboard/${storedUserID}`" class="flex flex-col items-center">
         <img alt="dashboard" src="../assets/chart_icon.svg" class="w-8 h-8">
         <span class="text-xs text-customWhite">Dashboard</span>

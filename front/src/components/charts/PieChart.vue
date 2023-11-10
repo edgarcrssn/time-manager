@@ -1,12 +1,9 @@
 <template>
-  <Pie
-    :data="chartData"
-    :options="chartOptions"
-  />
+  <Doughnut :data="chartData" :options="chartOptions" />
 </template>
 
 <script lang="ts" setup>
-import { Pie } from 'vue-chartjs'
+import { Doughnut } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js'
 import { defineProps } from 'vue'
 
