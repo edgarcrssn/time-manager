@@ -69,27 +69,36 @@ defmodule TimeManagerApiWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     changeset = TimeManagerApi.User.changeset(%TimeManagerApi.User{}, user_params)
 
-    case TimeManagerApi.Repo.insert(changeset) do
-      {:ok, user} ->
-        conn
-        |> put_status(:created)
-        |> json(%{user: user})
+    user_password = user_params["password"]
+    pattern = ~r/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
 
-      {:error, changeset} ->
-        if Enum.any?(changeset.errors, fn {field, error} ->
-             field == :email and
-               error ==
-                 {"has already been taken",
+    if !Regex.match?(pattern, user_password) do
+      conn
+      |> put_status(:bad_request)
+      |> json(%{message: "Password is too weak"})
+    else
+      case TimeManagerApi.Repo.insert(changeset) do
+        {:ok, user} ->
+          conn
+          |> put_status(:created)
+          |> json(%{user: user})
+
+        {:error, changeset} ->
+          if Enum.any?(changeset.errors, fn {field, error} ->
+              field == :email and
+                error ==
+                  {"has already been taken",
                   [constraint: :unique, constraint_name: "users_email_index"]}
-           end) do
-          conn
-          |> put_status(:conflict)
-          |> json(%{message: "Email is already taken"})
-        else
-          conn
-          |> put_status(:bad_request)
-          |> json(%{message: "Bad Request"})
-        end
+            end) do
+            conn
+            |> put_status(:conflict)
+            |> json(%{message: "Email is already taken"})
+          else
+            conn
+            |> put_status(:bad_request)
+            |> json(%{message: "Bad Request"})
+          end
+      end
     end
   end
 
@@ -163,7 +172,7 @@ defmodule TimeManagerApiWeb.UserController do
   def getByTeam(conn, %{"teamId" => teamId}) do
     teamId = String.to_integer(teamId)
     team = TimeManagerApi.Repo.get(TimeManagerApi.Team, teamId)
-    
+
     case team do
       nil ->
         conn

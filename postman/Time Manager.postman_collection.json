@@ -816,34 +816,6 @@
 				}
 			},
 			"response": []
-		},
-		{
-			"name": "register",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"test\",\n    \"password\": \"test\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:4000/register",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "4000",
-					"path": [
-						"register"
-					]
-				}
-			},
-			"response": []
 		}
 	]
 }
