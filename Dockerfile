@@ -1,6 +1,6 @@
 FROM elixir:1.15
 
-RUN apt-get update && apt-get install -y postgresql-client inotify-tools
+RUN apt-get update && apt-get install -y postgresql-client inotify-tools wkhtmltopdf
 
 WORKDIR /app
 COPY . .
