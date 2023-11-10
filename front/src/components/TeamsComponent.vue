@@ -46,7 +46,7 @@
       </Modal>
     </section>
 
-    <section class="bg-white border rounded-3xl p-4 mb-6">
+    <section class="card p-4 mb-6">
       <h3 class="text-center">
         Create a team
       </h3>
@@ -60,7 +60,7 @@
       />
     </section>
 
-    <section v-if="teamsUsersData.length" class="bg-white border rounded-3xl p-4">
+    <section v-if="teamsUsersData.length" class="card p-4">
       <h3 class="text-center">
         My team{{ teamsUsersData.length > 1 ? 's' : '' }}
       </h3>

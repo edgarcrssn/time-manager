@@ -1,21 +1,33 @@
 <template>
-  <section class="p-4 flex flex-col items-center justify-center text-center w-[500px]">
+  <section class="flex flex-col w-full">
     <h2>Login</h2>
-    <form class="w-full" @submit.prevent="submitLogin">
-      <div>
-        <input id="username" v-model="credentials.username" placeholder="Username" type="text" required>
-      </div>
-      <div>
-        <input id="password" v-model="credentials.password" placeholder="Password" type="password" required>
-      </div>
-      <button type="submit" class="main">
-        Login
-      </button>
-      <router-link to="/faq">
-        <button class="main">
-          Read FAQ
+    <form class="flex flex-col w-full max-w-[350px]" @submit.prevent="submitLogin">
+      <input
+        id="username"
+        v-model="credentials.username"
+        class="border rounded-md p-2 mb-3 w-full z-50"
+        placeholder="Username"
+        type="text"
+        required
+      >
+      <input
+        id="password"
+        v-model="credentials.password"
+        class="border rounded-md p-2 w-full z-50"
+        placeholder="Password"
+        type="password"
+        required
+      >
+      <div class="flex flex-row-reverse gap-2 z-50">
+        <button type="submit" class="main">
+          <img alt="right" src="../assets/right.svg" class="w-5 h-5">
         </button>
-      </router-link>
+        <router-link to="/faq">
+          <button class="main">
+            Read FAQ
+          </button>
+        </router-link>
+      </div>
     </form>
   </section>
 </template>

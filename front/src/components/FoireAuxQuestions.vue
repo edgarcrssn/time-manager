@@ -1,14 +1,16 @@
 <template>
-  <div class="min-h-screen flex flex-col justify-center bg-gray-100 p-4">
-    <router-link to="/" class="flex">
-      <img alt="return" src="../assets/return_icon.svg" class="w-5 h-5 mb-10">
+  <div class="min-h-screen flex flex-col justify-center p-4 items-center">
+    <router-link to="/" class="mb-5">
+      <button class="main">
+        <img alt="return" src="../assets/return_icon.svg" class="w-5 h-5">
+      </button>
     </router-link>
-    <h1 class="text-4xl font-semibold mb-10 self-center">
+    <h1 class="text-4xl font-semibold mb-10">
       Frequently Asked Questions
     </h1>
-    <div class="w-full max-w-2xl self-center">
+    <div class="w-full max-w-2xl">
       <div v-for="item in questions" :key="item.question" class="question-item mb-6 bg-white p-4 rounded-lg shadow-md">
-        <div class="question cursor-pointer text-lg hover:text-blue-600" @click="toggle(item)">
+        <div class="question cursor-pointer text-lg hover:text-customPurple" @click="toggle(item)">
           {{ item.question }}
         </div>
         <div v-if="item.show" class="answer mt-2 text-gray-700">

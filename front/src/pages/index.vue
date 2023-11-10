@@ -4,13 +4,15 @@
       <img
         alt="logo"
         src="../assets/images/earth.png"
-        class="absolute -left-[150px] -top-[70px] w-1/2 max-h-[500px] max-w-[700px] z-50"
+        class="absolute -left-[120px] -top-[50px] w-1/2 max-h-[500px] max-w-[700px] z-50"
       >
       <div class="w-1/2">
-        <h1 class="text-6xl md:text-8xl font-bold text-customBlue mb-4">
+        <h1 class="text-6xl md:text-8xl font-bold text-customPurple mb-4">
           Epic Hourly
         </h1>
-        <p>The easy-to-use time manager for your business</p>
+        <p class="text-xl md:text-3xl">
+          The easy-to-use time manager for your business.
+        </p>
         <Login />
       </div>
     </div>
@@ -18,8 +20,13 @@
     <div class="w-full lg:w-[45%]">
       <img
         alt="logo"
+        src="../assets/images/saturn.png"
+        class="absolute -right-[150px] -top-[20px] w-[40%] max-h-[500px] max-w-[700px] z-50"
+      >
+      <img
+        alt="logo"
         src="../assets/images/logo.png"
-        class="absolute lg:top-1/2 lg:left-2/3 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 h-1/2 object-cover z-50"
+        class="absolute lg:top-1/2 lg:left-2/3 lg:transform lg:-translate-x-1/2 lg:-translate-y-1/2 h-1/2 object-cover z-10"
       >
       <img alt="background" src="../assets/images/background.jpg" class="h-full w-full object-cover">
     </div>
