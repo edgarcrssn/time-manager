@@ -25,4 +25,25 @@ defmodule TimeManagerApiWeb.AuthController do
         |> json(%{error: "Invalid credentials"})
     end
   end
+
+  def register(conn, %{"user" => user_params}) do
+    with changeset <- User.changeset(%User{}, user_params),
+         {:ok, user} <- Repo.insert(changeset),
+         jwt <- Authentication.generate_jwt(user) do
+          {:ok, claims} = Joken.peek_claims(jwt)
+          csrf_token = claims["x_csrf_token"]
+                conn
+      |> put_resp_cookie("jwt", jwt, http_only: true)
+      |> json(%{user: user, csrf_token: csrf_token})
+    else
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{errors: Ecto.Changeset.traverse_errors(changeset)})
+      {:error, _reason} ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: "Failed to generate token"})
+    end
+  end
 end
